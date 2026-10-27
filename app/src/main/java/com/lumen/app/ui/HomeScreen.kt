@@ -779,25 +779,30 @@ private fun SettingsTab(vm: AppViewModel) {
         } else {
             Text(stringResource(R.string.set_offline), color = Gold, fontSize = 15.sp)
         }
-        Spacer(Modifier.height(4.dp))
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(stringResource(R.string.set_profile, vm.profile + 1, AppViewModel.PROFILES), onClick = { vm.switchProfile() })
-            Button(stringResource(R.string.set_text, stringResource(SCALE_NAMES[vm.textScale])), onClick = { vm.cycleTextScale() })
-        }
+        Spacer(Modifier.height(6.dp))
         val yesNo = { b: Boolean -> if (b) R.string.yes else R.string.no }
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(stringResource(R.string.set_autostart, stringResource(yesNo(vm.autoStart))), onClick = { vm.toggleAutoStart() })
-            Button(stringResource(R.string.set_pubguide, stringResource(yesNo(vm.publicEpg))), onClick = { vm.togglePublicEpg() })
+        val gap = Arrangement.spacedBy(12.dp)
+        val w = Modifier.weight(1f)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
+            Button(stringResource(R.string.set_profile, vm.profile + 1, AppViewModel.PROFILES), onClick = { vm.switchProfile() }, modifier = w)
+            Button(stringResource(R.string.set_text, stringResource(SCALE_NAMES[vm.textScale])), onClick = { vm.cycleTextScale() }, modifier = w)
         }
-        Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-            Button(stringResource(R.string.set_refresh), onClick = { vm.refreshAll() })
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
+            Button(stringResource(R.string.set_autostart, stringResource(yesNo(vm.autoStart))), onClick = { vm.toggleAutoStart() }, modifier = w)
+            Button(stringResource(R.string.set_pubguide, stringResource(yesNo(vm.publicEpg))), onClick = { vm.togglePublicEpg() }, modifier = w)
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
+            Button(stringResource(R.string.set_refresh), onClick = { vm.refreshAll() }, modifier = w)
             Button(
                 vm.newVersion?.let { stringResource(R.string.upd_available_btn, it.version) } ?: stringResource(R.string.upd_check_btn),
                 onClick = { if (vm.newVersion != null) vm.installUpdate() else vm.checkAppUpdate(true) },
                 primary = vm.newVersion != null,
+                modifier = w,
             )
-            Button(stringResource(R.string.set_help), onClick = { vm.push(Screen.Help) })
-            Button(stringResource(R.string.set_logout), onClick = { vm.logout() })
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
+            Button(stringResource(R.string.set_help), onClick = { vm.push(Screen.Help) }, modifier = w)
+            Button(stringResource(R.string.set_logout), onClick = { vm.logout() }, modifier = w)
         }
         vm.updateStatus?.let { Text(it, color = Gold, fontSize = 14.sp) }
         Text(stringResource(R.string.set_profile_note), color = TextDim, fontSize = 12.sp)

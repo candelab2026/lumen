@@ -128,13 +128,16 @@ private fun AppRoot(vm: AppViewModel) {
             com.lumen.app.ui.UpdateBar(last.first, last.second)
         }
         val updNotice = vm.updateNotice
-        if (updNotice != null && introDone) {
-            LaunchedEffect(updNotice) {
+        val updStatus = vm.updateStatus
+        val banner = updNotice ?: updStatus
+        if (banner != null && introDone) {
+            LaunchedEffect(banner) {
                 delay(5000)
                 vm.clearUpdateNotice()
+                vm.clearUpdateStatus()
             }
             Text(
-                updNotice, color = Gold, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center,
+                banner, color = Gold, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center,
                 modifier = Modifier.align(Alignment.TopCenter).padding(top = 28.dp)
                     .clip(RoundedCornerShape(12.dp)).background(Surface).padding(horizontal = 24.dp, vertical = 14.dp),
             )
@@ -156,7 +159,7 @@ private fun RenewalDialog(text: String, onClose: () -> Unit) {
         ) {
             Text(stringResource(R.string.renewal_title), color = Gold, fontSize = 22.sp, fontWeight = FontWeight.Bold)
             Text(text, color = TextMain, fontSize = 17.sp, textAlign = TextAlign.Center)
-            Button("OK", onClick = onClose, primary = true, fr = fr, modifier = Modifier.width(200.dp))
+            Button("OK", onClick = onClose, strong = true, fr = fr, modifier = Modifier.width(200.dp))
         }
     }
 }
@@ -175,8 +178,8 @@ private fun ExitDialog(onNo: () -> Unit, onYes: () -> Unit) {
             Text(stringResource(R.string.exit_title), color = TextMain, fontSize = 22.sp, fontWeight = FontWeight.Bold)
             Text(stringResource(R.string.exit_msg), color = TextMain, fontSize = 17.sp, textAlign = TextAlign.Center)
             androidx.compose.foundation.layout.Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-                Button(stringResource(R.string.yes), onClick = onYes, modifier = Modifier.width(200.dp))
-                Button(stringResource(R.string.no), onClick = onNo, primary = true, fr = fr, modifier = Modifier.width(200.dp))
+                Button(stringResource(R.string.yes), onClick = onYes, strong = true, modifier = Modifier.width(200.dp))
+                Button(stringResource(R.string.no), onClick = onNo, strong = true, fr = fr, modifier = Modifier.width(200.dp))
             }
         }
     }

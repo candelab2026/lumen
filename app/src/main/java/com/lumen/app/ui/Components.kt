@@ -14,6 +14,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -105,7 +106,8 @@ fun TvBox(
     // lo stato di focus arriva dall'interactionSource del clickable: è la fonte più affidabile
     val interaction = remember { MutableInteractionSource() }
     val focused by interaction.collectIsFocusedAsState()
-    val scale by animateFloatAsState(if (focused) focusScale else 1f, tween(90), label = "focusScale")
+    val pressed by interaction.collectIsPressedAsState()
+    val scale by animateFloatAsState(if (pressed) 0.93f else if (focused) focusScale else 1f, tween(90), label = "focusScale")
     var m = modifier
     if (focusRequester != null) m = m.focusRequester(focusRequester)
     Box(
@@ -123,6 +125,7 @@ fun TvBox(
             .clip(shape)
             .background(
                 when {
+                    pressed -> Accent
                     focused -> FocusBg
                     selected -> SurfaceSel
                     else -> Surface
@@ -135,14 +138,24 @@ fun TvBox(
 }
 
 @Composable
-fun Button(text: String, onClick: () -> Unit, modifier: Modifier = Modifier, primary: Boolean = false, fr: FocusRequester? = null) {
-    TvBox(onClick = onClick, modifier = modifier, focusRequester = fr, selected = primary) { f ->
+fun Button(
+    text: String,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+    primary: Boolean = false,
+    fr: FocusRequester? = null,
+    strong: Boolean = false,
+) {
+    // strong: testo sempre ben leggibile e bordo visibile anche senza focus (dialoghi)
+    val base = if (strong) modifier.border(2.dp, Color(0xFF5A6A8C), RoundedCornerShape(10.dp)) else modifier
+    TvBox(onClick = onClick, modifier = base, focusRequester = fr, selected = primary || strong) { f ->
         Text(
             text,
-            color = if (f || primary) TextMain else TextDim,
+            color = if (f || primary || strong) Color.White else TextDim,
             fontSize = 18.sp,
-            fontWeight = FontWeight.SemiBold,
-            modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
+            fontWeight = FontWeight.Bold,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.align(Alignment.Center).padding(horizontal = 24.dp, vertical = 12.dp),
         )
     }
 }

@@ -77,6 +77,10 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         updateNotice = null
     }
 
+    fun clearUpdateStatus() {
+        updateStatus = null
+    }
+
     /** Controllo automatico ogni 5 aperture; [manual] mostra sempre l'esito nelle Impostazioni. */
     fun checkAppUpdate(manual: Boolean) {
         viewModelScope.launch {

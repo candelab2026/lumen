@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.1.1
+
+- Settings: buttons laid out in an ordered two-column grid.
+- Clearer dialogs (exit/renewal) and visible press feedback on buttons.
+- "Check for updates" now shows its result in an on-screen message.
+
 ## 2.1.0
 - In-app update from GitHub Releases: a button in Settings downloads and installs the new APK (same signature, so user data is kept).
 - Automatic update check every 5 launches, with a 5-second on-screen notice.
