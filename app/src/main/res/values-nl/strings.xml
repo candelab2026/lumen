@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_foryou">Voor jou</string>
+    <string name="tab_live">Live-tv</string>
+    <string name="tab_movies">Films</string>
+    <string name="tab_series">Series</string>
+    <string name="tab_guide">TV-gids</string>
+    <string name="tab_settings">Instellingen</string>
+    <string name="expires_on" formatted="true">Verloopt op %1$s</string>
+    <string name="error_generic">Fout</string>
+    <string name="retry">Opnieuw</string>
+    <string name="search_channel">Zender zoeken</string>
+    <string name="search">Zoeken</string>
+    <string name="cat_favorites">★ Favorieten</string>
+    <string name="cat_recent">Recent</string>
+    <string name="cat_all_channels">Alle zenders</string>
+    <string name="cat_started">▶ Begonnen</string>
+    <string name="cat_all">Alle</string>
+    <string name="name_favorites">Favorieten</string>
+    <string name="empty_no_channel_found">Geen zenders gevonden</string>
+    <string name="empty_no_fav_channel">Geen favorieten: houd OK (of Menu) ingedrukt op een zender</string>
+    <string name="empty_no_recent">Geen recent bekeken zenders</string>
+    <string name="empty_no_channels">Geen zenders</string>
+    <string name="empty_no_results">Geen resultaten</string>
+    <string name="empty_nothing_started">Nog niets begonnen: bekeken titels verschijnen hier</string>
+    <string name="empty_no_fav_title">Geen favorieten: houd OK (of Menu) ingedrukt op een titel</string>
+    <string name="empty_no_content">Geen inhoud</string>
+    <string name="sub_expired">Uw abonnement is verlopen</string>
+    <string name="sub_today">Uw abonnement verloopt vandaag</string>
+    <string name="sub_days" formatted="true">Uw abonnement verloopt over %1$d dagen</string>
+    <string name="home_recent_channels">Laatste zenders</string>
+    <string name="home_continue">Verder kijken</string>
+    <string name="resume_from" formatted="true">▶ vanaf %1$d min</string>
+    <string name="home_hint_remove">Houd OK (of Menu) ingedrukt op een titel om hem uit de lijst te halen</string>
+    <string name="home_empty">Hier verschijnen recent bekeken zenders en de films of afleveringen die je begon.\nGa naar Live-tv, Films of Series om te beginnen.</string>
+    <string name="guide_nav_hint">◀ ▶ ander tijdvak    OK kanaal kijken    (categorie kies je in Live-tv)</string>
+    <string name="guide_no_channels">Geen zenders in deze categorie</string>
+    <string name="guide_unavailable">Gids niet beschikbaar</string>
+    <string name="set_account">Account</string>
+    <string name="set_server" formatted="true">Server: %1$s</string>
+    <string name="set_user" formatted="true">Gebruiker: %1$s</string>
+    <string name="set_status" formatted="true">Status: %1$s</string>
+    <string name="set_expiry" formatted="true">Einddatum: %1$s</string>
+    <string name="set_unlimited">onbeperkt</string>
+    <string name="set_connections" formatted="true">Verbindingen: %1$d/%2$d</string>
+    <string name="set_offline">Offlinemodus (gegevens uit cache)</string>
+    <string name="set_profile" formatted="true">Profiel: %1$d van %2$d (wijzig)</string>
+    <string name="set_text" formatted="true">Tekst: %1$s</string>
+    <string name="scale_normal">normaal</string>
+    <string name="scale_large">groot</string>
+    <string name="scale_xlarge">extra groot</string>
+    <string name="set_autostart" formatted="true">Bij opstarten laatste zender hervatten: %1$s</string>
+    <string name="yes">Ja</string>
+    <string name="no">Nee</string>
+    <string name="set_pubguide" formatted="true">Openbare reservegids: %1$s</string>
+    <string name="set_refresh">Lijsten en tv-gids vernieuwen</string>
+    <string name="set_logout">Uitloggen</string>
+    <string name="set_help">Help</string>
+    <string name="set_profile_note">Elk profiel heeft eigen favorieten, recente zenders en hervatpunten.</string>
+    <string name="set_version" formatted="true">Lumen versie %1$s (build %2$d)</string>
+    <string name="tagline">Jouw tv, overal</string>
+    <string name="login_server">Serveradres (bijv. http://host:8080)</string>
+    <string name="login_user">Gebruikersnaam</string>
+    <string name="login_pass">Wachtwoord</string>
+    <string name="login_button">Inloggen</string>
+    <string name="login_missing">Vul serveradres, gebruikersnaam en wachtwoord in</string>
+    <string name="login_unreachable" formatted="true">Server onbereikbaar: %1$s</string>
+    <string name="login_check_conn">controleer je verbinding</string>
+    <string name="login_bad">Onjuiste gebruikersnaam of wachtwoord</string>
+    <string name="login_inactive" formatted="true">Account niet actief (%1$s)</string>
+    <string name="login_invalid_resp">Ongeldig serverantwoord (is dit een Xtream Codes-server?)</string>
+    <string name="http_error" formatted="true">De server gaf fout %1$d</string>
+    <string name="err_denied" formatted="true">Toegang geweigerd door de server: controleer de einddatum van je abonnement%1$s</string>
+    <string name="err_denied_conn" formatted="true">" en verbindingen (%1$d/%2$d)"</string>
+    <string name="err_404">Inhoud niet beschikbaar op de server</string>
+    <string name="err_malformed">De zender zendt nu niet uit (ongeldig antwoord van de server)</string>
+    <string name="err_server" formatted="true">De server heeft een probleem (fout %1$d)</string>
+    <string name="err_network">Geen verbinding met de server: controleer het netwerk</string>
+    <string name="err_generic" formatted="true">Afspelen mislukt (%1$s)</string>
+    <string name="track_n" formatted="true">Spoor %1$d</string>
+    <string name="options">Opties</string>
+    <string name="sleep_timer" formatted="true">Slaaptimer: %1$s</string>
+    <string name="sleep_off">uit</string>
+    <string name="sleep_min" formatted="true">%1$d minuten</string>
+    <string name="audio">Audio</string>
+    <string name="no_audio">Geen selecteerbaar audiospoor</string>
+    <string name="subtitles">Ondertitels</string>
+    <string name="no_subs">Geen ondertitels beschikbaar</string>
+    <string name="subs_off">Uit</string>
+    <string name="back_close">Terug om te sluiten</string>
+    <string name="retry_soon" formatted="true">%1$s — opnieuw proberen over enkele seconden</string>
+    <string name="now">Nu</string>
+    <string name="next">Daarna</string>
+    <string name="btn_exit">← Sluiten</string>
+    <string name="channels">Zenders</string>
+    <string name="guide">Gids</string>
+    <string name="live_hint">▲▼ zender    ◀ lijst    ▶ gids    Menu opties    ⏪ vorige    0-9 nummer</string>
+    <string name="prev_channel" formatted="true">Vorige zender: %1$s</string>
+    <string name="guide_for" formatted="true">Gids · %1$s</string>
+    <string name="guide_none">Geen gids beschikbaar voor deze zender</string>
+    <string name="btn_pause">⏸ Pauze</string>
+    <string name="btn_resume">▶ Hervatten</string>
+    <string name="btn_next">Volgende ⏭</string>
+    <string name="vod_hint">◀ ▶ 10 s overslaan    OK pauze/hervatten    ▲ of Menu: audio, ondertitels, timer</string>
+    <string name="btn_resume_at" formatted="true">Hervatten vanaf %1$s</string>
+    <string name="btn_play">Afspelen</string>
+    <string name="btn_from_start">Vanaf het begin</string>
+    <string name="btn_in_favs">★ In favorieten</string>
+    <string name="btn_add_fav">☆ Favorieten</string>
+    <string name="btn_fav_short">★ Favoriet</string>
+    <string name="cast" formatted="true">Cast: %1$s</string>
+    <string name="eps_failed">Afleveringen laden mislukt</string>
+    <string name="eps_none">Geen afleveringen beschikbaar</string>
+    <string name="season_n" formatted="true">Seizoen %1$d</string>
+    <string name="ep_in_progress">"   ▶ bezig"</string>
+    <string name="renewal_title">Verlengingsherinnering</string>
+    <string name="renewal_expired" formatted="true">Uw abonnement is op %1$s verlopen.\nNeem contact op met uw aanbieder om te verlengen.</string>
+    <string name="renewal_today" formatted="true">Uw abonnement verloopt vandaag (%1$s).\nVergeet niet te verlengen.</string>
+    <string name="renewal_days" formatted="true">Uw abonnement verloopt op %1$s (over %2$d dagen).\nVergeet niet te verlengen.</string>
+    <string name="exit_title">AFSLUITEN</string>
+    <string name="exit_msg">Kies Ja om de app te sluiten of Nee om te annuleren.</string>
+    <string name="ok">OK</string>
+    <string name="upd_done">Bijwerken voltooid</string>
+    <string name="upd_channels">Zenders bijwerken</string>
+    <string name="upd_server_guide">Tv-gids van de server</string>
+    <string name="upd_public_guide">Openbare tv-gids</string>
+    <string name="upd_saving">Gids opslaan</string>
+    <string name="list_download_err" formatted="true">Lijst downloaden mislukt: %1$s</string>
+    <string name="net_error">netwerkfout</string>
+    <string name="read_err">Fout bij het lezen van gegevens</string>
+    <string name="expiry_line" formatted="true">Einde abonnement: %1$s</string>
+    <string name="cat_other">Overig</string>
+    <string name="episode_n" formatted="true">Aflevering %1$d</string>
+    <string name="cache_err">Cache opslaan mislukt</string>
+    <string name="help_title">Help</string>
+    <string name="help_hint">▲▼ om te scrollen    Terug om terug te gaan</string>
+    <string name="help1_t">Aan de slag</string>
+    <string name="help1_b">Lumen is een speler: er zitten geen zenders of inhoud in. Vul op de inlogpagina het serveradres van je IPTV-aanbieder (Xtream Codes), je gebruikersnaam en wachtwoord in. Alle drie krijg je van je aanbieder.</string>
+    <string name="help2_t">Navigatie</string>
+    <string name="help2_b">Gebruik de pijltjestoetsen van de afstandsbediening, OK om te kiezen en Terug om terug te gaan. De tabbladen bovenaan: Voor jou, Live-tv, Films, Series, TV-gids en Instellingen. In lijsten springen ⏪/⏩ of kanaal +/− per pagina.</string>
+    <string name="help3_t">Live-tv kijken</string>
+    <string name="help3_b">Tijdens het kijken: ▲▼ zender wisselen, ◀ opent de zenderlijst, ▶ de programmagids, Menu opent opties (audiospoor, ondertitels, slaaptimer). Typ een zendernummer met 0-9. De terugspoeltoets gaat naar de vorige zender.</string>
+    <string name="help4_t">Favorieten en verder kijken</string>
+    <string name="help4_b">Houd OK ingedrukt (of druk op Menu) op een zender, film of serie om hem aan Favorieten toe te voegen of te verwijderen. Films en afleveringen onthouden waar je bent gebleven en staan onder «Verder kijken» op het tabblad Voor jou.</string>
+    <string name="help5_t">TV-gids</string>
+    <string name="help5_b">De programmagids komt van je aanbieder. Heeft een zender geen gids, dan kan Lumen die zoeken in een openbare gids op basis van de zendernaam. Je kunt dit in Instellingen aan- of uitzetten.</string>
+    <string name="help6_t">Profielen</string>
+    <string name="help6_b">Er zijn 4 profielen. Elk bewaart eigen favorieten, recente zenders en hervatpunten. Wissel van profiel in Instellingen.</string>
+    <string name="help7_t">Problemen oplossen</string>
+    <string name="help7_b">Mislukt inloggen? Controleer het serveradres (met http:// en poort), gebruikersnaam en wachtwoord. Starten zenders niet, controleer dan verbinding en abonnement. «Te veel verbindingen» betekent dat het account op andere apparaten wordt gebruikt. Met «Lijsten en tv-gids vernieuwen» in Instellingen laad je alles opnieuw.</string>
+</resources>

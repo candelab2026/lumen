@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_foryou">Dla ciebie</string>
+    <string name="tab_live">TV na żywo</string>
+    <string name="tab_movies">Filmy</string>
+    <string name="tab_series">Seriale</string>
+    <string name="tab_guide">Program TV</string>
+    <string name="tab_settings">Ustawienia</string>
+    <string name="expires_on" formatted="true">Wygasa %1$s</string>
+    <string name="error_generic">Błąd</string>
+    <string name="retry">Ponów</string>
+    <string name="search_channel">Szukaj kanału</string>
+    <string name="search">Szukaj</string>
+    <string name="cat_favorites">★ Ulubione</string>
+    <string name="cat_recent">Ostatnie</string>
+    <string name="cat_all_channels">Wszystkie kanały</string>
+    <string name="cat_started">▶ Rozpoczęte</string>
+    <string name="cat_all">Wszystkie</string>
+    <string name="name_favorites">Ulubione</string>
+    <string name="empty_no_channel_found">Nie znaleziono kanałów</string>
+    <string name="empty_no_fav_channel">Brak ulubionych: przytrzymaj OK (lub Menu) na kanale</string>
+    <string name="empty_no_recent">Brak ostatnio oglądanych kanałów</string>
+    <string name="empty_no_channels">Brak kanałów</string>
+    <string name="empty_no_results">Brak wyników</string>
+    <string name="empty_nothing_started">Nic jeszcze nie rozpoczęto: oglądane tytuły pojawią się tutaj</string>
+    <string name="empty_no_fav_title">Brak ulubionych: przytrzymaj OK (lub Menu) na tytule</string>
+    <string name="empty_no_content">Brak treści</string>
+    <string name="sub_expired">Subskrypcja wygasła</string>
+    <string name="sub_today">Subskrypcja wygasa dziś</string>
+    <string name="sub_days" formatted="true">Subskrypcja wygasa za %1$d dni</string>
+    <string name="home_recent_channels">Ostatnie kanały</string>
+    <string name="home_continue">Kontynuuj oglądanie</string>
+    <string name="resume_from" formatted="true">▶ od %1$d min</string>
+    <string name="home_hint_remove">Przytrzymaj OK (lub Menu) na tytule, aby usunąć go z listy</string>
+    <string name="home_empty">Tutaj pojawią się ostatnio oglądane kanały oraz rozpoczęte filmy i odcinki.\nPrzejdź do TV na żywo, Filmów lub Seriali, aby zacząć.</string>
+    <string name="guide_nav_hint">◀ ▶ zmień przedział    OK oglądaj kanał    (kategorię wybierasz w TV na żywo)</string>
+    <string name="guide_no_channels">Brak kanałów w tej kategorii</string>
+    <string name="guide_unavailable">Program niedostępny</string>
+    <string name="set_account">Konto</string>
+    <string name="set_server" formatted="true">Serwer: %1$s</string>
+    <string name="set_user" formatted="true">Użytkownik: %1$s</string>
+    <string name="set_status" formatted="true">Status: %1$s</string>
+    <string name="set_expiry" formatted="true">Ważność: %1$s</string>
+    <string name="set_unlimited">bezterminowo</string>
+    <string name="set_connections" formatted="true">Połączenia: %1$d/%2$d</string>
+    <string name="set_offline">Tryb offline (dane z pamięci podręcznej)</string>
+    <string name="set_profile" formatted="true">Profil: %1$d z %2$d (zmień)</string>
+    <string name="set_text" formatted="true">Tekst: %1$s</string>
+    <string name="scale_normal">normalny</string>
+    <string name="scale_large">duży</string>
+    <string name="scale_xlarge">bardzo duży</string>
+    <string name="set_autostart" formatted="true">Przy starcie wznów ostatni kanał: %1$s</string>
+    <string name="yes">Tak</string>
+    <string name="no">Nie</string>
+    <string name="set_pubguide" formatted="true">Publiczny program zapasowy: %1$s</string>
+    <string name="set_refresh">Odśwież listy i program TV</string>
+    <string name="set_logout">Wyloguj</string>
+    <string name="set_help">Pomoc</string>
+    <string name="set_profile_note">Każdy profil ma własne ulubione, ostatnie kanały i punkty wznowienia.</string>
+    <string name="set_version" formatted="true">Lumen wersja %1$s (kompilacja %2$d)</string>
+    <string name="tagline">Twoja telewizja, wszędzie</string>
+    <string name="login_server">Adres serwera (np. http://host:8080)</string>
+    <string name="login_user">Nazwa użytkownika</string>
+    <string name="login_pass">Hasło</string>
+    <string name="login_button">Zaloguj</string>
+    <string name="login_missing">Podaj adres serwera, nazwę użytkownika i hasło</string>
+    <string name="login_unreachable" formatted="true">Serwer niedostępny: %1$s</string>
+    <string name="login_check_conn">sprawdź połączenie</string>
+    <string name="login_bad">Błędna nazwa użytkownika lub hasło</string>
+    <string name="login_inactive" formatted="true">Konto nieaktywne (%1$s)</string>
+    <string name="login_invalid_resp">Nieprawidłowa odpowiedź serwera (czy to serwer Xtream Codes?)</string>
+    <string name="http_error" formatted="true">Serwer zwrócił błąd %1$d</string>
+    <string name="err_denied" formatted="true">Serwer odmówił dostępu: sprawdź ważność subskrypcji%1$s</string>
+    <string name="err_denied_conn" formatted="true">" i połączenia (%1$d/%2$d)"</string>
+    <string name="err_404">Treść niedostępna na serwerze</string>
+    <string name="err_malformed">Kanał obecnie nie nadaje (nieprawidłowa odpowiedź serwera)</string>
+    <string name="err_server" formatted="true">Problem z serwerem (błąd %1$d)</string>
+    <string name="err_network">Brak połączenia z serwerem: sprawdź sieć</string>
+    <string name="err_generic" formatted="true">Odtwarzanie nie powiodło się (%1$s)</string>
+    <string name="track_n" formatted="true">Ścieżka %1$d</string>
+    <string name="options">Opcje</string>
+    <string name="sleep_timer" formatted="true">Wyłącznik czasowy: %1$s</string>
+    <string name="sleep_off">wył.</string>
+    <string name="sleep_min" formatted="true">%1$d minut</string>
+    <string name="audio">Dźwięk</string>
+    <string name="no_audio">Brak wybieralnej ścieżki audio</string>
+    <string name="subtitles">Napisy</string>
+    <string name="no_subs">Brak napisów</string>
+    <string name="subs_off">Wyłączone</string>
+    <string name="back_close">Wstecz, aby zamknąć</string>
+    <string name="retry_soon" formatted="true">%1$s — ponowna próba za kilka sekund</string>
+    <string name="now">Teraz</string>
+    <string name="next">Następnie</string>
+    <string name="btn_exit">← Wyjdź</string>
+    <string name="channels">Kanały</string>
+    <string name="guide">Program</string>
+    <string name="live_hint">▲▼ kanał    ◀ lista    ▶ program    Menu opcje    ⏪ poprzedni    0-9 numer</string>
+    <string name="prev_channel" formatted="true">Poprzedni kanał: %1$s</string>
+    <string name="guide_for" formatted="true">Program · %1$s</string>
+    <string name="guide_none">Brak programu dla tego kanału</string>
+    <string name="btn_pause">⏸ Pauza</string>
+    <string name="btn_resume">▶ Wznów</string>
+    <string name="btn_next">Następny ⏭</string>
+    <string name="vod_hint">◀ ▶ przeskocz 10 s    OK pauza/wznów    ▲ lub Menu: dźwięk, napisy, wyłącznik</string>
+    <string name="btn_resume_at" formatted="true">Wznów od %1$s</string>
+    <string name="btn_play">Odtwórz</string>
+    <string name="btn_from_start">Od początku</string>
+    <string name="btn_in_favs">★ W ulubionych</string>
+    <string name="btn_add_fav">☆ Ulubione</string>
+    <string name="btn_fav_short">★ Ulubione</string>
+    <string name="cast" formatted="true">Obsada: %1$s</string>
+    <string name="eps_failed">Nie można załadować odcinków</string>
+    <string name="eps_none">Brak dostępnych odcinków</string>
+    <string name="season_n" formatted="true">Sezon %1$d</string>
+    <string name="ep_in_progress">"   ▶ w trakcie"</string>
+    <string name="renewal_title">Przypomnienie o odnowieniu</string>
+    <string name="renewal_expired" formatted="true">Subskrypcja wygasła %1$s.\nSkontaktuj się z dostawcą, aby ją odnowić.</string>
+    <string name="renewal_today" formatted="true">Subskrypcja wygasa dziś (%1$s).\nPamiętaj o odnowieniu.</string>
+    <string name="renewal_days" formatted="true">Subskrypcja wygasa %1$s (za %2$d dni).\nPamiętaj o odnowieniu.</string>
+    <string name="exit_title">WYJŚCIE</string>
+    <string name="exit_msg">Wybierz Tak, aby wyjść z aplikacji, lub Nie, aby anulować.</string>
+    <string name="ok">OK</string>
+    <string name="upd_done">Aktualizacja zakończona</string>
+    <string name="upd_channels">Aktualizacja kanałów</string>
+    <string name="upd_server_guide">Program TV serwera</string>
+    <string name="upd_public_guide">Publiczny program TV</string>
+    <string name="upd_saving">Zapisywanie programu</string>
+    <string name="list_download_err" formatted="true">Nie można pobrać listy: %1$s</string>
+    <string name="net_error">błąd sieci</string>
+    <string name="read_err">Błąd odczytu danych</string>
+    <string name="expiry_line" formatted="true">Ważność subskrypcji: %1$s</string>
+    <string name="cat_other">Inne</string>
+    <string name="episode_n" formatted="true">Odcinek %1$d</string>
+    <string name="cache_err">Nie można zapisać pamięci podręcznej</string>
+    <string name="help_title">Pomoc</string>
+    <string name="help_hint">▲▼ przewijanie    Wstecz, aby wrócić</string>
+    <string name="help1_t">Pierwsze kroki</string>
+    <string name="help1_b">Lumen to odtwarzacz: nie zawiera kanałów ani treści. Na stronie logowania wpisz adres serwera dostawcy IPTV (Xtream Codes), nazwę użytkownika i hasło. Wszystkie trzy dane przekazuje dostawca.</string>
+    <string name="help2_t">Nawigacja</string>
+    <string name="help2_b">Strzałkami pilota poruszaj się, OK wybiera, Wstecz wraca. Karty u góry: Dla ciebie, TV na żywo, Filmy, Seriale, Program TV i Ustawienia. Na listach ⏪/⏩ lub kanał +/− przewijają stronami.</string>
+    <string name="help3_t">Oglądanie TV na żywo</string>
+    <string name="help3_b">Podczas oglądania: ▲▼ zmiana kanału, ◀ lista kanałów, ▶ program, Menu otwiera opcje (ścieżka audio, napisy, wyłącznik czasowy). Numer kanału wpisz klawiszami 0-9. Klawisz przewijania wstecz wraca do poprzedniego kanału.</string>
+    <string name="help4_t">Ulubione i kontynuacja</string>
+    <string name="help4_b">Przytrzymaj OK (lub naciśnij Menu) na kanale, filmie lub serialu, aby dodać go do ulubionych lub usunąć. Filmy i odcinki zapamiętują miejsce zatrzymania i pojawiają się w «Kontynuuj oglądanie» na karcie Dla ciebie.</string>
+    <string name="help5_t">Program TV</string>
+    <string name="help5_b">Program pochodzi od dostawcy. Jeśli kanał go nie ma, Lumen może poszukać go w publicznym programie, porównując nazwy kanałów. Możesz to włączyć lub wyłączyć w Ustawieniach.</string>
+    <string name="help6_t">Profile</string>
+    <string name="help6_b">Dostępne są 4 profile. Każdy ma własne ulubione, ostatnie kanały i punkty wznowienia. Profil zmienisz w Ustawieniach.</string>
+    <string name="help7_t">Rozwiązywanie problemów</string>
+    <string name="help7_b">Jeśli logowanie się nie udaje, sprawdź adres serwera (z http:// i portem), nazwę użytkownika i hasło. Jeśli kanały nie startują, sprawdź połączenie i subskrypcję. «Zbyt wiele połączeń» oznacza, że konto jest używane na innych urządzeniach. «Odśwież listy i program TV» w Ustawieniach przeładuje wszystko.</string>
+</resources>

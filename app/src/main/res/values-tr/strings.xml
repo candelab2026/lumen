@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_foryou">Sana özel</string>
+    <string name="tab_live">Canlı TV</string>
+    <string name="tab_movies">Filmler</string>
+    <string name="tab_series">Diziler</string>
+    <string name="tab_guide">TV Rehberi</string>
+    <string name="tab_settings">Ayarlar</string>
+    <string name="expires_on" formatted="true">Bitiş: %1$s</string>
+    <string name="error_generic">Hata</string>
+    <string name="retry">Tekrar dene</string>
+    <string name="search_channel">Kanal ara</string>
+    <string name="search">Ara</string>
+    <string name="cat_favorites">★ Favoriler</string>
+    <string name="cat_recent">Son izlenenler</string>
+    <string name="cat_all_channels">Tüm kanallar</string>
+    <string name="cat_started">▶ Başlananlar</string>
+    <string name="cat_all">Tümü</string>
+    <string name="name_favorites">Favoriler</string>
+    <string name="empty_no_channel_found">Kanal bulunamadı</string>
+    <string name="empty_no_fav_channel">Favori yok: bir kanalda OK (veya Menü) tuşuna uzun basın</string>
+    <string name="empty_no_recent">Yakın zamanda izlenen kanal yok</string>
+    <string name="empty_no_channels">Kanal yok</string>
+    <string name="empty_no_results">Sonuç yok</string>
+    <string name="empty_nothing_started">Henüz bir şey başlamadı: izlediklerin burada görünür</string>
+    <string name="empty_no_fav_title">Favori yok: bir başlıkta OK (veya Menü) tuşuna uzun basın</string>
+    <string name="empty_no_content">İçerik yok</string>
+    <string name="sub_expired">Aboneliğiniz sona erdi</string>
+    <string name="sub_today">Aboneliğiniz bugün bitiyor</string>
+    <string name="sub_days" formatted="true">Aboneliğiniz %1$d gün içinde bitiyor</string>
+    <string name="home_recent_channels">Son kanallar</string>
+    <string name="home_continue">İzlemeye devam et</string>
+    <string name="resume_from" formatted="true">▶ %1$d dk.\'dan</string>
+    <string name="home_hint_remove">Listeden kaldırmak için bir başlıkta OK (veya Menü) tuşuna uzun basın</string>
+    <string name="home_empty">Son izlenen kanallar ile başladığın film veya bölümler burada görünür.\nBaşlamak için Canlı TV, Filmler veya Diziler\'e git.</string>
+    <string name="guide_nav_hint">◀ ▶ zaman aralığı    OK kanalı izle    (kategori Canlı TV\'den seçilir)</string>
+    <string name="guide_no_channels">Bu kategoride kanal yok</string>
+    <string name="guide_unavailable">Rehber yok</string>
+    <string name="set_account">Hesap</string>
+    <string name="set_server" formatted="true">Sunucu: %1$s</string>
+    <string name="set_user" formatted="true">Kullanıcı: %1$s</string>
+    <string name="set_status" formatted="true">Durum: %1$s</string>
+    <string name="set_expiry" formatted="true">Bitiş: %1$s</string>
+    <string name="set_unlimited">sınırsız</string>
+    <string name="set_connections" formatted="true">Bağlantılar: %1$d/%2$d</string>
+    <string name="set_offline">Çevrimdışı mod (önbellek verisi)</string>
+    <string name="set_profile" formatted="true">Profil: %1$d / %2$d (değiştir)</string>
+    <string name="set_text" formatted="true">Metin: %1$s</string>
+    <string name="scale_normal">normal</string>
+    <string name="scale_large">büyük</string>
+    <string name="scale_xlarge">çok büyük</string>
+    <string name="set_autostart" formatted="true">Açılışta son kanala devam et: %1$s</string>
+    <string name="yes">Evet</string>
+    <string name="no">Hayır</string>
+    <string name="set_pubguide" formatted="true">Genel rehber yedeği: %1$s</string>
+    <string name="set_refresh">Listeleri ve TV rehberini yenile</string>
+    <string name="set_logout">Çıkış yap</string>
+    <string name="set_help">Yardım</string>
+    <string name="set_profile_note">Her profilin kendi favorileri, son kanalları ve devam noktaları vardır.</string>
+    <string name="set_version" formatted="true">Lumen sürüm %1$s (yapı %2$d)</string>
+    <string name="tagline">TV\'niz, her yerde</string>
+    <string name="login_server">Sunucu adresi (ör. http://host:8080)</string>
+    <string name="login_user">Kullanıcı adı</string>
+    <string name="login_pass">Şifre</string>
+    <string name="login_button">Giriş yap</string>
+    <string name="login_missing">Sunucu adresini, kullanıcı adını ve şifreyi girin</string>
+    <string name="login_unreachable" formatted="true">Sunucuya ulaşılamıyor: %1$s</string>
+    <string name="login_check_conn">bağlantınızı kontrol edin</string>
+    <string name="login_bad">Kullanıcı adı veya şifre hatalı</string>
+    <string name="login_inactive" formatted="true">Hesap etkin değil (%1$s)</string>
+    <string name="login_invalid_resp">Geçersiz sunucu yanıtı (Xtream Codes sunucusu mu?)</string>
+    <string name="http_error" formatted="true">Sunucu %1$d hatası döndürdü</string>
+    <string name="err_denied" formatted="true">Sunucu erişimi reddetti: abonelik bitişini kontrol edin%1$s</string>
+    <string name="err_denied_conn" formatted="true">" ve bağlantıları (%1$d/%2$d)"</string>
+    <string name="err_404">İçerik sunucuda mevcut değil</string>
+    <string name="err_malformed">Kanal şu anda yayın yapmıyor (sunucudan geçersiz yanıt)</string>
+    <string name="err_server" formatted="true">Sunucuda sorun var (hata %1$d)</string>
+    <string name="err_network">Sunucuya bağlantı yok: ağı kontrol edin</string>
+    <string name="err_generic" formatted="true">Oynatma başarısız (%1$s)</string>
+    <string name="track_n" formatted="true">Parça %1$d</string>
+    <string name="options">Seçenekler</string>
+    <string name="sleep_timer" formatted="true">Uyku zamanlayıcı: %1$s</string>
+    <string name="sleep_off">kapalı</string>
+    <string name="sleep_min" formatted="true">%1$d dakika</string>
+    <string name="audio">Ses</string>
+    <string name="no_audio">Seçilebilir ses parçası yok</string>
+    <string name="subtitles">Altyazılar</string>
+    <string name="no_subs">Altyazı yok</string>
+    <string name="subs_off">Kapalı</string>
+    <string name="back_close">Kapatmak için Geri</string>
+    <string name="retry_soon" formatted="true">%1$s — birkaç saniye içinde tekrar denenecek</string>
+    <string name="now">Şimdi</string>
+    <string name="next">Sonra</string>
+    <string name="btn_exit">← Çıkış</string>
+    <string name="channels">Kanallar</string>
+    <string name="guide">Rehber</string>
+    <string name="live_hint">▲▼ kanal    ◀ liste    ▶ rehber    Menü seçenekler    ⏪ önceki    0-9 numara</string>
+    <string name="prev_channel" formatted="true">Önceki kanal: %1$s</string>
+    <string name="guide_for" formatted="true">Rehber · %1$s</string>
+    <string name="guide_none">Bu kanal için rehber yok</string>
+    <string name="btn_pause">⏸ Duraklat</string>
+    <string name="btn_resume">▶ Devam</string>
+    <string name="btn_next">Sonraki ⏭</string>
+    <string name="vod_hint">◀ ▶ 10 sn atla    OK duraklat/devam    ▲ veya Menü: ses, altyazı, zamanlayıcı</string>
+    <string name="btn_resume_at" formatted="true">%1$s konumundan devam et</string>
+    <string name="btn_play">Oynat</string>
+    <string name="btn_from_start">Baştan</string>
+    <string name="btn_in_favs">★ Favorilerde</string>
+    <string name="btn_add_fav">☆ Favoriler</string>
+    <string name="btn_fav_short">★ Favori</string>
+    <string name="cast" formatted="true">Oyuncular: %1$s</string>
+    <string name="eps_failed">Bölümler yüklenemedi</string>
+    <string name="eps_none">Bölüm yok</string>
+    <string name="season_n" formatted="true">Sezon %1$d</string>
+    <string name="ep_in_progress">"   ▶ devam ediyor"</string>
+    <string name="renewal_title">Yenileme hatırlatması</string>
+    <string name="renewal_expired" formatted="true">Aboneliğiniz %1$s tarihinde sona erdi.\nYenilemek için sağlayıcınızla iletişime geçin.</string>
+    <string name="renewal_today" formatted="true">Aboneliğiniz bugün (%1$s) bitiyor.\nYenilemeyi unutmayın.</string>
+    <string name="renewal_days" formatted="true">Aboneliğiniz %1$s tarihinde (%2$d gün sonra) bitiyor.\nYenilemeyi unutmayın.</string>
+    <string name="exit_title">ÇIKIŞ</string>
+    <string name="exit_msg">Çıkmak için Evet\'i, vazgeçmek için Hayır\'ı seçin.</string>
+    <string name="ok">Tamam</string>
+    <string name="upd_done">Güncelleme tamamlandı</string>
+    <string name="upd_channels">Kanallar güncelleniyor</string>
+    <string name="upd_server_guide">Sunucu TV rehberi</string>
+    <string name="upd_public_guide">Genel TV rehberi</string>
+    <string name="upd_saving">Rehber kaydediliyor</string>
+    <string name="list_download_err" formatted="true">Liste indirilemedi: %1$s</string>
+    <string name="net_error">ağ hatası</string>
+    <string name="read_err">Veri okuma hatası</string>
+    <string name="expiry_line" formatted="true">Abonelik bitişi: %1$s</string>
+    <string name="cat_other">Diğer</string>
+    <string name="episode_n" formatted="true">Bölüm %1$d</string>
+    <string name="cache_err">Önbellek kaydedilemedi</string>
+    <string name="help_title">Yardım</string>
+    <string name="help_hint">▲▼ kaydırmak için    Geri: dön</string>
+    <string name="help1_t">Başlarken</string>
+    <string name="help1_b">Lumen bir oynatıcıdır: kanal veya içerik barındırmaz. Giriş sayfasında IPTV sağlayıcınızın sunucu adresini (Xtream Codes), kullanıcı adınızı ve şifrenizi girin. Üçü de sağlayıcınız tarafından verilir.</string>
+    <string name="help2_t">Gezinme</string>
+    <string name="help2_b">Uzaktaki yön tuşlarıyla gezinin, OK ile seçin, Geri ile dönün. Üstteki sekmeler: Sana özel, Canlı TV, Filmler, Diziler, TV Rehberi ve Ayarlar. Listelerde ⏪/⏩ veya kanal +/− sayfa sayfa atlar.</string>
+    <string name="help3_t">Canlı TV izleme</string>
+    <string name="help3_b">İzlerken: ▲▼ kanal değiştirir, ◀ kanal listesini, ▶ program rehberini açar, Menü seçenekleri açar (ses parçası, altyazı, uyku zamanlayıcı). Kanal numarasını 0-9 tuşlarıyla girin. Geri sarma tuşu önceki kanala döner.</string>
+    <string name="help4_t">Favoriler ve devam etme</string>
+    <string name="help4_b">Bir kanal, film veya dizide OK tuşuna uzun basarak (veya Menü) Favorilere ekleyin ya da çıkarın. Film ve bölümler kaldığınız yeri hatırlar ve Sana özel sekmesinde «İzlemeye devam et» altında görünür.</string>
+    <string name="help5_t">TV rehberi</string>
+    <string name="help5_b">Program rehberi sağlayıcınızdan gelir. Bir kanalın rehberi yoksa Lumen, kanal adını eşleştirerek genel bir rehberde arayabilir. Bunu Ayarlar\'dan açıp kapatabilirsiniz.</string>
+    <string name="help6_t">Profiller</string>
+    <string name="help6_b">4 profil vardır. Her biri kendi favorilerini, son kanallarını ve devam noktalarını tutar. Profili Ayarlar\'dan değiştirin.</string>
+    <string name="help7_t">Sorun giderme</string>
+    <string name="help7_b">Giriş başarısızsa sunucu adresini (http:// ve port dahil), kullanıcı adını ve şifreyi kontrol edin. Kanallar açılmıyorsa bağlantınızı ve aboneliğinizi kontrol edin. «Çok fazla bağlantı», hesabın başka cihazlarda kullanıldığı anlamına gelir. Her şeyi yeniden yüklemek için Ayarlar\'daki «Listeleri ve TV rehberini yenile» seçeneğini kullanın.</string>
+</resources>

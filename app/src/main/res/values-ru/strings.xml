@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tab_foryou">Для вас</string>
+    <string name="tab_live">Эфир</string>
+    <string name="tab_movies">Фильмы</string>
+    <string name="tab_series">Сериалы</string>
+    <string name="tab_guide">Телепрограмма</string>
+    <string name="tab_settings">Настройки</string>
+    <string name="expires_on" formatted="true">Истекает %1$s</string>
+    <string name="error_generic">Ошибка</string>
+    <string name="retry">Повторить</string>
+    <string name="search_channel">Поиск канала</string>
+    <string name="search">Поиск</string>
+    <string name="cat_favorites">★ Избранное</string>
+    <string name="cat_recent">Недавние</string>
+    <string name="cat_all_channels">Все каналы</string>
+    <string name="cat_started">▶ Начатые</string>
+    <string name="cat_all">Все</string>
+    <string name="name_favorites">Избранное</string>
+    <string name="empty_no_channel_found">Каналы не найдены</string>
+    <string name="empty_no_fav_channel">Нет избранного: удерживайте OK (или Меню) на канале</string>
+    <string name="empty_no_recent">Нет недавно просмотренных каналов</string>
+    <string name="empty_no_channels">Нет каналов</string>
+    <string name="empty_no_results">Ничего не найдено</string>
+    <string name="empty_nothing_started">Пока ничего не начато: просмотренное появится здесь</string>
+    <string name="empty_no_fav_title">Нет избранного: удерживайте OK (или Меню) на названии</string>
+    <string name="empty_no_content">Нет содержимого</string>
+    <string name="sub_expired">Подписка истекла</string>
+    <string name="sub_today">Подписка истекает сегодня</string>
+    <string name="sub_days" formatted="true">Подписка истекает через %1$d дн.</string>
+    <string name="home_recent_channels">Последние каналы</string>
+    <string name="home_continue">Продолжить просмотр</string>
+    <string name="resume_from" formatted="true">▶ с %1$d мин</string>
+    <string name="home_hint_remove">Удерживайте OK (или Меню) на названии, чтобы убрать его из списка</string>
+    <string name="home_empty">Здесь появятся последние каналы и начатые фильмы или серии.\nПерейдите в «Эфир», «Фильмы» или «Сериалы», чтобы начать.</string>
+    <string name="guide_nav_hint">◀ ▶ сменить интервал    OK смотреть канал    (категория выбирается в «Эфире»)</string>
+    <string name="guide_no_channels">В этой категории нет каналов</string>
+    <string name="guide_unavailable">Телепрограмма недоступна</string>
+    <string name="set_account">Аккаунт</string>
+    <string name="set_server" formatted="true">Сервер: %1$s</string>
+    <string name="set_user" formatted="true">Пользователь: %1$s</string>
+    <string name="set_status" formatted="true">Статус: %1$s</string>
+    <string name="set_expiry" formatted="true">Срок: %1$s</string>
+    <string name="set_unlimited">бессрочно</string>
+    <string name="set_connections" formatted="true">Подключения: %1$d/%2$d</string>
+    <string name="set_offline">Офлайн-режим (данные из кэша)</string>
+    <string name="set_profile" formatted="true">Профиль: %1$d из %2$d (сменить)</string>
+    <string name="set_text" formatted="true">Текст: %1$s</string>
+    <string name="scale_normal">обычный</string>
+    <string name="scale_large">крупный</string>
+    <string name="scale_xlarge">очень крупный</string>
+    <string name="set_autostart" formatted="true">При запуске включать последний канал: %1$s</string>
+    <string name="yes">Да</string>
+    <string name="no">Нет</string>
+    <string name="set_pubguide" formatted="true">Публичная телепрограмма как запасная: %1$s</string>
+    <string name="set_refresh">Обновить списки и телепрограмму</string>
+    <string name="set_logout">Выйти из аккаунта</string>
+    <string name="set_help">Справка</string>
+    <string name="set_profile_note">У каждого профиля свои избранное, недавние каналы и места остановки.</string>
+    <string name="set_version" formatted="true">Lumen версия %1$s (сборка %2$d)</string>
+    <string name="tagline">Ваше ТВ — везде</string>
+    <string name="login_server">Адрес сервера (напр. http://host:8080)</string>
+    <string name="login_user">Логин</string>
+    <string name="login_pass">Пароль</string>
+    <string name="login_button">Войти</string>
+    <string name="login_missing">Введите адрес сервера, логин и пароль</string>
+    <string name="login_unreachable" formatted="true">Сервер недоступен: %1$s</string>
+    <string name="login_check_conn">проверьте подключение</string>
+    <string name="login_bad">Неверный логин или пароль</string>
+    <string name="login_inactive" formatted="true">Аккаунт не активен (%1$s)</string>
+    <string name="login_invalid_resp">Недопустимый ответ сервера (это сервер Xtream Codes?)</string>
+    <string name="http_error" formatted="true">Сервер вернул ошибку %1$d</string>
+    <string name="err_denied" formatted="true">Сервер отклонил доступ: проверьте срок подписки%1$s</string>
+    <string name="err_denied_conn" formatted="true">" и подключения (%1$d/%2$d)"</string>
+    <string name="err_404">Контент недоступен на сервере</string>
+    <string name="err_malformed">Канал сейчас не вещает (недопустимый ответ сервера)</string>
+    <string name="err_server" formatted="true">Проблема на сервере (ошибка %1$d)</string>
+    <string name="err_network">Нет связи с сервером: проверьте сеть</string>
+    <string name="err_generic" formatted="true">Не удалось воспроизвести (%1$s)</string>
+    <string name="track_n" formatted="true">Дорожка %1$d</string>
+    <string name="options">Опции</string>
+    <string name="sleep_timer" formatted="true">Таймер сна: %1$s</string>
+    <string name="sleep_off">выкл.</string>
+    <string name="sleep_min" formatted="true">%1$d мин</string>
+    <string name="audio">Звук</string>
+    <string name="no_audio">Нет доступных звуковых дорожек</string>
+    <string name="subtitles">Субтитры</string>
+    <string name="no_subs">Субтитры недоступны</string>
+    <string name="subs_off">Выкл.</string>
+    <string name="back_close">«Назад» — закрыть</string>
+    <string name="retry_soon" formatted="true">%1$s — повтор через несколько секунд</string>
+    <string name="now">Сейчас</string>
+    <string name="next">Далее</string>
+    <string name="btn_exit">← Выход</string>
+    <string name="channels">Каналы</string>
+    <string name="guide">Программа</string>
+    <string name="live_hint">▲▼ канал    ◀ список    ▶ программа    Меню опции    ⏪ предыдущий    0-9 номер</string>
+    <string name="prev_channel" formatted="true">Предыдущий канал: %1$s</string>
+    <string name="guide_for" formatted="true">Программа · %1$s</string>
+    <string name="guide_none">Для этого канала нет телепрограммы</string>
+    <string name="btn_pause">⏸ Пауза</string>
+    <string name="btn_resume">▶ Продолжить</string>
+    <string name="btn_next">Далее ⏭</string>
+    <string name="vod_hint">◀ ▶ перемотка 10 с    OK пауза/пуск    ▲ или Меню: звук, субтитры, таймер</string>
+    <string name="btn_resume_at" formatted="true">Продолжить с %1$s</string>
+    <string name="btn_play">Смотреть</string>
+    <string name="btn_from_start">С начала</string>
+    <string name="btn_in_favs">★ В избранном</string>
+    <string name="btn_add_fav">☆ В избранное</string>
+    <string name="btn_fav_short">★ Избранное</string>
+    <string name="cast" formatted="true">В ролях: %1$s</string>
+    <string name="eps_failed">Не удалось загрузить серии</string>
+    <string name="eps_none">Нет доступных серий</string>
+    <string name="season_n" formatted="true">Сезон %1$d</string>
+    <string name="ep_in_progress">"   ▶ начато"</string>
+    <string name="renewal_title">Напоминание о продлении</string>
+    <string name="renewal_expired" formatted="true">Подписка истекла %1$s.\nСвяжитесь с провайдером для продления.</string>
+    <string name="renewal_today" formatted="true">Подписка истекает сегодня (%1$s).\nНе забудьте продлить.</string>
+    <string name="renewal_days" formatted="true">Подписка истекает %1$s (через %2$d дн.).\nНе забудьте продлить.</string>
+    <string name="exit_title">ВЫХОД</string>
+    <string name="exit_msg">Выберите «Да», чтобы выйти из приложения, или «Нет» для отмены.</string>
+    <string name="ok">OK</string>
+    <string name="upd_done">Обновление завершено</string>
+    <string name="upd_channels">Обновление каналов</string>
+    <string name="upd_server_guide">Телепрограмма сервера</string>
+    <string name="upd_public_guide">Публичная телепрограмма</string>
+    <string name="upd_saving">Сохранение программы</string>
+    <string name="list_download_err" formatted="true">Не удалось загрузить список: %1$s</string>
+    <string name="net_error">ошибка сети</string>
+    <string name="read_err">Ошибка чтения данных</string>
+    <string name="expiry_line" formatted="true">Срок подписки: %1$s</string>
+    <string name="cat_other">Прочее</string>
+    <string name="episode_n" formatted="true">Серия %1$d</string>
+    <string name="cache_err">Не удалось сохранить кэш</string>
+    <string name="help_title">Справка</string>
+    <string name="help_hint">▲▼ прокрутка    «Назад» — вернуться</string>
+    <string name="help1_t">Начало работы</string>
+    <string name="help1_b">Lumen — это плеер: в нём нет каналов и контента. На странице входа введите адрес сервера вашего IPTV-провайдера (Xtream Codes), логин и пароль. Все три данных выдаёт провайдер.</string>
+    <string name="help2_t">Навигация</string>
+    <string name="help2_b">Стрелками пульта перемещайтесь, OK — выбор, «Назад» — возврат. Вкладки сверху: Для вас, Эфир, Фильмы, Сериалы, Телепрограмма и Настройки. В списках ⏪/⏩ или канал +/− листают страницами.</string>
+    <string name="help3_t">Просмотр эфира</string>
+    <string name="help3_b">Во время просмотра: ▲▼ — смена канала, ◀ — список каналов, ▶ — программа передач, Меню — опции (звук, субтитры, таймер сна). Номер канала вводится цифрами 0-9. Клавиша перемотки назад возвращает к предыдущему каналу.</string>
+    <string name="help4_t">Избранное и продолжение просмотра</string>
+    <string name="help4_b">Удерживайте OK (или нажмите Меню) на канале, фильме или сериале, чтобы добавить или убрать его из избранного. Фильмы и серии запоминают место остановки и появляются в «Продолжить просмотр» на вкладке «Для вас».</string>
+    <string name="help5_t">Телепрограмма</string>
+    <string name="help5_b">Телепрограмму предоставляет провайдер. Если у канала её нет, Lumen может найти её в публичной программе по названию канала. Это можно включить или отключить в настройках.</string>
+    <string name="help6_t">Профили</string>
+    <string name="help6_b">Есть 4 профиля. У каждого свои избранное, недавние каналы и места остановки. Профиль меняется в настройках.</string>
+    <string name="help7_t">Устранение неполадок</string>
+    <string name="help7_b">Если вход не удался, проверьте адрес сервера (с http:// и портом), логин и пароль. Если каналы не запускаются, проверьте соединение и подписку. «Слишком много подключений» значит, что аккаунт используется на других устройствах. «Обновить списки и телепрограмму» в настройках перезагрузит всё.</string>
+</resources>
