@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.1.2
+
+- Login screen is now scrollable so the sign-in button is always reachable on phones; keyboard Done signs in.
+
 ## 2.1.1
 
 - Settings: buttons laid out in an ordered two-column grid.
