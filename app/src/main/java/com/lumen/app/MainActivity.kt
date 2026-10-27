@@ -127,6 +127,18 @@ private fun AppRoot(vm: AppViewModel) {
             if (upd != null) last = upd
             com.lumen.app.ui.UpdateBar(last.first, last.second)
         }
+        val updNotice = vm.updateNotice
+        if (updNotice != null && introDone) {
+            LaunchedEffect(updNotice) {
+                delay(5000)
+                vm.clearUpdateNotice()
+            }
+            Text(
+                updNotice, color = Gold, fontSize = 18.sp, fontWeight = FontWeight.SemiBold, textAlign = TextAlign.Center,
+                modifier = Modifier.align(Alignment.TopCenter).padding(top = 28.dp)
+                    .clip(RoundedCornerShape(12.dp)).background(Surface).padding(horizontal = 24.dp, vertical = 14.dp),
+            )
+        }
         if (showExit) ExitDialog(onNo = { showExit = false }, onYes = { activity?.finishAndRemoveTask() })
     }
 }

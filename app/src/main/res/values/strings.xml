@@ -149,4 +149,12 @@
     <string name="help6_b">There are 4 profiles. Each one keeps its own favorites, recent channels and resume points. Change profile from Settings.</string>
     <string name="help7_t">Troubleshooting</string>
     <string name="help7_b">If sign-in fails, check the server address (including http:// and the port), username and password. If channels do not play, check your connection and your subscription. \"Too many connections\" means the account is already in use on other devices. Use \"Refresh lists and TV guide\" in Settings to reload everything.</string>
+    <string name="upd_check_btn">Check for updates</string>
+    <string name="upd_available_btn" formatted="true">Update app to %1$s</string>
+    <string name="upd_uptodate">Lumen is up to date</string>
+    <string name="upd_notice" formatted="true">New version %1$s available. Go to Settings to update.</string>
+    <string name="upd_downloading">Downloading update</string>
+    <string name="upd_failed" formatted="true">Update failed: %1$s</string>
+    <string name="upd_allow">Allow Lumen to install apps, then press the update button again</string>
+    <string name="upd_checking">Checking for updates…</string>
 </resources>

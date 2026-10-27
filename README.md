@@ -15,6 +15,7 @@ A lightweight IPTV player for **Android TV** and **Amazon Fire TV** (also runs o
 - 4 profiles, each with its own favorites and history
 - Audio track / subtitle selection, sleep timer, channel number entry, previous-channel key
 - Built for the remote control (D-pad), with a built-in **Help** page in Settings
+- In-app updates from GitHub Releases (checked every 5 launches; installing over the old version keeps your data)
 - Credentials stored encrypted on the device
 - Translated into English, Italian, Spanish, French, German, Portuguese, Russian, Turkish, Polish and Dutch (follows the system language)
 
@@ -45,7 +46,7 @@ keyAlias=lumen
 keyPassword=...
 ```
 
-then run `gradlew.bat :app:assembleRelease`. The APK is written to `app/build/outputs/apk/release/`. Keep your keystore: it is needed to update an installed app.
+then run `gradlew.bat :app:assembleRelease`. The APK is written to `app/build/outputs/apk/release/`. Keep your keystore and always sign releases with the same key: Android only installs an update over an existing app (keeping its data) if the signature matches. Releases must contain a single `.apk` asset and a `vX.Y.Z` tag, which the in-app updater reads.
 
 ## Project layout
 

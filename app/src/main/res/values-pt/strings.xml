@@ -148,4 +148,12 @@
     <string name="help6_b">Existem 4 perfis. Cada um guarda os seus favoritos, canais recentes e pontos de retoma. Mude de perfil nas Definições.</string>
     <string name="help7_t">Resolução de problemas</string>
     <string name="help7_b">Se o acesso falhar, verifique o endereço do servidor (com http:// e a porta), utilizador e palavra-passe. Se os canais não arrancam, verifique a ligação e a subscrição. «Demasiadas ligações» significa que a conta está em uso noutros dispositivos. Use «Atualizar listas e guia TV» nas Definições para recarregar tudo.</string>
+    <string name="upd_check_btn">Procurar atualizações</string>
+    <string name="upd_available_btn" formatted="true">Atualizar a app para %1$s</string>
+    <string name="upd_uptodate">O Lumen está atualizado</string>
+    <string name="upd_notice" formatted="true">Nova versão %1$s disponível. Vá às Definições para atualizar.</string>
+    <string name="upd_downloading">A transferir atualização</string>
+    <string name="upd_failed" formatted="true">Falha na atualização: %1$s</string>
+    <string name="upd_allow">Permita ao Lumen instalar apps e prima de novo o botão de atualizar</string>
+    <string name="upd_checking">A procurar atualizações…</string>
 </resources>

@@ -148,4 +148,12 @@
     <string name="help6_b">Er zijn 4 profielen. Elk bewaart eigen favorieten, recente zenders en hervatpunten. Wissel van profiel in Instellingen.</string>
     <string name="help7_t">Problemen oplossen</string>
     <string name="help7_b">Mislukt inloggen? Controleer het serveradres (met http:// en poort), gebruikersnaam en wachtwoord. Starten zenders niet, controleer dan verbinding en abonnement. «Te veel verbindingen» betekent dat het account op andere apparaten wordt gebruikt. Met «Lijsten en tv-gids vernieuwen» in Instellingen laad je alles opnieuw.</string>
+    <string name="upd_check_btn">Op updates controleren</string>
+    <string name="upd_available_btn" formatted="true">App bijwerken naar %1$s</string>
+    <string name="upd_uptodate">Lumen is up-to-date</string>
+    <string name="upd_notice" formatted="true">Nieuwe versie %1$s beschikbaar. Ga naar Instellingen om bij te werken.</string>
+    <string name="upd_downloading">Update downloaden</string>
+    <string name="upd_failed" formatted="true">Bijwerken mislukt: %1$s</string>
+    <string name="upd_allow">Sta Lumen toe apps te installeren en druk opnieuw op de updateknop</string>
+    <string name="upd_checking">Zoeken naar updates…</string>
 </resources>

@@ -148,4 +148,12 @@
     <string name="help6_b">Есть 4 профиля. У каждого свои избранное, недавние каналы и места остановки. Профиль меняется в настройках.</string>
     <string name="help7_t">Устранение неполадок</string>
     <string name="help7_b">Если вход не удался, проверьте адрес сервера (с http:// и портом), логин и пароль. Если каналы не запускаются, проверьте соединение и подписку. «Слишком много подключений» значит, что аккаунт используется на других устройствах. «Обновить списки и телепрограмму» в настройках перезагрузит всё.</string>
+    <string name="upd_check_btn">Проверить обновления</string>
+    <string name="upd_available_btn" formatted="true">Обновить приложение до %1$s</string>
+    <string name="upd_uptodate">Lumen обновлён до последней версии</string>
+    <string name="upd_notice" formatted="true">Доступна новая версия %1$s. Обновите её в настройках.</string>
+    <string name="upd_downloading">Загрузка обновления</string>
+    <string name="upd_failed" formatted="true">Не удалось обновить: %1$s</string>
+    <string name="upd_allow">Разрешите Lumen устанавливать приложения и снова нажмите кнопку обновления</string>
+    <string name="upd_checking">Проверка обновлений…</string>
 </resources>

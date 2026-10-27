@@ -791,9 +791,15 @@ private fun SettingsTab(vm: AppViewModel) {
         }
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
             Button(stringResource(R.string.set_refresh), onClick = { vm.refreshAll() })
+            Button(
+                vm.newVersion?.let { stringResource(R.string.upd_available_btn, it.version) } ?: stringResource(R.string.upd_check_btn),
+                onClick = { if (vm.newVersion != null) vm.installUpdate() else vm.checkAppUpdate(true) },
+                primary = vm.newVersion != null,
+            )
             Button(stringResource(R.string.set_help), onClick = { vm.push(Screen.Help) })
             Button(stringResource(R.string.set_logout), onClick = { vm.logout() })
         }
+        vm.updateStatus?.let { Text(it, color = Gold, fontSize = 14.sp) }
         Text(stringResource(R.string.set_profile_note), color = TextDim, fontSize = 12.sp)
         Spacer(Modifier.height(6.dp))
         Text(stringResource(R.string.set_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE), color = TextDim, fontSize = 14.sp)

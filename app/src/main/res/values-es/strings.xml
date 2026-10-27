@@ -148,4 +148,12 @@
     <string name="help6_b">Hay 4 perfiles. Cada uno guarda sus favoritos, canales recientes y puntos de reanudación. Cambia de perfil en Ajustes.</string>
     <string name="help7_t">Solución de problemas</string>
     <string name="help7_b">Si falla el acceso, revisa la dirección del servidor (con http:// y el puerto), usuario y contraseña. Si los canales no se reproducen, revisa la conexión y la suscripción. «Demasiadas conexiones» indica que la cuenta se usa en otros dispositivos. Usa «Actualizar listas y guía TV» en Ajustes para recargarlo todo.</string>
+    <string name="upd_check_btn">Buscar actualizaciones</string>
+    <string name="upd_available_btn" formatted="true">Actualizar la app a %1$s</string>
+    <string name="upd_uptodate">Lumen está actualizada</string>
+    <string name="upd_notice" formatted="true">Nueva versión %1$s disponible. Ve a Ajustes para actualizar.</string>
+    <string name="upd_downloading">Descargando actualización</string>
+    <string name="upd_failed" formatted="true">Falló la actualización: %1$s</string>
+    <string name="upd_allow">Permite a Lumen instalar apps y vuelve a pulsar el botón de actualizar</string>
+    <string name="upd_checking">Buscando actualizaciones…</string>
 </resources>

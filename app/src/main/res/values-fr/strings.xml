@@ -148,4 +148,12 @@
     <string name="help6_b">Il y a 4 profils. Chacun garde ses favoris, ses chaînes récentes et ses points de reprise. Changez de profil dans les Réglages.</string>
     <string name="help7_t">Dépannage</string>
     <string name="help7_b">Si la connexion échoue, vérifiez l\'adresse du serveur (avec http:// et le port), l\'identifiant et le mot de passe. Si les chaînes ne démarrent pas, vérifiez la connexion et l\'abonnement. « Trop de connexions » signifie que le compte est utilisé sur d\'autres appareils. Utilisez « Actualiser listes et guide TV » dans les Réglages.</string>
+    <string name="upd_check_btn">Rechercher des mises à jour</string>
+    <string name="upd_available_btn" formatted="true">Mettre à jour l\'app vers %1$s</string>
+    <string name="upd_uptodate">Lumen est à jour</string>
+    <string name="upd_notice" formatted="true">Nouvelle version %1$s disponible. Allez dans Réglages pour mettre à jour.</string>
+    <string name="upd_downloading">Téléchargement de la mise à jour</string>
+    <string name="upd_failed" formatted="true">Échec de la mise à jour : %1$s</string>
+    <string name="upd_allow">Autorisez Lumen à installer des apps, puis rappuyez sur le bouton de mise à jour</string>
+    <string name="upd_checking">Recherche de mises à jour…</string>
 </resources>

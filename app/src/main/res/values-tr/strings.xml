@@ -148,4 +148,12 @@
     <string name="help6_b">4 profil vardır. Her biri kendi favorilerini, son kanallarını ve devam noktalarını tutar. Profili Ayarlar\'dan değiştirin.</string>
     <string name="help7_t">Sorun giderme</string>
     <string name="help7_b">Giriş başarısızsa sunucu adresini (http:// ve port dahil), kullanıcı adını ve şifreyi kontrol edin. Kanallar açılmıyorsa bağlantınızı ve aboneliğinizi kontrol edin. «Çok fazla bağlantı», hesabın başka cihazlarda kullanıldığı anlamına gelir. Her şeyi yeniden yüklemek için Ayarlar\'daki «Listeleri ve TV rehberini yenile» seçeneğini kullanın.</string>
+    <string name="upd_check_btn">Güncellemeleri denetle</string>
+    <string name="upd_available_btn" formatted="true">Uygulamayı %1$s sürümüne güncelle</string>
+    <string name="upd_uptodate">Lumen güncel</string>
+    <string name="upd_notice" formatted="true">Yeni sürüm %1$s mevcut. Güncellemek için Ayarlar\'a gidin.</string>
+    <string name="upd_downloading">Güncelleme indiriliyor</string>
+    <string name="upd_failed" formatted="true">Güncelleme başarısız: %1$s</string>
+    <string name="upd_allow">Lumen\'in uygulama yüklemesine izin verin, sonra güncelle düğmesine tekrar basın</string>
+    <string name="upd_checking">Güncellemeler denetleniyor…</string>
 </resources>

@@ -91,7 +91,7 @@ class Store(ctx: Context) {
     }
 
     /** True se sono passate almeno `every` aperture dell'app dall'ultimo aggiornamento della sezione. */
-    fun due(section: String, every: Int = 3): Boolean = launches - data.getInt("ref_$section", -100) >= every
+    fun due(section: String, every: Int = 5): Boolean = launches - data.getInt("ref_$section", -100) >= every
 
     fun markRefreshed(section: String) {
         data.edit().putInt("ref_$section", launches).apply()

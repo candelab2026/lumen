@@ -24,6 +24,7 @@ import java.util.Calendar
 import java.util.TimeZone
 
 private const val HOUR = 3_600_000L
+private const val RELEASES_API = "https://api.github.com/repos/candelab2026/lumen/releases/latest"
 private const val EXT = "ext:"
 private const val EXT_EPG_URL = "https://epgshare01.online/epgshare01/epg_ripper_%s1.xml.gz"
 
@@ -152,6 +153,38 @@ class Repository(ctx: Context) {
             if (!f.exists()) throw e
         }
         return f
+    }
+
+    // ---------- Aggiornamento dell'app (GitHub Releases) ----------
+
+    /** Ultima release pubblicata su GitHub se è più recente di [current], altrimenti null. */
+    suspend fun latestRelease(current: String): AppUpdate? = withContext(Dispatchers.IO) {
+        val j = JSONObject(httpGet(RELEASES_API))
+        val version = j.optString("tag_name").trimStart('v', 'V')
+        val assets = j.optJSONArray("assets") ?: return@withContext null
+        var url: String? = null
+        for (i in 0 until assets.length()) {
+            val a = assets.getJSONObject(i)
+            if (a.optString("name").endsWith(".apk", true)) url = a.optString("browser_download_url")
+        }
+        if (url == null || !isNewer(version, current)) null else AppUpdate(version, url)
+    }
+
+    /** Scarica l'APK nella cache; l'installazione sopra l'app esistente (stessa firma) conserva tutti i dati. */
+    suspend fun downloadApk(u: AppUpdate, label: String): File = withContext(Dispatchers.IO) {
+        val f = File(dir, "update.apk")
+        download(u.url, f, label, 0f, 1f)
+        f
+    }
+
+    private fun isNewer(a: String, b: String): Boolean {
+        val x = a.split('.').map { it.takeWhile(Char::isDigit).toIntOrNull() ?: 0 }
+        val y = b.split('.').map { it.takeWhile(Char::isDigit).toIntOrNull() ?: 0 }
+        for (i in 0 until maxOf(x.size, y.size)) {
+            val d = x.getOrElse(i) { 0 } - y.getOrElse(i) { 0 }
+            if (d != 0) return d > 0
+        }
+        return false
     }
 
     // ---------- Login ----------

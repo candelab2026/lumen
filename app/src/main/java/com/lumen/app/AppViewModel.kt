@@ -17,6 +17,7 @@ import com.lumen.app.data.EpgStore
 import com.lumen.app.data.Movie
 import com.lumen.app.data.Repository
 import com.lumen.app.data.Series
+import com.lumen.app.data.AppUpdate
 import com.lumen.app.data.Store
 import com.lumen.app.data.normalizeServer
 import kotlinx.coroutines.launch
@@ -61,6 +62,71 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         private set
     var publicEpg by mutableStateOf(store.publicEpg)
         private set
+
+    /** Versione più recente trovata su GitHub (null se aggiornati o non ancora controllato). */
+    var newVersion by mutableStateOf<AppUpdate?>(null)
+        private set
+    /** Avviso temporaneo (5 s) mostrato dopo l'intro; esito dell'ultimo controllo mostrato nelle Impostazioni. */
+    var updateNotice by mutableStateOf<String?>(null)
+        private set
+    var updateStatus by mutableStateOf<String?>(null)
+        private set
+    private var updating = false
+
+    fun clearUpdateNotice() {
+        updateNotice = null
+    }
+
+    /** Controllo automatico ogni 5 aperture; [manual] mostra sempre l'esito nelle Impostazioni. */
+    fun checkAppUpdate(manual: Boolean) {
+        viewModelScope.launch {
+            try {
+                if (manual) updateStatus = s(R.string.upd_checking)
+                val u = repo.latestRelease(BuildConfig.VERSION_NAME)
+                store.markRefreshed("appupdate")
+                newVersion = u
+                updateStatus = if (u == null) s(R.string.upd_uptodate) else null
+                if (u != null && !manual) updateNotice = s(R.string.upd_notice, u.version)
+            } catch (e: Exception) {
+                updateStatus = if (manual) s(R.string.upd_failed, e.message ?: s(R.string.net_error)) else null
+            }
+        }
+    }
+
+    /** Scarica l'APK e apre l'installazione di Android: i dati dell'utente restano (stesso pacchetto e stessa firma). */
+    fun installUpdate() {
+        val u = newVersion ?: return checkAppUpdate(true)
+        if (updating) return
+        val ctx = getApplication<Application>()
+        if (android.os.Build.VERSION.SDK_INT >= 26 && !ctx.packageManager.canRequestPackageInstalls()) {
+            updateStatus = s(R.string.upd_allow)
+            ctx.startActivity(
+                android.content.Intent(android.provider.Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES, android.net.Uri.parse("package:" + ctx.packageName))
+                    .addFlags(android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
+            )
+            return
+        }
+        updating = true
+        updateStatus = null
+        viewModelScope.launch {
+            try {
+                repo.progress = ::reportUpdate
+                val f = repo.downloadApk(u, s(R.string.upd_downloading))
+                update = null
+                val uri = androidx.core.content.FileProvider.getUriForFile(ctx, ctx.packageName + ".fileprovider", f)
+                ctx.startActivity(
+                    android.content.Intent(android.content.Intent.ACTION_VIEW)
+                        .setDataAndType(uri, "application/vnd.android.package-archive")
+                        .addFlags(android.content.Intent.FLAG_GRANT_READ_URI_PERMISSION or android.content.Intent.FLAG_ACTIVITY_NEW_TASK),
+                )
+            } catch (e: Exception) {
+                update = null
+                updateStatus = s(R.string.upd_failed, e.message ?: s(R.string.net_error))
+            } finally {
+                updating = false
+            }
+        }
+    }
 
     var screens by mutableStateOf<List<Screen>>(listOf(Screen.Splash))
         private set
@@ -154,6 +220,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     init {
         store.registerLaunch()
+        if (store.due("appupdate")) checkAppUpdate(false)
         autoStartPending = store.autoStart && store.lastChannel >= 0
         val u = store.user
         val p = store.pass

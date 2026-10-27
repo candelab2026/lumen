@@ -73,4 +73,6 @@ data class AccountInfo(
     val activeConnections: Int,
 )
 
+class AppUpdate(val version: String, val url: String)
+
 class AuthException(message: String) : Exception(message)

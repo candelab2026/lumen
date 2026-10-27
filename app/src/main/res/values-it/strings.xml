@@ -148,4 +148,12 @@
     <string name="help6_b">Ci sono 4 profili. Ognuno ha i suoi preferiti, i canali recenti e i punti di ripresa. Cambia profilo dalle Impostazioni.</string>
     <string name="help7_t">Risoluzione problemi</string>
     <string name="help7_b">Se l\'accesso non riesce, controlla l\'indirizzo del server (compreso http:// e la porta), username e password. Se i canali non partono, controlla la connessione e l\'abbonamento. «Troppe connessioni» significa che l\'account è già in uso su altri dispositivi. Usa «Aggiorna liste e guida TV» nelle Impostazioni per ricaricare tutto.</string>
+    <string name="upd_check_btn">Controlla aggiornamenti</string>
+    <string name="upd_available_btn" formatted="true">Aggiorna l\'app alla %1$s</string>
+    <string name="upd_uptodate">Lumen è aggiornata</string>
+    <string name="upd_notice" formatted="true">Nuova versione %1$s disponibile. Vai in Impostazioni per aggiornare.</string>
+    <string name="upd_downloading">Scaricamento aggiornamento</string>
+    <string name="upd_failed" formatted="true">Aggiornamento non riuscito: %1$s</string>
+    <string name="upd_allow">Consenti a Lumen di installare app, poi premi di nuovo il tasto di aggiornamento</string>
+    <string name="upd_checking">Controllo aggiornamenti…</string>
 </resources>

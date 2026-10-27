@@ -148,4 +148,12 @@
     <string name="help6_b">Es gibt 4 Profile. Jedes speichert eigene Favoriten, zuletzt gesehene Sender und Fortsetzungspunkte. Das Profil wechseln Sie in den Einstellungen.</string>
     <string name="help7_t">Fehlerbehebung</string>
     <string name="help7_b">Schlägt die Anmeldung fehl, prüfen Sie Serveradresse (mit http:// und Port), Benutzernamen und Passwort. Starten Sender nicht, prüfen Sie Verbindung und Abonnement. «Zu viele Verbindungen» bedeutet, dass das Konto auf anderen Geräten genutzt wird. Mit «Listen und TV-Programm aktualisieren» in den Einstellungen wird alles neu geladen.</string>
+    <string name="upd_check_btn">Nach Updates suchen</string>
+    <string name="upd_available_btn" formatted="true">App auf %1$s aktualisieren</string>
+    <string name="upd_uptodate">Lumen ist aktuell</string>
+    <string name="upd_notice" formatted="true">Neue Version %1$s verfügbar. Zum Aktualisieren in die Einstellungen gehen.</string>
+    <string name="upd_downloading">Update wird heruntergeladen</string>
+    <string name="upd_failed" formatted="true">Update fehlgeschlagen: %1$s</string>
+    <string name="upd_allow">Erlauben Sie Lumen das Installieren von Apps und drücken Sie erneut auf Aktualisieren</string>
+    <string name="upd_checking">Suche nach Updates…</string>
 </resources>
