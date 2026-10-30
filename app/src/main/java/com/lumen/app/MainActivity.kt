@@ -71,6 +71,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
+        AppStats.ping(this)
         setContent {
             TvTheme {
                 // testi più grandi per la lettura da lontano (regolabile nelle impostazioni)

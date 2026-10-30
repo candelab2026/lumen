@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+- Anonymous usage count: once a day, on launch, the app sends app name, version, "android" and device language to candelab.net/stats. No identifier, no account or viewing data. See "Privacy" in the README.
+
+## 2.1.3
+
+- Miscellaneous improvements.
+
 ## 2.1.2
 
 - Login screen is now scrollable so the sign-in button is always reachable on phones; keyboard Done signs in.

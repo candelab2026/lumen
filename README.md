@@ -62,6 +62,10 @@ app/src/main/res/values*/strings.xml   translations
 
 Copy `app/src/main/res/values/strings.xml` to `values-<code>/strings.xml` and translate the values. Pull requests are welcome.
 
+## Privacy
+
+Lumen has no account and no built-in server. Once a day, on launch, it sends one anonymous count (`app_open`: app name, version, "android", device language) to `https://candelab.net/stats` to know how many people use which version. It never sends your server address, credentials, channels or anything you watch. The source is `app/src/main/java/com/lumen/app/AppStats.kt`.
+
 ## License
 
 [MIT](LICENSE)

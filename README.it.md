@@ -38,6 +38,10 @@ gradlew.bat :app:assembleDebug
 
 Per l'APK firmato crea `keystore.properties` nella radice (è escluso da git) con `storeFile`, `storePassword`, `keyAlias`, `keyPassword`, poi `gradlew.bat :app:assembleRelease`. Conserva il keystore: serve per aggiornare l'app installata.
 
+## Privacy
+
+Lumen non ha account né server incorporato. Una volta al giorno, all'avvio, invia un conteggio anonimo (`app_open`: nome app, versione, "android", lingua del dispositivo) a `https://candelab.net/stats` per sapere quante persone usano quale versione. Non invia mai indirizzo del server, credenziali, canali o ciò che guardi. Il codice è in `app/src/main/java/com/lumen/app/AppStats.kt`.
+
 ## Licenza
 
 [MIT](LICENSE)
