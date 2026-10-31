@@ -41,6 +41,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material3.Text
+import com.lumen.app.AppStats
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -239,6 +240,8 @@ private fun LiveTab(vm: AppViewModel, active: Boolean) {
 @Composable
 private fun LiveContent(vm: AppViewModel, st: ListState<Channel>, active: Boolean) {
     var query by remember { mutableStateOf("") }
+    val statCtx = LocalContext.current
+    LaunchedEffect(query.isNotBlank()) { if (query.isNotBlank()) AppStats.event(statCtx, "search_used") }
     val favs = vm.favs
     val lFav = stringResource(R.string.cat_favorites)
     val lRec = stringResource(R.string.cat_recent)
@@ -424,6 +427,8 @@ private fun <T> PosterSection(
     onOpen: (T) -> Unit,
 ) {
     var query by remember { mutableStateOf("") }
+    val statCtx = LocalContext.current
+    LaunchedEffect(query.isNotBlank()) { if (query.isNotBlank()) AppStats.event(statCtx, "search_used") }
     val favs = vm.favs
     val sStart = stringResource(R.string.cat_started)
     val sFav = stringResource(R.string.cat_favorites)
@@ -644,6 +649,8 @@ private fun floorHalfHour(t: Long) = t - t % (HOUR / 2)
 @Composable
 private fun GuideTab(vm: AppViewModel) {
     val st = vm.live
+    val statCtx = LocalContext.current
+    LaunchedEffect(Unit) { AppStats.event(statCtx, "epg_opened") }
     when (st.status) {
         Status.Idle, Status.Loading -> Loading()
         Status.Error -> ErrorBox(st.error) { vm.ensureLoaded(4) }

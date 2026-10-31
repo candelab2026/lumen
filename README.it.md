@@ -40,7 +40,7 @@ Per l'APK firmato crea `keystore.properties` nella radice (è escluso da git) co
 
 ## Privacy
 
-Lumen non ha account né server incorporato. Una volta al giorno, all'avvio, invia un conteggio anonimo (`app_open`: nome app, versione, "android", lingua del dispositivo) a `https://candelab.net/stats` per sapere quante persone usano quale versione. Non invia mai indirizzo del server, credenziali, canali o ciò che guardi. Il codice è in `app/src/main/java/com/lumen/app/AppStats.kt`.
+Lumen non ha account né server incorporato. All'avvio (una volta al giorno) e quando usi alcune funzioni (avvio di Live, film o serie, ricerca, preferiti, guida TV, errore di riproduzione) invia un conteggio anonimo (nome fisso dell'evento, nome app, versione, "android", lingua del dispositivo) a `https://candelab.net/stats` per sapere quanto sono usate le funzioni e quali versioni. Non invia mai indirizzo del server, credenziali, canali o ciò che guardi. Il codice è in `app/src/main/java/com/lumen/app/AppStats.kt`.
 
 ## Licenza
 

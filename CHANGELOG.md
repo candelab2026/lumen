@@ -1,8 +1,8 @@
 # Changelog
 
-## Unreleased
+## 2.1.4
 
-- Anonymous usage count: once a day, on launch, the app sends app name, version, "android" and device language to candelab.net/stats. No identifier, no account or viewing data. See "Privacy" in the README.
+- Anonymous usage counts: on launch (once a day) and on a few features (play live/movie/series, search, favorites, TV guide, playback error) the app sends a fixed event name, app name, version, "android" and device language to candelab.net/stats. No identifier, no account or viewing data. See "Privacy" in the README.
 
 ## 2.1.3
 

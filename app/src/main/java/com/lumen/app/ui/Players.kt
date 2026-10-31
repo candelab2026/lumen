@@ -62,6 +62,7 @@ import androidx.media3.datasource.HttpDataSource
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import com.lumen.app.data.AccountInfo
+import com.lumen.app.AppStats
 import androidx.media3.common.PlaybackException
 import androidx.media3.common.Player
 import androidx.media3.common.util.UnstableApi
@@ -317,7 +318,10 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
             }
 
             override fun onPlayerError(e: PlaybackException) {
-                if (ext == "m3u8") ext = "ts" else error = playbackErrorText(ctx, e, vm.account)
+                if (ext == "m3u8") ext = "ts" else {
+                    error = playbackErrorText(ctx, e, vm.account)
+                    AppStats.event(ctx, "player_error")
+                }
             }
         }
         player.addListener(l)
@@ -594,6 +598,7 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
 
             override fun onPlayerError(e: PlaybackException) {
                 error = playbackErrorText(ctx, e, vm.account)
+                AppStats.event(ctx, "player_error")
             }
         }
         player.addListener(l)

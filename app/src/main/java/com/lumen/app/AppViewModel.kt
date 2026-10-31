@@ -432,6 +432,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     // ---------- Preferiti ----------
 
     fun toggleFav(key: String) {
+        if (key !in favs) AppStats.event(getApplication(), "favorite_added")
         favs = if (key in favs) favs - key else favs + key
         store.setFavorites(favs)
     }
@@ -487,9 +488,13 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     // ---------- Riproduzione ----------
 
-    fun playLive(list: List<Channel>, index: Int) = push(Screen.PlayLive(list, index))
+    fun playLive(list: List<Channel>, index: Int) {
+        AppStats.event(getApplication(), "play_live")
+        push(Screen.PlayLive(list, index))
+    }
 
     fun playMovie(m: Movie) {
+        AppStats.event(getApplication(), "play_movie")
         val item = ContinueItem("M${m.id}", m.name, m.poster, "movie", m.id.toString(), m.ext)
         push(Screen.PlayVod(listOf(VodEntry(m.name, repo.movieUrl(m), item.key, item)), 0))
     }
@@ -498,6 +503,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         push(Screen.PlayVod(listOf(VodEntry(c.title, repo.vodUrl(c.kind, c.rid, c.ext), c.key, c)), 0))
 
     fun playEpisodes(s: Series, eps: List<Episode>, index: Int) {
+        AppStats.event(getApplication(), "play_series")
         val entries = eps.map {
             val title = "${s.name}  S${it.season}E${it.num}  ${it.title}"
             val item = ContinueItem("E${it.id}", title, s.cover, "series", it.id, it.ext, s.id.toString())
