@@ -32,6 +32,7 @@
     <string name="home_continue">Weiterschauen</string>
     <string name="resume_from" formatted="true">▶ ab %1$d Min.</string>
     <string name="home_hint_remove">OK (oder Menü) lange auf einem Titel drücken, um ihn zu entfernen</string>
+    <string name="live_hint_fav">OK (oder Menü) lange auf einem Sender drücken, um ihn zu den Favoriten hinzuzufügen</string>
     <string name="home_empty">Zuletzt gesehene Sender sowie begonnene Filme oder Folgen erscheinen hier.\nGehe zu Live-TV, Filme oder Serien, um zu starten.</string>
     <string name="guide_nav_hint">◀ ▶ Zeitfenster ändern    OK Sender ansehen    (Kategorie in Live-TV wählen)</string>
     <string name="guide_no_channels">Keine Sender in dieser Kategorie</string>

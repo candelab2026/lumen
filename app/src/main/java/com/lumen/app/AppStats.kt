@@ -13,7 +13,7 @@ import kotlin.concurrent.thread
 /**
  * Statistiche anonime di utilizzo verso il portale candelab.net/stats: UN "app_open" al giorno più alcune azioni
  * principali (solo il nome fisso dell'azione, es. "play_live"). Si inviano nome dell'app, versione, "android" e lingua
- * del dispositivo: nessun identificativo, nessun dato dell'account, nessun titolo o canale guardato.
+ * del dispositivo: solo un codice casuale anonimo dell'installazione (si azzera disinstallando), nessun dato dell'account, nessun titolo o canale guardato.
  */
 object AppStats {
     private const val ENDPOINT = "https://candelab.net/stats/v1/event"
@@ -46,6 +46,12 @@ object AppStats {
                     .put("platform", "android")
                     .put("version", BuildConfig.VERSION_NAME)
                 if (lang.length == 2) o.put("lang", lang)
+                var iid = p.getString("iid", null)
+                if (iid == null) {
+                    iid = java.util.UUID.randomUUID().toString()
+                    p.edit().putString("iid", iid).apply()
+                }
+                o.put("iid", iid)
 
                 val c = URL(ENDPOINT).openConnection() as HttpURLConnection
                 c.connectTimeout = 10_000

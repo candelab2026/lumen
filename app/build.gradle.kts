@@ -11,7 +11,7 @@ val keystoreProps = Properties().apply {
 }
 
 base {
-    archivesName.set("Lumen-2.1.5")
+    archivesName.set("Lumen-2.1.7")
 }
 
 android {
@@ -22,8 +22,8 @@ android {
         applicationId = "com.lumen.app"
         minSdk = 23
         targetSdk = 34
-        versionCode = 36
-        versionName = "2.1.5" // aggiornare anche archivesName
+        versionCode = 38
+        versionName = "2.1.7" // aggiornare anche archivesName
     }
 
     signingConfigs {

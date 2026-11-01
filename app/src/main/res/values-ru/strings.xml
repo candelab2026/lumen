@@ -32,6 +32,7 @@
     <string name="home_continue">Продолжить просмотр</string>
     <string name="resume_from" formatted="true">▶ с %1$d мин</string>
     <string name="home_hint_remove">Удерживайте OK (или Меню) на названии, чтобы убрать его из списка</string>
+    <string name="live_hint_fav">Удерживайте OK (или Меню) на канале, чтобы добавить его в избранное</string>
     <string name="home_empty">Здесь появятся последние каналы и начатые фильмы или серии.\nПерейдите в «Эфир», «Фильмы» или «Сериалы», чтобы начать.</string>
     <string name="guide_nav_hint">◀ ▶ сменить интервал    OK смотреть канал    (категория выбирается в «Эфире»)</string>
     <string name="guide_no_channels">В этой категории нет каналов</string>

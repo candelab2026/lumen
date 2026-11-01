@@ -20,6 +20,8 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import kotlinx.coroutines.delay
+import androidx.compose.foundation.gestures.detectTapGestures
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.Modifier
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -61,6 +63,11 @@ class MainActivity : ComponentActivity() {
             android.view.KeyEvent.KEYCODE_DPAD_CENTER -> true
             else -> false
         }
+        // OK durante l'animazione iniziale la salta
+        if (!vm.introDone && (event.keyCode == android.view.KeyEvent.KEYCODE_DPAD_CENTER || event.keyCode == android.view.KeyEvent.KEYCODE_ENTER)) {
+            if (event.action == android.view.KeyEvent.ACTION_UP) vm.introDone = true
+            return true
+        }
         if (dpad && !vm.anyFocus && vm.screens.last() is Screen.Home) {
             if (event.action == android.view.KeyEvent.ACTION_DOWN) vm.focusKick++
             return true
@@ -88,10 +95,10 @@ class MainActivity : ComponentActivity() {
 @Composable
 private fun AppRoot(vm: AppViewModel) {
     val top = vm.screens.last()
-    var introDone by remember { mutableStateOf(false) }
+    val introDone = vm.introDone
     LaunchedEffect(Unit) {
         delay(5500)
-        introDone = true
+        vm.introDone = true
     }
     BackHandler(enabled = vm.screens.size > 1) { vm.back() }
     val focusManager = androidx.compose.ui.platform.LocalFocusManager.current
@@ -110,7 +117,9 @@ private fun AppRoot(vm: AppViewModel) {
 
     Box(Modifier.fillMaxSize().background(Bg).onFocusChanged { vm.anyFocus = it.hasFocus }) {
         when {
-            !introDone || top is Screen.Splash -> IntroScreen(vm.expiryText())
+            !introDone || top is Screen.Splash -> Box(
+                Modifier.fillMaxSize().pointerInput(Unit) { detectTapGestures { vm.introDone = true } },
+            ) { IntroScreen(vm.expiryText()) }
             else -> AppContent(vm, top)
         }
         val notice = vm.renewalNotice
@@ -119,7 +128,7 @@ private fun AppRoot(vm: AppViewModel) {
         val upd = vm.update
         androidx.compose.animation.AnimatedVisibility(
             visible = upd != null,
-            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 40.dp, bottom = 24.dp),
+            modifier = Modifier.align(Alignment.BottomEnd).padding(end = 14.dp, bottom = 8.dp),
             enter = androidx.compose.animation.fadeIn() + androidx.compose.animation.slideInVertically { it },
             exit = androidx.compose.animation.fadeOut() + androidx.compose.animation.slideOutVertically { it },
         ) {

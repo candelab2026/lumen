@@ -32,6 +32,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -145,6 +146,7 @@ fun Button(
     primary: Boolean = false,
     fr: FocusRequester? = null,
     strong: Boolean = false,
+    small: Boolean = false,
 ) {
     // strong: testo sempre ben leggibile e bordo visibile anche senza focus (dialoghi)
     val base = if (strong) modifier.border(2.dp, Color(0xFF5A6A8C), RoundedCornerShape(10.dp)) else modifier
@@ -152,11 +154,31 @@ fun Button(
         Text(
             text,
             color = if (f || primary || strong) Color.White else TextDim,
-            fontSize = 18.sp,
+            fontSize = if (small) 14.sp else 18.sp,
             fontWeight = FontWeight.Bold,
+            maxLines = if (small) 1 else Int.MAX_VALUE,
+            softWrap = !small,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
-            modifier = Modifier.align(Alignment.Center).padding(horizontal = 24.dp, vertical = 12.dp),
+            modifier = Modifier.align(Alignment.Center)
+                .padding(horizontal = if (small) 14.dp else 24.dp, vertical = if (small) 8.dp else 12.dp),
         )
+    }
+}
+
+/** Schermo basso (telefono in orizzontale): margini e locandine più piccoli. */
+@Composable
+fun isCompact(): Boolean = androidx.compose.ui.platform.LocalConfiguration.current.screenHeightDp < 500
+
+/** Nasconde barra di stato e tasti di sistema finché il composable è visibile (video a schermo intero sui telefoni). */
+@Composable
+fun Immersive() {
+    val view = androidx.compose.ui.platform.LocalView.current
+    DisposableEffect(view) {
+        val window = (view.context as? android.app.Activity)?.window
+        val ctl = window?.let { androidx.core.view.WindowCompat.getInsetsController(it, view) }
+        ctl?.systemBarsBehavior = androidx.core.view.WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        ctl?.hide(androidx.core.view.WindowInsetsCompat.Type.systemBars())
+        onDispose { ctl?.show(androidx.core.view.WindowInsetsCompat.Type.systemBars()) }
     }
 }
 
@@ -265,24 +287,24 @@ fun UpdateBar(label: String, fraction: Float, modifier: Modifier = Modifier) {
     val done = fraction >= 1f
     Column(
         modifier
-            .width(380.dp)
-            .clip(androidx.compose.foundation.shape.RoundedCornerShape(12.dp))
-            .background(androidx.compose.ui.graphics.Color(0xE6101828))
-            .padding(horizontal = 16.dp, vertical = 12.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+            .width(190.dp)
+            .clip(androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+            .background(androidx.compose.ui.graphics.Color(0xB3101828))
+            .padding(horizontal = 10.dp, vertical = 6.dp),
+        verticalArrangement = Arrangement.spacedBy(4.dp),
     ) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-            Text(label, color = TextMain, fontSize = 13.sp, maxLines = 1)
-            Text("${(shown * 100).toInt()}%", color = if (done) Gold else TextDim, fontSize = 13.sp)
+            Text(label, color = TextMain, fontSize = 10.sp, maxLines = 1)
+            Text("${(shown * 100).toInt()}%", color = if (done) Gold else TextDim, fontSize = 10.sp)
         }
         Box(
-            Modifier.fillMaxWidth().height(8.dp)
-                .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
+            Modifier.fillMaxWidth().height(3.dp)
+                .clip(androidx.compose.foundation.shape.RoundedCornerShape(2.dp))
                 .background(androidx.compose.ui.graphics.Color(0x33FFFFFF)),
         ) {
             Box(
                 Modifier.fillMaxWidth(shown).fillMaxHeight()
-                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(4.dp))
+                    .clip(androidx.compose.foundation.shape.RoundedCornerShape(2.dp))
                     .background(androidx.compose.ui.graphics.Brush.horizontalGradient(listOf(Accent, Violet)))
                     .drawWithContent {
                         drawContent()

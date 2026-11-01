@@ -32,6 +32,7 @@
     <string name="home_continue">Seguir viendo</string>
     <string name="resume_from" formatted="true">▶ desde %1$d min</string>
     <string name="home_hint_remove">Mantén pulsado OK (o Menú) en un título para quitarlo de la lista</string>
+    <string name="live_hint_fav">Mantén pulsado OK (o Menú) en un canal para añadirlo a favoritos</string>
     <string name="home_empty">Aquí aparecerán los últimos canales vistos y las películas o episodios que hayas empezado.\nVe a TV en vivo, Películas o Series para empezar.</string>
     <string name="guide_nav_hint">◀ ▶ cambiar franja    OK ver canal    (la categoría se elige en TV en vivo)</string>
     <string name="guide_no_channels">Sin canales en esta categoría</string>

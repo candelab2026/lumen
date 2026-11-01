@@ -59,6 +59,7 @@ import androidx.media3.common.MediaItem
 import androidx.media3.common.TrackSelectionOverride
 import androidx.media3.common.Tracks
 import androidx.media3.datasource.HttpDataSource
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import com.lumen.app.data.AccountInfo
@@ -282,6 +283,8 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
     var prevIndex by remember { mutableIntStateOf(-1) }
     var sleepMin by remember { mutableIntStateOf(0) }
     val fr = remember { FocusRequester() }
+    val compact = isCompact()
+    Immersive()
 
     fun goTo(i: Int) {
         if (i != index && i in channels.indices) {
@@ -479,13 +482,13 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
                 if (next != null) {
                     Text(stringResource(R.string.next) + "  ${fmtTime(next.start)}-${fmtTime(next.stop)}  ${next.title}", color = TextDim, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(stringResource(R.string.btn_exit), { vm.back() })
-                    Button("▲", { zapPrev(); overlayTick++ })
-                    Button("▼", { zapNext(); overlayTick++ })
-                    Button(stringResource(R.string.channels), { panel = 1 })
-                    Button(stringResource(R.string.guide), { panel = 2 })
-                    Button(stringResource(R.string.options), { panel = 3 })
+                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(stringResource(R.string.btn_exit), { vm.back() }, small = compact)
+                    Button("▲", { zapPrev(); overlayTick++ }, small = compact)
+                    Button("▼", { zapNext(); overlayTick++ }, small = compact)
+                    Button(stringResource(R.string.channels), { panel = 1 }, small = compact)
+                    Button(stringResource(R.string.guide), { panel = 2 }, small = compact)
+                    Button(stringResource(R.string.options), { panel = 3 }, small = compact)
                 }
                 Text(
                     stringResource(R.string.live_hint),
@@ -528,7 +531,7 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
                 if (prevIndex >= 0) {
                     OptionRow(stringResource(R.string.prev_channel, channels[prevIndex].name), { toPrevious(); panel = 0 })
                 }
-                OptionRow(if (isFav) "★ Rimuovi dai preferiti" else "☆ Aggiungi ai preferiti", { vm.toggleFav("L${ch.id}") })
+                OptionRow(stringResource(if (isFav) R.string.btn_in_favs else R.string.btn_add_fav), { vm.toggleFav("L${ch.id}") })
             }
         }
 
@@ -571,6 +574,8 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
     val fr = remember { FocusRequester() }
     var optOpen by remember { mutableStateOf(false) }
     var sleepMin by remember { mutableIntStateOf(0) }
+    val compact = isCompact()
+    Immersive()
     SleepTimer(sleepMin, player) { vm.back() }
     BackHandler(enabled = optOpen) { optOpen = false }
 
@@ -729,13 +734,13 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
                         Box(Modifier.fillMaxWidth(frac).fillMaxHeight().background(Accent))
                     }
                 }
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Button(stringResource(R.string.btn_exit), { vm.back() })
-                    Button("⏪ 10s", { seek(-10_000L) })
-                    Button(if (playing) stringResource(R.string.btn_pause) else stringResource(R.string.btn_resume), { player.playWhenReady = !player.playWhenReady; overlayTick++ })
-                    Button("10s ⏩", { seek(10_000L) })
-                    if (idx + 1 < req.entries.size) Button(stringResource(R.string.btn_next), { idx++ })
-                    Button(stringResource(R.string.options), { optOpen = true })
+                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Button(stringResource(R.string.btn_exit), { vm.back() }, small = compact)
+                    Button("⏪ 10s", { seek(-10_000L) }, small = compact)
+                    Button(if (playing) stringResource(R.string.btn_pause) else stringResource(R.string.btn_resume), { player.playWhenReady = !player.playWhenReady; overlayTick++ }, small = compact)
+                    Button("10s ⏩", { seek(10_000L) }, small = compact)
+                    if (idx + 1 < req.entries.size) Button(stringResource(R.string.btn_next), { idx++ }, small = compact)
+                    Button(stringResource(R.string.options), { optOpen = true }, small = compact)
                 }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("${fmtClock(pos)} / ${fmtClock(dur)}", color = TextDim, fontSize = 13.sp)

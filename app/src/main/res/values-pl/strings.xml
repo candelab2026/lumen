@@ -32,6 +32,7 @@
     <string name="home_continue">Kontynuuj oglądanie</string>
     <string name="resume_from" formatted="true">▶ od %1$d min</string>
     <string name="home_hint_remove">Przytrzymaj OK (lub Menu) na tytule, aby usunąć go z listy</string>
+    <string name="live_hint_fav">Przytrzymaj OK (lub Menu) na kanale, aby dodać go do ulubionych</string>
     <string name="home_empty">Tutaj pojawią się ostatnio oglądane kanały oraz rozpoczęte filmy i odcinki.\nPrzejdź do TV na żywo, Filmów lub Seriali, aby zacząć.</string>
     <string name="guide_nav_hint">◀ ▶ zmień przedział    OK oglądaj kanał    (kategorię wybierasz w TV na żywo)</string>
     <string name="guide_no_channels">Brak kanałów w tej kategorii</string>

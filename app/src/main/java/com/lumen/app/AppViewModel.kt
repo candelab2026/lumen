@@ -62,6 +62,8 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         private set
     var publicEpg by mutableStateOf(store.publicEpg)
         private set
+    /** Animazione iniziale finita (o saltata con OK / un tocco). */
+    var introDone by mutableStateOf(false)
 
     /** Versione più recente trovata su GitHub (null se aggiornati o non ancora controllato). */
     var newVersion by mutableStateOf<AppUpdate?>(null)

@@ -1,6 +1,7 @@
 package com.lumen.app.ui
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.horizontalScroll
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.layout.Arrangement
@@ -65,20 +66,21 @@ object DetailScreens {
         LaunchedEffect(Unit) { runCatching { playFr.requestFocus() } }
         val key = "M${m.id}"
         val resume = vm.store.resume(key)
+        val compact = isCompact()
 
         Box(Modifier.fillMaxSize().background(Bg)) {
             Backdrop(info?.backdrop)
-            Row(Modifier.fillMaxSize().padding(40.dp), horizontalArrangement = Arrangement.spacedBy(28.dp)) {
-                Poster(m.poster, Modifier.width(190.dp))
-                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                    Text(m.name, color = TextMain, fontSize = 26.sp, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            Row(Modifier.fillMaxSize().padding(if (compact) 16.dp else 40.dp), horizontalArrangement = Arrangement.spacedBy(if (compact) 16.dp else 28.dp)) {
+                Poster(m.poster, Modifier.width(if (compact) 110.dp else 190.dp))
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(if (compact) 6.dp else 10.dp)) {
+                    Text(m.name, color = TextMain, fontSize = if (compact) 20.sp else 26.sp, fontWeight = FontWeight.Bold, maxLines = if (compact) 1 else 2, overflow = TextOverflow.Ellipsis)
                     val meta = listOfNotNull(info?.year, info?.duration, info?.genre, m.rating?.let { "★ $it" }).joinToString("  •  ")
                     if (meta.isNotEmpty()) Text(meta, color = TextDim, fontSize = 14.sp)
                     // i tasti stanno subito sotto il titolo: la trama lunga scorre (anche col dito) senza nasconderli
-                    Row(horizontalArrangement = Arrangement.spacedBy(12.dp)) {
-                        Button(if (resume > 30_000) stringResource(R.string.btn_resume_at, fmtClock(resume)) else stringResource(R.string.btn_play), onClick = { vm.playMovie(m) }, primary = true, fr = playFr)
-                        if (resume > 30_000) Button(stringResource(R.string.btn_from_start), onClick = { vm.store.clearResume(key); vm.playMovie(m) })
-                        Button(if (key in vm.favs) stringResource(R.string.btn_in_favs) else stringResource(R.string.btn_add_fav), onClick = { vm.toggleFav(key) })
+                    Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+                        Button(if (resume > 30_000) stringResource(R.string.btn_resume_at, fmtClock(resume)) else stringResource(R.string.btn_play), onClick = { vm.playMovie(m) }, primary = true, fr = playFr, small = compact)
+                        if (resume > 30_000) Button(stringResource(R.string.btn_from_start), onClick = { vm.store.clearResume(key); vm.playMovie(m) }, small = compact)
+                        Button(if (key in vm.favs) stringResource(R.string.btn_in_favs) else stringResource(R.string.btn_add_fav), onClick = { vm.toggleFav(key) }, small = compact)
                     }
                     Column(Modifier.weight(1f).noFocus().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                         info?.plot?.let { Text(it, color = TextMain, fontSize = 14.sp) }
@@ -107,18 +109,21 @@ object DetailScreens {
         val firstFr = remember { FocusRequester() }
         LaunchedEffect(detail) { if (detail != null) runCatching { firstFr.requestFocus() } }
 
+        val compact = isCompact()
+
         Box(Modifier.fillMaxSize().background(Bg)) {
             Backdrop(detail?.backdrop)
-            Row(Modifier.fillMaxSize().padding(40.dp), horizontalArrangement = Arrangement.spacedBy(28.dp)) {
-                Column(Modifier.width(190.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+            Row(Modifier.fillMaxSize().padding(if (compact) 16.dp else 40.dp), horizontalArrangement = Arrangement.spacedBy(if (compact) 16.dp else 28.dp)) {
+                // su schermi bassi la colonna scorre: il pulsante Preferiti resta sempre raggiungibile
+                Column(Modifier.width(if (compact) 110.dp else 190.dp).noFocus().verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(10.dp)) {
                     Poster(s.cover, Modifier.fillMaxWidth())
-                    Button(if (key in vm.favs) stringResource(R.string.btn_fav_short) else stringResource(R.string.btn_add_fav), onClick = { vm.toggleFav(key) }, modifier = Modifier.fillMaxWidth())
+                    Button(if (key in vm.favs) stringResource(R.string.btn_fav_short) else stringResource(R.string.btn_add_fav), onClick = { vm.toggleFav(key) }, modifier = Modifier.fillMaxWidth(), small = compact)
                 }
-                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                    Text(s.name, color = TextMain, fontSize = 26.sp, fontWeight = FontWeight.Bold, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                Column(Modifier.weight(1f), verticalArrangement = Arrangement.spacedBy(if (compact) 4.dp else 8.dp)) {
+                    Text(s.name, color = TextMain, fontSize = if (compact) 20.sp else 26.sp, fontWeight = FontWeight.Bold, maxLines = if (compact) 1 else 2, overflow = TextOverflow.Ellipsis)
                     val meta = listOfNotNull(detail?.year, detail?.genre, s.rating?.let { "★ $it" }).joinToString("  •  ")
                     if (meta.isNotEmpty()) Text(meta, color = TextDim, fontSize = 14.sp)
-                    (detail?.plot ?: s.plot)?.let { Text(it, color = TextMain, fontSize = 13.sp, maxLines = 3, overflow = TextOverflow.Ellipsis) }
+                    (detail?.plot ?: s.plot)?.let { Text(it, color = TextMain, fontSize = 13.sp, maxLines = if (compact) 1 else 3, overflow = TextOverflow.Ellipsis) }
 
                     val d = detail
                     when {

@@ -64,7 +64,7 @@ Copy `app/src/main/res/values/strings.xml` to `values-<code>/strings.xml` and tr
 
 ## Privacy
 
-Lumen has no account and no built-in server. On launch (once a day) and when you use a few features (starting Live, a movie or a series, search, favorites, TV guide, a playback error) it sends an anonymous count (fixed event name, app name, version, "android", device language) to `https://candelab.net/stats` to know how much features are used and which versions. It never sends your server address, credentials, channels or anything you watch. The source is `app/src/main/java/com/lumen/app/AppStats.kt`.
+Lumen has no account and no built-in server. On launch (once a day) and when you use a few features (starting Live, a movie or a series, search, favorites, TV guide, a playback error) it sends an anonymous count (fixed event name, app name, version, "android", device language) to `https://candelab.net/stats` to know how much features are used and which versions. Each install has a random anonymous ID (no link to you or your device), used only to count installs and active users. It never sends your server address, credentials, channels or anything you watch. The source is `app/src/main/java/com/lumen/app/AppStats.kt`.
 
 ## License
 

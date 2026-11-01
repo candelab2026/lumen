@@ -32,6 +32,7 @@
     <string name="home_continue">Verder kijken</string>
     <string name="resume_from" formatted="true">▶ vanaf %1$d min</string>
     <string name="home_hint_remove">Houd OK (of Menu) ingedrukt op een titel om hem uit de lijst te halen</string>
+    <string name="live_hint_fav">Houd OK (of Menu) ingedrukt op een zender om hem aan favorieten toe te voegen</string>
     <string name="home_empty">Hier verschijnen recent bekeken zenders en de films of afleveringen die je begon.\nGa naar Live-tv, Films of Series om te beginnen.</string>
     <string name="guide_nav_hint">◀ ▶ ander tijdvak    OK kanaal kijken    (categorie kies je in Live-tv)</string>
     <string name="guide_no_channels">Geen zenders in deze categorie</string>

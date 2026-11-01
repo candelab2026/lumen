@@ -32,6 +32,7 @@
     <string name="home_continue">Reprendre la lecture</string>
     <string name="resume_from" formatted="true">▶ à %1$d min</string>
     <string name="home_hint_remove">Maintenez OK (ou Menu) sur un titre pour le retirer de la liste</string>
+    <string name="live_hint_fav">Maintenez OK (ou Menu) sur une chaîne pour l\'ajouter aux favoris</string>
     <string name="home_empty">Les dernières chaînes regardées et les films ou épisodes commencés apparaîtront ici.\nAllez dans TV en direct, Films ou Séries pour commencer.</string>
     <string name="guide_nav_hint">◀ ▶ changer de plage    OK regarder la chaîne    (catégorie à choisir dans TV en direct)</string>
     <string name="guide_no_channels">Aucune chaîne dans cette catégorie</string>

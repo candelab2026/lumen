@@ -32,6 +32,7 @@
     <string name="home_continue">İzlemeye devam et</string>
     <string name="resume_from" formatted="true">▶ %1$d dk.\'dan</string>
     <string name="home_hint_remove">Listeden kaldırmak için bir başlıkta OK (veya Menü) tuşuna uzun basın</string>
+    <string name="live_hint_fav">Favorilere eklemek için bir kanalda OK (veya Menü) tuşuna uzun basın</string>
     <string name="home_empty">Son izlenen kanallar ile başladığın film veya bölümler burada görünür.\nBaşlamak için Canlı TV, Filmler veya Diziler\'e git.</string>
     <string name="guide_nav_hint">◀ ▶ zaman aralığı    OK kanalı izle    (kategori Canlı TV\'den seçilir)</string>
     <string name="guide_no_channels">Bu kategoride kanal yok</string>

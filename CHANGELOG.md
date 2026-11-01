@@ -1,5 +1,18 @@
 # Changelog
 
+## 2.1.7
+
+- Phones: full-screen video (system bars hidden while playing).
+- Phones: « » buttons in the TV guide to change the time slot by touch.
+- Phones: compact layout for home, movie and series pages; the series Favorites button is always reachable.
+- Player buttons scroll instead of going off-screen.
+- The intro animation can be skipped with OK or a tap.
+- Hint for adding channels to favorites; translated favorites option in the live player.
+
+## 2.1.6
+
+- Anonymous random install ID in the usage counts, to count installs and active users.
+
 ## 2.1.5
 
 - Fixed an out-of-memory crash while refreshing the TV guide.

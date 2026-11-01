@@ -100,7 +100,7 @@ fun HomeScreen(vm: AppViewModel, active: Boolean) {
         Modifier
             .fillMaxSize()
             .focusProperties { if (!active) canFocus = false }
-            .padding(horizontal = 40.dp, vertical = 20.dp),
+            .padding(horizontal = if (isCompact()) 16.dp else 40.dp, vertical = if (isCompact()) 10.dp else 20.dp),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
             Logo(size = 22)
@@ -162,7 +162,7 @@ fun HomeScreen(vm: AppViewModel, active: Boolean) {
         Text(
             stringResource(R.string.expires_on, java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT).format(Date(exp))),
             color = Gold, fontSize = 11.sp, maxLines = 1,
-            modifier = Modifier.align(Alignment.TopEnd).padding(top = 3.dp, end = 40.dp),
+            modifier = Modifier.align(Alignment.TopEnd).padding(top = 3.dp, end = if (isCompact()) 16.dp else 40.dp),
         )
     }
     }
@@ -270,7 +270,7 @@ private fun LiveContent(vm: AppViewModel, st: ListState<Channel>, active: Boolea
     }
 
     Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        Column(Modifier.width(200.dp)) {
+        Column(Modifier.width(if (isCompact()) 150.dp else 200.dp)) {
             TvTextField(query, { query = it }, stringResource(R.string.search_channel), Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             CategoryList(entries, vm.liveCat, onFocusCat = { vm.liveCat = it }, onPick = {
@@ -307,13 +307,16 @@ private fun LiveContent(vm: AppViewModel, st: ListState<Channel>, active: Boolea
                     },
                 )
             } else {
-                LazyColumn(
-                    Modifier.noFocus().fillMaxSize(), state = listState,
-                    verticalArrangement = Arrangement.spacedBy(4.dp), contentPadding = PaddingValues(vertical = 4.dp),
-                ) {
-                    itemsIndexed(shown, key = { _, c -> c.id }) { i, ch ->
-                        ChannelRow(vm, ch, shown, i, active, jumpTick)
+                Column(Modifier.fillMaxSize()) {
+                    LazyColumn(
+                        Modifier.noFocus().fillMaxWidth().weight(1f), state = listState,
+                        verticalArrangement = Arrangement.spacedBy(4.dp), contentPadding = PaddingValues(vertical = 4.dp),
+                    ) {
+                        itemsIndexed(shown, key = { _, c -> c.id }) { i, ch ->
+                            ChannelRow(vm, ch, shown, i, active, jumpTick)
+                        }
                     }
+                    Text(stringResource(R.string.live_hint_fav), color = TextDim, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 4.dp))
                 }
             }
         }
@@ -471,7 +474,7 @@ private fun <T> PosterSection(
     }
 
     Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-        Column(Modifier.width(200.dp)) {
+        Column(Modifier.width(if (isCompact()) 150.dp else 200.dp)) {
             TvTextField(query, { query = it }, stringResource(R.string.search), Modifier.fillMaxWidth())
             Spacer(Modifier.height(8.dp))
             CategoryList(entries, selCat, onFocusCat = setCat, onPick = {
@@ -509,7 +512,7 @@ private fun <T> PosterSection(
                 )
             } else {
                 LazyVerticalGrid(
-                    columns = GridCells.Fixed(5),
+                    columns = GridCells.Fixed(if (isCompact()) 4 else 5),
                     state = gridState,
                     modifier = Modifier.noFocus().fillMaxSize(),
                     contentPadding = PaddingValues(6.dp),
@@ -669,24 +672,32 @@ private fun GuideContent(vm: AppViewModel, st: ListState<Channel>) {
         else -> st.cats.firstOrNull { it.id == vm.liveCat }?.name ?: ""
     }
     val dayFmt = remember { SimpleDateFormat("EEE d MMM", Locale.getDefault()) }
+    fun shift(h: Int) {
+        val now = floorHalfHour(System.currentTimeMillis())
+        start = (start + h * HOUR).coerceIn(now - 2 * HOUR, now + 24 * HOUR)
+    }
 
     Column(
         Modifier.fillMaxSize().onPreviewKeyEvent { ev ->
             if (ev.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
-            val now = floorHalfHour(System.currentTimeMillis())
             when (ev.key) {
-                Key.DirectionRight -> { start = (start + HOUR).coerceAtMost(now + 24 * HOUR); true }
-                Key.DirectionLeft -> { start = (start - HOUR).coerceAtLeast(now - 2 * HOUR); true }
+                Key.DirectionRight -> { shift(1); true }
+                Key.DirectionLeft -> { shift(-1); true }
                 else -> false
             }
         },
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
-            Text(
-                "$catName  ·  ${dayFmt.format(Date(start))}",
-                color = TextMain, fontSize = 15.sp, fontWeight = FontWeight.SemiBold,
-                modifier = Modifier.width(250.dp), maxLines = 1, overflow = TextOverflow.Ellipsis,
-            )
+            // « » per il touch: col telecomando bastano ◀ ▶
+            Row(Modifier.width(250.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                Button("«", { shift(-1) }, small = true)
+                Button("»", { shift(1) }, small = true)
+                Text(
+                    "$catName  ·  ${dayFmt.format(Date(start))}",
+                    color = TextMain, fontSize = 15.sp, fontWeight = FontWeight.SemiBold,
+                    maxLines = 1, overflow = TextOverflow.Ellipsis,
+                )
+            }
             Row(Modifier.weight(1f)) {
                 for (i in 0 until 6) {
                     Text(fmtTime(start + i * HOUR / 2), color = TextDim, fontSize = 12.sp, modifier = Modifier.weight(1f))
