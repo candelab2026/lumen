@@ -1,12 +1,13 @@
 # Changelog
 
+## 2.1.5
+
+- Fixed an out-of-memory crash while refreshing the TV guide.
+- Miscellaneous improvements.
+
 ## 2.1.4
 
 - Anonymous usage counts: on launch (once a day) and on a few features (play live/movie/series, search, favorites, TV guide, playback error) the app sends a fixed event name, app name, version, "android" and device language to candelab.net/stats. No identifier, no account or viewing data. See "Privacy" in the README.
-
-## 2.1.4
-
-- Miscellaneous improvements.
 
 ## 2.1.3
 
