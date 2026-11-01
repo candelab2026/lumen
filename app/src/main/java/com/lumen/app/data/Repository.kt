@@ -494,8 +494,9 @@ class Repository(ctx: Context) {
      */
     private fun scanXmltv(
         input: java.io.InputStream,
-        sb: StringBuilder,
+        sb: java.io.Writer,
         keyPrefix: String,
+        have: MutableSet<String>? = null,
         isWanted: (String) -> Boolean,
         onChannel: ((String, String) -> Unit)? = null,
         onProgrammes: (() -> Unit)? = null,
@@ -530,11 +531,12 @@ class Repository(ctx: Context) {
                         keep = stop > now - 2 * HOUR && start < now + 36 * HOUR && isWanted(chan)
                     }
                     "title" -> if (keep && title.isEmpty()) title = flat(parser.nextText())
-                    "desc" -> if (keep && desc.isEmpty()) desc = flat(parser.nextText())
+                    "desc" -> if (keep && desc.isEmpty()) desc = flat(parser.nextText()).take(400)
                 }
             } else if (ev == XmlPullParser.END_TAG && parser.name == "programme" && keep) {
-                sb.append(keyPrefix).append(chan).append('\t').append(start).append('\t').append(stop).append('\t')
+                sb.append(keyPrefix).append(chan).append('\t').append(start.toString()).append('\t').append(stop.toString()).append('\t')
                     .append(title).append('\t').append(desc).append('\n')
+                have?.add(chan)
                 keep = false
             }
             ev = parser.next()
@@ -548,16 +550,15 @@ class Repository(ctx: Context) {
     suspend fun refreshEpg(channels: List<Channel>): Map<String, List<Programme>> = withContext(Dispatchers.IO) {
         val wanted = channels.mapNotNull { it.epgId }.filter { !it.startsWith(EXT) }.toSet()
         if (channels.isEmpty()) return@withContext emptyMap()
-        val sb = StringBuilder()
         val have = HashSet<String>()
+        val outFile = File(dir, "epg_new.tmp")
+        val sb = outFile.bufferedWriter(Charsets.UTF_8)
+        try {
         if (wanted.isNotEmpty()) {
             val xml = File(dir, "xmltv.xml")
             download("$base/xmltv.php?username=${Uri.encode(user)}&password=${Uri.encode(pass)}", xml, app.getString(R.string.upd_server_guide), 0.3f, 0.7f)
             try {
-                val tmp = StringBuilder()
-                BufferedInputStream(FileInputStream(xml), 64 * 1024).use { scanXmltv(it, tmp, "", { c -> c in wanted }) }
-                sb.append(tmp)
-                tmp.lineSequence().forEach { l -> l.substringBefore('	').takeIf { it.isNotEmpty() }?.let(have::add) }
+                BufferedInputStream(FileInputStream(xml), 64 * 1024).use { scanXmltv(it, sb, "", have = have, isWanted = { c -> c in wanted }) }
             } finally {
                 xml.delete()
             }
@@ -574,7 +575,7 @@ class Repository(ctx: Context) {
                     val ids = HashSet<String>()
                     java.util.zip.GZIPInputStream(BufferedInputStream(FileInputStream(gz), 64 * 1024)).use { gin ->
                         scanXmltv(
-                            gin, sb, EXT, { c -> c in ids },
+                            gin, sb, EXT, isWanted = { c -> c in ids },
                             onChannel = { id, name ->
                                 names.putIfAbsent(epgKey(name), id)
                                 names.putIfAbsent(epgKey(id.replace(Regex("\\.[a-z]{2}$"), "")), id)
@@ -601,7 +602,14 @@ class Repository(ctx: Context) {
             aliasFile.writeText("")
         }
         progress?.invoke(app.getString(R.string.upd_saving), 0.97f)
-        epgFile.writeText(sb.toString())
+        } finally {
+            sb.close()
+        }
+        epgFile.delete()
+        if (!outFile.renameTo(epgFile)) {
+            outFile.copyTo(epgFile, overwrite = true)
+            outFile.delete()
+        }
         loadEpgCache()
     }
 
