@@ -82,7 +82,7 @@ import com.lumen.app.data.Programme
 import kotlinx.coroutines.delay
 
 @Composable
-private fun rememberPlayer(): ExoPlayer {
+private fun rememberPlayer(tap: com.lumen.app.RecTap? = null): ExoPlayer {
     val ctx = LocalContext.current
     val player = remember {
         val http = DefaultHttpDataSource.Factory()
@@ -90,8 +90,15 @@ private fun rememberPlayer(): ExoPlayer {
             .setAllowCrossProtocolRedirects(true)
             .setConnectTimeoutMs(15_000)
             .setReadTimeoutMs(20_000)
+        // DefaultDataSource legge anche i file locali (registrazioni); col tap i byte letti finiscono anche su file
+        val net = androidx.media3.datasource.DefaultDataSource.Factory(ctx, http)
+        // gli indirizzi lumen-ts:// sono il file della differita (pausa della diretta)
+        val base = androidx.media3.datasource.DataSource.Factory { com.lumen.app.RoutingDataSource(net) }
+        val factory: androidx.media3.datasource.DataSource.Factory = if (tap == null) base else androidx.media3.datasource.DataSource.Factory {
+            androidx.media3.datasource.TeeDataSource(base.createDataSource(), com.lumen.app.TapSink(tap))
+        }
         ExoPlayer.Builder(ctx)
-            .setMediaSourceFactory(DefaultMediaSourceFactory(http))
+            .setMediaSourceFactory(DefaultMediaSourceFactory(factory))
             .setLoadControl(DefaultLoadControl.Builder().setBufferDurationsMs(15_000, 50_000, 1_500, 3_000).build())
             .build()
     }
@@ -119,6 +126,7 @@ private fun VideoSurface(player: ExoPlayer) {
                 this.player = player
                 resizeMode = AspectRatioFrameLayout.RESIZE_MODE_FIT
                 setShowBuffering(PlayerView.SHOW_BUFFERING_NEVER)
+                setKeepContentOnPlayerReset(true)
                 isFocusable = false
                 descendantFocusability = android.view.ViewGroup.FOCUS_BLOCK_DESCENDANTS
             }
@@ -267,7 +275,8 @@ private fun OptionsPanel(
 
 @Composable
 fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
-    val player = rememberPlayer()
+    val tap = remember { com.lumen.app.RecTap() }
+    val player = rememberPlayer(tap)
     val ctx = LocalContext.current
     val channels = req.channels
     var index by remember { mutableIntStateOf(req.index.coerceIn(0, channels.lastIndex)) }
@@ -292,11 +301,146 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
             index = i
         }
     }
+    // ---------- registrazione ----------
+    var recName by remember { mutableStateOf<String?>(null) }
+    var recStart by remember { mutableLongStateOf(0L) }
+    var recStopAt by remember { mutableLongStateOf(0L) }
+    var recNotice by remember { mutableStateOf<String?>(null) }
+    var recClock by remember { mutableLongStateOf(0L) }
+    val recFile = remember { arrayOfNulls<java.io.File>(1) }
+
+    fun stopRec(msg: String? = null) {
+        val n = recName ?: return
+        tap.stop()
+        recFile[0]?.let { com.lumen.app.Recorder.finish(ctx, it) }
+        recFile[0] = null
+        recName = null
+        recStopAt = 0L
+        recNotice = msg ?: ctx.getString(R.string.rec_saved, n)
+    }
+
+    fun startRec(title: String?, progStop: Long?) {
+        if (recName != null) return
+        val name = com.lumen.app.Recorder.baseName(channels[index].name, title)
+        val file = com.lumen.app.Recorder.begin(ctx, name)
+        val out = try { file.outputStream() } catch (e: Exception) { null }
+        if (out == null) {
+            recNotice = ctx.getString(R.string.rec_open_failed)
+            return
+        }
+        com.lumen.app.Recorder.askPermission(ctx)
+        tap.start(out)
+        recFile[0] = file
+        recName = name
+        recStart = System.currentTimeMillis()
+        // si ferma da sola 2 minuti dopo la fine del programma (se la guida lo conosce)
+        recStopAt = progStop?.plus(120_000L) ?: 0L
+        AppStats.event(ctx, "record_started")
+    }
+    // uscendo dal player la registrazione si chiude e parte la conversione
+    DisposableEffect(Unit) {
+        onDispose {
+            tap.stop()
+            recFile[0]?.let { com.lumen.app.Recorder.finish(ctx, it) }
+            recFile[0] = null
+        }
+    }
+    LaunchedEffect(recName) {
+        while (recName != null) {
+            recClock = System.currentTimeMillis()
+            tap.error?.let { stopRec(ctx.getString(R.string.rec_failed, it)) }
+            if (recStopAt in 1..recClock) stopRec()
+            delay(1_000)
+        }
+    }
+    LaunchedEffect(recNotice) {
+        if (recNotice != null) {
+            delay(5_000)
+            recNotice = null
+        }
+    }
+
     fun zapNext() = goTo((index + 1) % channels.size)
     fun zapPrev() = goTo((index - 1 + channels.size) % channels.size)
     fun toPrevious() { if (prevIndex >= 0) goTo(prevIndex) }
     SleepTimer(sleepMin, player) { vm.back() }
 
+    // ---------- pausa della diretta: 0 in diretta, 1 in pausa (si scarica su file), 2 in differita ----------
+    var tsMode by remember { mutableIntStateOf(0) }
+    var shift by remember { mutableStateOf<com.lumen.app.Timeshift?>(null) }
+    var delayMs by remember { mutableLongStateOf(0L) }
+    var pauseStart by remember { mutableLongStateOf(0L) }
+    var shiftClock by remember { mutableLongStateOf(0L) }
+
+    fun endShift() {
+        shift?.close()
+        shift = null
+        tsMode = 0
+        delayMs = 0L
+    }
+
+    fun goLive() {
+        if (tsMode == 0) return
+        endShift()
+        retry++
+    }
+
+    fun pauseLive() {
+        val now = System.currentTimeMillis()
+        when (tsMode) {
+            0 -> {
+                val dir = ctx.externalCacheDir ?: ctx.cacheDir
+                val t = com.lumen.app.Timeshift(java.io.File(dir, "timeshift.ts"))
+                // il player chiude la sua connessione: da qui in poi il canale arriva solo nel file
+                player.stop()
+                t.start(vm.repo.liveUrl(channels[index], "ts"), Config.USER_AGENT)
+                shift = t
+                delayMs = 0L
+                tsMode = 1
+                pauseStart = now
+            }
+            2 -> {
+                player.playWhenReady = false
+                tsMode = 1
+                pauseStart = now
+            }
+        }
+    }
+
+    fun resumeLive() {
+        if (tsMode != 1) return
+        val t = shift ?: return goLive()
+        delayMs += System.currentTimeMillis() - pauseStart
+        if (player.currentMediaItem?.localConfiguration?.uri?.scheme != com.lumen.app.Timeshift.SCHEME) {
+            player.setMediaItem(MediaItem.Builder().setUri(t.uri).setMimeType(androidx.media3.common.MimeTypes.VIDEO_MP2T).build())
+            player.prepare()
+        }
+        player.playWhenReady = true
+        tsMode = 2
+    }
+
+    fun togglePause() = if (tsMode == 1) resumeLive() else pauseLive()
+
+    DisposableEffect(Unit) { onDispose { shift?.close() } }
+    LaunchedEffect(shift) {
+        val t = shift ?: return@LaunchedEffect
+        while (true) {
+            shiftClock = System.currentTimeMillis()
+            // il server non dà il flusso .ts (solo HLS) o ha rifiutato la connessione: si torna in diretta
+            if (t.done && t.written == 0L) {
+                recNotice = ctx.getString(R.string.ts_failed)
+                goLive()
+                break
+            }
+            delay(500)
+        }
+    }
+
+    // cambiando canale la registrazione in corso si chiude (il file conterrebbe un altro programma)
+    LaunchedEffect(ch.id) {
+        if (recName != null) stopRec()
+        if (shift != null) endShift()
+    }
     LaunchedEffect(ch.id, ext, retry) {
         error = null
         buffering = true
@@ -318,9 +462,15 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
         val l = object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
                 buffering = state == Player.STATE_BUFFERING || state == Player.STATE_IDLE
+                // differita finita (file non più alimentato): si torna in diretta
+                if (state == Player.STATE_ENDED && tsMode == 2) goLive()
             }
 
             override fun onPlayerError(e: PlaybackException) {
+                if (tsMode != 0) {
+                    goLive()
+                    return
+                }
                 if (ext == "m3u8") ext = "ts" else {
                     error = playbackErrorText(ctx, e, vm.account)
                     AppStats.event(ctx, "player_error")
@@ -397,12 +547,23 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
                     ev.key == Key.DirectionLeft -> { if (down && first) panel = 1; true }
                     ev.key == Key.DirectionRight -> { if (down && first) panel = 2; true }
                     ev.key == Key.DirectionCenter || ev.key == Key.Enter || ev.key == Key.NumPadEnter -> {
-                        if (down && first) { if (overlay) panel = 1 else overlayTick++ }
+                        if (down && first) { if (tsMode == 1) resumeLive() else if (overlay) panel = 1 else overlayTick++ }
                         true
                     }
                     ev.key == Key.Menu || ev.key == Key.Info || ev.key == Key.Settings -> { if (down && first) panel = 3; true }
+                    ev.key == Key.MediaRecord -> {
+                        if (down && first) { if (recName != null) stopRec() else startRec(now?.title, now?.stop) }
+                        true
+                    }
                     ev.key == Key.MediaPlayPause || ev.key == Key.MediaPlay || ev.key == Key.MediaPause -> {
-                        if (down && first) player.playWhenReady = !player.playWhenReady
+                        if (down && first) {
+                            when {
+                                ev.key == Key.MediaPlay -> resumeLive()
+                                ev.key == Key.MediaPause -> if (tsMode != 1) pauseLive()
+                                else -> togglePause()
+                            }
+                            overlayTick++
+                        }
                         true
                     }
                     ev.key in DIGITS -> {
@@ -444,14 +605,39 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
     ) {
         VideoSurface(player)
 
-        if (buffering && error == null) {
+        if (buffering && error == null && tsMode != 1) {
             CircularProgressIndicator(color = Accent, modifier = Modifier.align(Alignment.Center))
+        }
+        if (tsMode != 0) {
+            val d = delayMs + if (tsMode == 1) (shiftClock - pauseStart).coerceAtLeast(0) else 0L
+            Text(
+                if (tsMode == 1) "⏸  " + stringResource(R.string.ts_paused, fmtClock(d)) else "⏱  " + stringResource(R.string.ts_delayed, fmtClock(d)),
+                color = TextMain, fontSize = 16.sp, fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.TopEnd).padding(24.dp).background(Color(0xAA000000), androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
+            )
         }
         error?.let {
             Text(
                 stringResource(R.string.retry_soon, it),
                 color = Gold, fontSize = 18.sp,
                 modifier = Modifier.align(Alignment.Center).background(Color(0xAA000000)).padding(16.dp),
+            )
+        }
+        if (recName != null) {
+            val sec = ((recClock - recStart) / 1000).coerceAtLeast(0)
+            Text(
+                "● REC  " + fmtClock(sec * 1000) + (if (recStopAt > 0) "  → " + fmtTime(recStopAt - 120_000L) else ""),
+                color = Color(0xFFFF4D4D), fontSize = 16.sp, fontWeight = FontWeight.Bold,
+                modifier = Modifier.align(Alignment.TopStart).padding(24.dp).background(Color(0xAA000000), androidx.compose.foundation.shape.RoundedCornerShape(8.dp))
+                    .padding(horizontal = 12.dp, vertical = 6.dp),
+            )
+        }
+        recNotice?.let {
+            Text(
+                it, color = Gold, fontSize = 16.sp, maxLines = 2, overflow = TextOverflow.Ellipsis,
+                modifier = Modifier.align(Alignment.TopCenter).padding(top = 24.dp, start = 160.dp, end = 160.dp)
+                    .background(Color(0xCC000000), androidx.compose.foundation.shape.RoundedCornerShape(8.dp)).padding(horizontal = 16.dp, vertical = 8.dp),
             )
         }
         if (typed.isNotEmpty()) {
@@ -488,7 +674,14 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
                     Button("▼", { zapNext(); overlayTick++ }, small = compact)
                     Button(stringResource(R.string.channels), { panel = 1 }, small = compact)
                     Button(stringResource(R.string.guide), { panel = 2 }, small = compact)
+                    Button(stringResource(if (tsMode == 1) R.string.ts_resume else R.string.ts_pause), { togglePause(); overlayTick++ }, small = compact)
+                    if (tsMode != 0) Button(stringResource(R.string.ts_live), { goLive(); overlayTick++ }, small = compact)
                     Button(stringResource(R.string.options), { panel = 3 }, small = compact)
+                    Button(
+                        stringResource(if (recName != null) R.string.rec_stop else R.string.rec_start),
+                        { if (recName != null) stopRec() else startRec(now?.title, now?.stop); overlayTick++ },
+                        small = compact,
+                    )
                 }
                 Text(
                     stringResource(R.string.live_hint),
@@ -528,6 +721,12 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
         if (panel == 3) {
             val isFav = "L${ch.id}" in vm.favs
             OptionsPanel(player, sleepMin, { sleepMin = nextSleep(sleepMin) }, Modifier.align(Alignment.CenterEnd)) {
+                OptionRow(stringResource(if (tsMode == 1) R.string.ts_resume else R.string.ts_pause), { togglePause(); panel = 0 })
+                if (tsMode != 0) OptionRow(stringResource(R.string.ts_live), { goLive(); panel = 0 })
+                OptionRow(stringResource(if (recName != null) R.string.rec_stop else R.string.rec_start), {
+                    if (recName != null) stopRec() else startRec(now?.title, now?.stop)
+                    panel = 0
+                })
                 if (prevIndex >= 0) {
                     OptionRow(stringResource(R.string.prev_channel, channels[prevIndex].name), { toPrevious(); panel = 0 })
                 }

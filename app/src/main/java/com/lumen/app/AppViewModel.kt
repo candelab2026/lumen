@@ -41,6 +41,7 @@ sealed class Screen {
     object Login : Screen()
     object Home : Screen()
     object Help : Screen()
+    object Recordings : Screen()
     class MovieDetail(val movie: Movie) : Screen()
     class SeriesDetail(val series: Series) : Screen()
     class PlayLive(val channels: List<Channel>, val index: Int) : Screen()
@@ -195,7 +196,8 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     var anyFocus = false
     var focusKick by mutableIntStateOf(0)
 
-    private var autoStartPending = false
+    /** Canale da aprire appena la lista è pronta (avvio automatico o promemoria); -1 nessuno. */
+    private var pendingChannel = -1
 
     /** Promemoria di rinnovo da mostrare dopo l'accesso (un mese prima della scadenza); null se non serve. */
     var renewalNotice by mutableStateOf<String?>(null)
@@ -227,7 +229,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     init {
         store.registerLaunch()
         if (store.due("appupdate")) checkAppUpdate(false)
-        autoStartPending = store.autoStart && store.lastChannel >= 0
+        if (store.autoStart && store.lastChannel >= 0) pendingChannel = store.lastChannel
         val u = store.user
         val p = store.pass
         val srv = store.server
@@ -256,6 +258,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     private fun enterHome() {
         screens = listOf(Screen.Home)
         ensureLoaded(tab)
+        if (pendingChannel >= 0) ensureLoaded(1)
     }
 
     fun push(s: Screen) {
@@ -356,9 +359,10 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
                 markIfFetched("live", "live.json")
                 live = ListState(Status.Ready, cats, items, items.groupBy { it.catId })
                 loadEpg(items, f)
-                if (autoStartPending) {
-                    autoStartPending = false
-                    val i = items.indexOfFirst { it.id == store.lastChannel }
+                if (pendingChannel >= 0) {
+                    val id = pendingChannel
+                    pendingChannel = -1
+                    val i = items.indexOfFirst { it.id == id }
                     if (i >= 0 && screens.lastOrNull() is Screen.Home) push(Screen.PlayLive(items, i))
                 }
             } catch (e: Exception) {
@@ -493,6 +497,23 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     fun playLive(list: List<Channel>, index: Int) {
         AppStats.event(getApplication(), "play_live")
         push(Screen.PlayLive(list, index))
+    }
+
+    /** Apre un canale per id (dal promemoria): chiude il player in corso e, se la lista non è pronta, aspetta il caricamento. */
+    fun openChannel(id: Int) {
+        if (screens.firstOrNull() !is Screen.Home) {
+            pendingChannel = id
+            return
+        }
+        screens = listOf(Screen.Home)
+        val items = live.items
+        val i = items.indexOfFirst { it.id == id }
+        if (live.status == Status.Ready && i >= 0) {
+            playLive(items, i)
+        } else {
+            pendingChannel = id
+            ensureLoaded(1)
+        }
     }
 
     fun playMovie(m: Movie) {

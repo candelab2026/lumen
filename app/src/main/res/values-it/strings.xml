@@ -157,4 +157,37 @@
     <string name="upd_failed" formatted="true">Aggiornamento non riuscito: %1$s</string>
     <string name="upd_allow">Consenti a Lumen di installare app, poi premi di nuovo il tasto di aggiornamento</string>
     <string name="upd_checking">Controllo aggiornamenti…</string>
+    <string name="rem_channel">Promemoria programmi</string>
+    <string name="rem_starting">Sta per iniziare: %1$s</string>
+    <string name="rem_watch">Guarda</string>
+    <string name="rem_dismiss">Chiudi</string>
+    <string name="rem_watch_now">▶ Guarda ora</string>
+    <string name="rem_hint">OK su un programma futuro attiva o toglie il promemoria 🔔 (un minuto prima dell\'inizio)</string>
+    <string name="rem_none">Nessuna guida per questo canale</string>
+    <string name="guide_hint_rem">Tieni premuto OK (o Menu) su un canale: promemoria 🔔</string>
+    <string name="rec_start">● Registra</string>
+    <string name="rec_stop">■ Ferma registrazione</string>
+    <string name="rec_saved">Registrazione salvata: %1$s</string>
+    <string name="rec_failed">Registrazione interrotta: %1$s</string>
+    <string name="rec_open_failed">Impossibile scrivere nella cartella delle registrazioni</string>
+    <string name="rec_title">Registrazioni</string>
+    <string name="rec_empty">Nessuna registrazione. Nel player live usa Opzioni → Registra.</string>
+    <string name="rec_delete_q">Eliminare questa registrazione?</string>
+    <string name="rec_folder_btn">Cartella registrazioni: %1$s</string>
+    <string name="rec_folder_title">Dove salvare le registrazioni</string>
+    <string name="rec_internal">Memoria interna</string>
+    <string name="rec_external">USB / scheda SD %1$d</string>
+    <string name="rec_pick">Scegli una cartella…</string>
+    <string name="rec_custom">Cartella scelta</string>
+    <string name="rec_free">%1$s liberi</string>
+    <string name="rec_hint_list">OK riproduce    Tieni premuto OK (o Menu) elimina</string>
+    <string name="rec_note">La registrazione si ferma a fine programma, quando cambi canale o esci dal player. Su USB/SD i file sono in Android/data/com.lumen.app/files/Recordings.</string>
+    <string name="rec_converting">Conversione registrazione in MP4…</string>
+    <string name="rec_conv_failed">Conversione in MP4 non riuscita: salvata in .ts</string>
+    <string name="ts_pause">⏸ Pausa</string>
+    <string name="ts_resume">▶ Riprendi</string>
+    <string name="ts_live">⏭ Torna in diretta</string>
+    <string name="ts_paused">In pausa %1$s</string>
+    <string name="ts_delayed">In differita −%1$s</string>
+    <string name="ts_failed">Pausa non disponibile su questo canale</string>
 </resources>

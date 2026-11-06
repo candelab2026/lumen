@@ -157,4 +157,37 @@
     <string name="upd_failed" formatted="true">Güncelleme başarısız: %1$s</string>
     <string name="upd_allow">Lumen\'in uygulama yüklemesine izin verin, sonra güncelle düğmesine tekrar basın</string>
     <string name="upd_checking">Güncellemeler denetleniyor…</string>
+    <string name="rem_channel">Program hatırlatıcıları</string>
+    <string name="rem_starting">Birazdan başlıyor: %1$s</string>
+    <string name="rem_watch">İzle</string>
+    <string name="rem_dismiss">Kapat</string>
+    <string name="rem_watch_now">▶ Şimdi izle</string>
+    <string name="rem_hint">Gelecek bir programda OK hatırlatıcıyı açar veya kaldırır 🔔 (bir dakika önce)</string>
+    <string name="rem_none">Bu kanal için rehber yok</string>
+    <string name="guide_hint_rem">Bir kanalda OK (veya Menü) basılı tutun: hatırlatıcılar 🔔</string>
+    <string name="rec_start">● Kaydet</string>
+    <string name="rec_stop">■ Kaydı durdur</string>
+    <string name="rec_saved">Kayıt kaydedildi: %1$s</string>
+    <string name="rec_failed">Kayıt durdu: %1$s</string>
+    <string name="rec_open_failed">Kayıt klasörüne yazılamıyor</string>
+    <string name="rec_title">Kayıtlar</string>
+    <string name="rec_empty">Henüz kayıt yok. Canlı oynatıcıda Seçenekler → Kaydet kullanın.</string>
+    <string name="rec_delete_q">Bu kayıt silinsin mi?</string>
+    <string name="rec_folder_btn">Kayıt klasörü: %1$s</string>
+    <string name="rec_folder_title">Kayıtlar nereye kaydedilsin</string>
+    <string name="rec_internal">Dahili bellek</string>
+    <string name="rec_external">USB / SD kart %1$d</string>
+    <string name="rec_pick">Klasör seç…</string>
+    <string name="rec_custom">Seçilen klasör</string>
+    <string name="rec_free">%1$s boş</string>
+    <string name="rec_hint_list">OK oynatır    OK (veya Menü) basılı tutun: sil</string>
+    <string name="rec_note">Kayıt program bitince, kanal değiştirince veya oynatıcıdan çıkınca durur. USB/SD üzerindeki dosyalar Android/data/com.lumen.app/files/Recordings klasöründedir.</string>
+    <string name="rec_converting">Kayıt MP4\'e dönüştürülüyor…</string>
+    <string name="rec_conv_failed">MP4 dönüştürme başarısız: .ts olarak kaydedildi</string>
+    <string name="ts_pause">⏸ Duraklat</string>
+    <string name="ts_resume">▶ Devam et</string>
+    <string name="ts_live">⏭ Canlıya dön</string>
+    <string name="ts_paused">Duraklatıldı %1$s</string>
+    <string name="ts_delayed">Gecikmeli −%1$s</string>
+    <string name="ts_failed">Bu kanalda duraklatma kullanılamıyor</string>
 </resources>

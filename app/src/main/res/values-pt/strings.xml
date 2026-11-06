@@ -157,4 +157,37 @@
     <string name="upd_failed" formatted="true">Falha na atualização: %1$s</string>
     <string name="upd_allow">Permita ao Lumen instalar apps e prima de novo o botão de atualizar</string>
     <string name="upd_checking">A procurar atualizações…</string>
+    <string name="rem_channel">Lembretes de programas</string>
+    <string name="rem_starting">Vai começar: %1$s</string>
+    <string name="rem_watch">Ver</string>
+    <string name="rem_dismiss">Fechar</string>
+    <string name="rem_watch_now">▶ Ver agora</string>
+    <string name="rem_hint">OK num programa futuro ativa ou remove o lembrete 🔔 (um minuto antes)</string>
+    <string name="rem_none">Sem guia para este canal</string>
+    <string name="guide_hint_rem">Mantenha OK (ou Menu) num canal: lembretes 🔔</string>
+    <string name="rec_start">● Gravar</string>
+    <string name="rec_stop">■ Parar gravação</string>
+    <string name="rec_saved">Gravação guardada: %1$s</string>
+    <string name="rec_failed">Gravação interrompida: %1$s</string>
+    <string name="rec_open_failed">Não é possível escrever na pasta das gravações</string>
+    <string name="rec_title">Gravações</string>
+    <string name="rec_empty">Ainda não há gravações. No leitor em direto use Opções → Gravar.</string>
+    <string name="rec_delete_q">Eliminar esta gravação?</string>
+    <string name="rec_folder_btn">Pasta das gravações: %1$s</string>
+    <string name="rec_folder_title">Onde guardar as gravações</string>
+    <string name="rec_internal">Memória interna</string>
+    <string name="rec_external">USB / cartão SD %1$d</string>
+    <string name="rec_pick">Escolher uma pasta…</string>
+    <string name="rec_custom">Pasta escolhida</string>
+    <string name="rec_free">%1$s livres</string>
+    <string name="rec_hint_list">OK reproduz    Mantenha OK (ou Menu) para eliminar</string>
+    <string name="rec_note">A gravação para no fim do programa, ao mudar de canal ou ao sair do leitor. Em USB/SD os ficheiros estão em Android/data/com.lumen.app/files/Recordings.</string>
+    <string name="rec_converting">A converter a gravação para MP4…</string>
+    <string name="rec_conv_failed">A conversão para MP4 falhou: guardada como .ts</string>
+    <string name="ts_pause">⏸ Pausa</string>
+    <string name="ts_resume">▶ Retomar</string>
+    <string name="ts_live">⏭ Voltar ao direto</string>
+    <string name="ts_paused">Em pausa %1$s</string>
+    <string name="ts_delayed">Em diferido −%1$s</string>
+    <string name="ts_failed">Pausa indisponível neste canal</string>
 </resources>

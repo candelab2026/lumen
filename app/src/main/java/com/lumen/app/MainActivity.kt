@@ -75,10 +75,36 @@ class MainActivity : ComponentActivity() {
         return super.dispatchKeyEvent(event)
     }
 
+    override fun onStart() {
+        super.onStart()
+        Reminders.foreground = true
+    }
+
+    override fun onStop() {
+        Reminders.foreground = false
+        super.onStop()
+    }
+
+    override fun onNewIntent(intent: android.content.Intent) {
+        super.onNewIntent(intent)
+        handleIntent(intent)
+    }
+
+    /** Tocco sulla notifica di un promemoria: si apre quel canale. */
+    private fun handleIntent(i: android.content.Intent?) {
+        val ch = i?.getIntExtra(Reminders.EXTRA_CH, -1) ?: -1
+        if (ch >= 0) {
+            i?.removeExtra(Reminders.EXTRA_CH)
+            vm.openChannel(ch)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         window.addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON)
         AppStats.ping(this)
+        Recorder.recover(this)
+        handleIntent(intent)
         setContent {
             TvTheme {
                 // testi più grandi per la lettura da lontano (regolabile nelle impostazioni)
@@ -137,6 +163,10 @@ private fun AppRoot(vm: AppViewModel) {
             if (upd != null) last = upd
             com.lumen.app.ui.UpdateBar(last.first, last.second)
         }
+        // conversione in MP4 delle registrazioni: in basso a sinistra, per non sovrapporsi all'aggiornamento liste
+        Recorder.job?.let { (label, frac) ->
+            com.lumen.app.ui.UpdateBar(label, frac, Modifier.align(Alignment.BottomStart).padding(start = 14.dp, bottom = 8.dp))
+        }
         val updNotice = vm.updateNotice
         val updStatus = vm.updateStatus
         val banner = updNotice ?: updStatus
@@ -152,6 +182,11 @@ private fun AppRoot(vm: AppViewModel) {
                     .clip(RoundedCornerShape(12.dp)).background(Surface).padding(horizontal = 24.dp, vertical = 14.dp),
             )
         }
+        val rem = Reminders.fired
+        if (rem != null && introDone) ReminderDialog(rem, onWatch = {
+            Reminders.fired = null
+            vm.openChannel(rem.chId)
+        }, onClose = { Reminders.fired = null })
         if (showExit) ExitDialog(onNo = { showExit = false }, onYes = { activity?.finishAndRemoveTask() })
     }
 }
@@ -170,6 +205,27 @@ private fun RenewalDialog(text: String, onClose: () -> Unit) {
             Text(stringResource(R.string.renewal_title), color = Gold, fontSize = 22.sp, fontWeight = FontWeight.Bold)
             Text(text, color = TextMain, fontSize = 17.sp, textAlign = TextAlign.Center)
             Button("OK", onClick = onClose, strong = true, fr = fr, modifier = Modifier.width(200.dp))
+        }
+    }
+}
+
+@Composable
+private fun ReminderDialog(r: Reminder, onWatch: () -> Unit, onClose: () -> Unit) {
+    val fr = remember { FocusRequester() }
+    LaunchedEffect(r) { runCatching { fr.requestFocus() } }
+    BackHandler { onClose() }
+    Box(Modifier.fillMaxSize().background(Color(0xCC000000)), contentAlignment = Alignment.Center) {
+        Column(
+            Modifier.width(560.dp).clip(RoundedCornerShape(16.dp)).background(Surface).padding(28.dp),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(18.dp),
+        ) {
+            Text(stringResource(R.string.rem_starting, r.title), color = Gold, fontSize = 22.sp, fontWeight = FontWeight.Bold, textAlign = TextAlign.Center)
+            Text(r.chName, color = TextMain, fontSize = 17.sp, textAlign = TextAlign.Center)
+            androidx.compose.foundation.layout.Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Button(stringResource(R.string.rem_watch), onClick = onWatch, strong = true, fr = fr, modifier = Modifier.width(200.dp))
+                Button(stringResource(R.string.rem_dismiss), onClick = onClose, strong = true, modifier = Modifier.width(200.dp))
+            }
         }
     }
 }
@@ -210,6 +266,7 @@ private fun AppContent(vm: AppViewModel, top: Screen) {
                     is Screen.PlayLive -> LivePlayerScreen(vm, top)
                     is Screen.PlayVod -> VodPlayerScreen(vm, top)
                     is Screen.Help -> com.lumen.app.ui.HelpScreen()
+                    is Screen.Recordings -> com.lumen.app.ui.RecordingsScreen(vm)
                     else -> {}
                 }
             }

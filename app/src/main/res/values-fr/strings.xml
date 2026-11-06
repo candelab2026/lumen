@@ -157,4 +157,37 @@
     <string name="upd_failed" formatted="true">Échec de la mise à jour : %1$s</string>
     <string name="upd_allow">Autorisez Lumen à installer des apps, puis rappuyez sur le bouton de mise à jour</string>
     <string name="upd_checking">Recherche de mises à jour…</string>
+    <string name="rem_channel">Rappels de programmes</string>
+    <string name="rem_starting">Bientôt : %1$s</string>
+    <string name="rem_watch">Regarder</string>
+    <string name="rem_dismiss">Fermer</string>
+    <string name="rem_watch_now">▶ Regarder maintenant</string>
+    <string name="rem_hint">OK sur un programme à venir active ou retire le rappel 🔔 (une minute avant)</string>
+    <string name="rem_none">Pas de guide pour cette chaîne</string>
+    <string name="guide_hint_rem">Maintenez OK (ou Menu) sur une chaîne : rappels 🔔</string>
+    <string name="rec_start">● Enregistrer</string>
+    <string name="rec_stop">■ Arrêter l\'enregistrement</string>
+    <string name="rec_saved">Enregistrement sauvegardé : %1$s</string>
+    <string name="rec_failed">Enregistrement interrompu : %1$s</string>
+    <string name="rec_open_failed">Impossible d\'écrire dans le dossier des enregistrements</string>
+    <string name="rec_title">Enregistrements</string>
+    <string name="rec_empty">Aucun enregistrement. Dans le lecteur en direct, utilisez Options → Enregistrer.</string>
+    <string name="rec_delete_q">Supprimer cet enregistrement ?</string>
+    <string name="rec_folder_btn">Dossier des enregistrements : %1$s</string>
+    <string name="rec_folder_title">Où sauvegarder les enregistrements</string>
+    <string name="rec_internal">Mémoire interne</string>
+    <string name="rec_external">USB / carte SD %1$d</string>
+    <string name="rec_pick">Choisir un dossier…</string>
+    <string name="rec_custom">Dossier choisi</string>
+    <string name="rec_free">%1$s libres</string>
+    <string name="rec_hint_list">OK lit    Maintenez OK (ou Menu) pour supprimer</string>
+    <string name="rec_note">L\'enregistrement s\'arrête à la fin du programme, au changement de chaîne ou en quittant le lecteur. Sur USB/SD, les fichiers sont dans Android/data/com.lumen.app/files/Recordings.</string>
+    <string name="rec_converting">Conversion de l\'enregistrement en MP4…</string>
+    <string name="rec_conv_failed">Échec de la conversion en MP4 : enregistré en .ts</string>
+    <string name="ts_pause">⏸ Pause</string>
+    <string name="ts_resume">▶ Reprendre</string>
+    <string name="ts_live">⏭ Retour au direct</string>
+    <string name="ts_paused">En pause %1$s</string>
+    <string name="ts_delayed">En différé −%1$s</string>
+    <string name="ts_failed">Pause non disponible sur cette chaîne</string>
 </resources>

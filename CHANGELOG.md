@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.2.0
+
+- TV guide reminders: hold OK (or Menu) on a channel, pick an upcoming programme; a notice appears a minute before it starts (dialog with the app open, notification otherwise) and opens the channel.
+- Recording of the live channel being watched (Options → Record, or the Record key), saved by default as .mp4 in Download/Lumen (converted when the recording ends; kept as .ts if conversion fails), or on a USB drive / SD card, or any folder on phones. Recordings interrupted by closing the app or switching off are converted at the next launch. Uses the same connection as playback. Stops at the end of the programme, on channel change or when leaving the player.
+- Recordings list in Settings: play back or delete.
+- Pause live TV: Play/Pause (or the Pause button) keeps downloading the channel to a temporary file; resume watches it delayed, "Back to live" returns to the live edge. Same single connection.
+- MP2 audio (common on TV channels) is decoded in software (JLayer) so recordings can be converted to MP4 with AAC audio.
+
 ## 2.1.7
 
 - Phones: full-screen video (system bars hidden while playing).

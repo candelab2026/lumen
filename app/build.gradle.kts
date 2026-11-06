@@ -11,7 +11,7 @@ val keystoreProps = Properties().apply {
 }
 
 base {
-    archivesName.set("Lumen-2.1.7")
+    archivesName.set("Lumen-2.2.0")
 }
 
 android {
@@ -22,8 +22,8 @@ android {
         applicationId = "com.lumen.app"
         minSdk = 23
         targetSdk = 34
-        versionCode = 38
-        versionName = "2.1.7" // aggiornare anche archivesName
+        versionCode = 39
+        versionName = "2.2.0" // aggiornare anche archivesName
     }
 
     signingConfigs {
@@ -75,6 +75,10 @@ dependencies {
     implementation("androidx.media3:media3-exoplayer:1.8.0")
     implementation("androidx.media3:media3-exoplayer-hls:1.8.0")
     implementation("androidx.media3:media3-ui:1.8.0")
+    // conversione delle registrazioni da .ts a .mp4 (senza ricodifica quando possibile)
+    implementation("androidx.media3:media3-transformer:1.8.0")
+    // decodifica software dell'audio MP2 dei canali TV, per poterlo convertire in AAC dentro il .mp4
+    implementation("com.googlecode.soundlibs:jlayer:1.0.1.4") { exclude(group = "junit") }
 
     implementation("io.coil-kt:coil-compose:2.7.0")
     implementation("androidx.security:security-crypto:1.1.0-alpha06")

@@ -676,10 +676,16 @@ private fun GuideContent(vm: AppViewModel, st: ListState<Channel>) {
         val now = floorHalfHour(System.currentTimeMillis())
         start = (start + h * HOUR).coerceIn(now - 2 * HOUR, now + 24 * HOUR)
     }
+    val ctx = LocalContext.current
+    // canale di cui si stanno scegliendo i promemoria (pressione lunga / Menu sulla riga)
+    var picked by remember { mutableStateOf<Pair<Int, FocusRequester>?>(null) }
+    var remTick by remember { mutableIntStateOf(0) }
+    val reminded = remember(remTick) { com.lumen.app.Reminders.all(ctx).map { it.key }.toSet() }
 
+    Box(Modifier.fillMaxSize()) {
     Column(
         Modifier.fillMaxSize().onPreviewKeyEvent { ev ->
-            if (ev.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
+            if (ev.type != KeyEventType.KeyDown || picked != null) return@onPreviewKeyEvent false
             when (ev.key) {
                 Key.DirectionRight -> { shift(1); true }
                 Key.DirectionLeft -> { shift(-1); true }
@@ -705,15 +711,81 @@ private fun GuideContent(vm: AppViewModel, st: ListState<Channel>) {
             }
         }
         Text(
-            stringResource(R.string.guide_nav_hint),
-            color = TextDim, fontSize = 11.sp, modifier = Modifier.padding(vertical = 4.dp),
+            stringResource(R.string.guide_nav_hint) + "    " + stringResource(R.string.guide_hint_rem),
+            color = TextDim, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(vertical = 4.dp),
         )
         if (shown.isEmpty()) {
             CenterMessage(stringResource(R.string.guide_no_channels))
         } else {
             LazyColumn(Modifier.noFocus().fillMaxSize(), verticalArrangement = Arrangement.spacedBy(3.dp), contentPadding = PaddingValues(vertical = 4.dp)) {
                 itemsIndexed(shown, key = { _, c -> c.id }) { i, ch ->
-                    GuideRow(vm, ch, shown, i, start)
+                    GuideRow(vm, ch, shown, i, start, reminded) { fr -> picked = ch.id to fr }
+                }
+            }
+        }
+    }
+    val p = picked
+    val pi = p?.let { (id, _) -> shown.indexOfFirst { it.id == id } } ?: -1
+    if (p != null && pi >= 0) {
+        ReminderPicker(vm, shown, pi, reminded, onToggle = { remTick++ }) {
+            picked = null
+            runCatching { p.second.requestFocus() }
+        }
+    }
+    }
+}
+
+/** Programmi in arrivo di un canale: OK su uno futuro attiva/toglie il promemoria, su quello in corso lo guarda. */
+@Composable
+private fun ReminderPicker(vm: AppViewModel, list: List<Channel>, index: Int, reminded: Set<String>, onToggle: () -> Unit, onClose: () -> Unit) {
+    val ch = list[index]
+    val ctx = LocalContext.current
+    val progs = remember(vm.epgVersion, ch.epgId) { vm.epg.upcoming(ch.epgId, 30) }
+    val fr = remember { FocusRequester() }
+    LaunchedEffect(Unit) { runCatching { fr.requestFocus() } }
+    androidx.activity.compose.BackHandler { onClose() }
+    val now = System.currentTimeMillis()
+    val dayFmt = remember { SimpleDateFormat("EEE d", Locale.getDefault()) }
+    Box(Modifier.fillMaxSize().background(androidx.compose.ui.graphics.Color(0xCC000000)), contentAlignment = Alignment.Center) {
+        Column(
+            // il focus resta nel riquadro finché non si chiude
+            Modifier.width(620.dp).fillMaxHeight(0.95f).focusProperties { exit = { FocusRequester.Cancel } }.focusGroup()
+                .clip(RoundedCornerShape(16.dp)).background(Surface).padding(18.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
+        ) {
+            Text("${ch.num}  ${ch.name}", color = TextMain, fontSize = 20.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(stringResource(R.string.rem_hint), color = TextDim, fontSize = 12.sp)
+            Button(stringResource(R.string.rem_watch_now), { onClose(); vm.playLive(list, index) }, small = true, fr = fr)
+            if (progs.isEmpty()) Text(stringResource(R.string.rem_none), color = TextDim, fontSize = 14.sp)
+            LazyColumn(Modifier.noFocus().fillMaxWidth().weight(1f), verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                items(progs, key = { it.start }) { pr ->
+                    val key = "${ch.id}@${pr.start}"
+                    val on = key in reminded
+                    val running = pr.start <= now
+                    TvBox(
+                        onClick = {
+                            if (running) {
+                                onClose()
+                                vm.playLive(list, index)
+                            } else {
+                                val active = com.lumen.app.Reminders.toggle(ctx, com.lumen.app.Reminder(ch.id, ch.name, pr.title, pr.start))
+                                if (active) com.lumen.app.Reminders.askPermission(ctx)
+                                onToggle()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                        selected = on,
+                        focusScale = 1.01f,
+                    ) { f ->
+                        Row(Modifier.padding(horizontal = 12.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Text(
+                                (if (running) "▶ " else "") + "${dayFmt.format(Date(pr.start))}  ${fmtTime(pr.start)}-${fmtTime(pr.stop)}",
+                                color = if (running) Accent else TextDim, fontSize = 13.sp, modifier = Modifier.width(170.dp),
+                            )
+                            Text(pr.title, color = if (f || on) TextMain else TextDim, fontSize = 15.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                            if (on) Text("🔔", fontSize = 16.sp, modifier = Modifier.padding(start = 8.dp))
+                        }
+                    }
                 }
             }
         }
@@ -721,7 +793,8 @@ private fun GuideContent(vm: AppViewModel, st: ListState<Channel>) {
 }
 
 @Composable
-private fun GuideRow(vm: AppViewModel, ch: Channel, list: List<Channel>, index: Int, start: Long) {
+private fun GuideRow(vm: AppViewModel, ch: Channel, list: List<Channel>, index: Int, start: Long, reminded: Set<String>, onPick: (FocusRequester) -> Unit) {
+    val fr = remember { FocusRequester() }
     @Suppress("UNUSED_VARIABLE") val ver = vm.epgVersion
     val end = start + GUIDE_WINDOW
     val progs = remember(vm.epgVersion, ch.epgId, start) { vm.epg.between(ch.epgId, start, end) }
@@ -729,6 +802,8 @@ private fun GuideRow(vm: AppViewModel, ch: Channel, list: List<Channel>, index: 
 
     TvBox(
         onClick = { vm.playLive(list, index) },
+        onLongClick = { onPick(fr) },
+        focusRequester = fr,
         modifier = Modifier.fillMaxWidth(),
         focusScale = 1.01f,
     ) { f ->
@@ -758,7 +833,7 @@ private fun GuideRow(vm: AppViewModel, ch: Channel, list: List<Channel>, index: 
                                     .background(if (p.start <= now && p.stop > now) SurfaceSel else Bg),
                             ) {
                                 Text(
-                                    p.title, color = if (f) TextMain else TextDim, fontSize = 12.sp,
+                                    (if ("${ch.id}@${p.start}" in reminded) "🔔 " else "") + p.title, color = if (f) TextMain else TextDim, fontSize = 12.sp,
                                     maxLines = 2, overflow = TextOverflow.Ellipsis,
                                     modifier = Modifier.padding(horizontal = 6.dp, vertical = 3.dp),
                                 )
@@ -780,6 +855,10 @@ private val SCALE_NAMES = listOf(R.string.scale_normal, R.string.scale_large, R.
 private fun SettingsTab(vm: AppViewModel) {
     val acc = vm.account
     val dateFmt = remember { java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT) }
+    val ctx = LocalContext.current
+    var folderDlg by remember { mutableStateOf(false) }
+    val folderFr = remember { FocusRequester() }
+    Box(Modifier.fillMaxSize()) {
     Column(
         Modifier.fillMaxSize().noFocus().verticalScroll(rememberScrollState()).padding(top = 8.dp),
         verticalArrangement = Arrangement.spacedBy(10.dp),
@@ -819,6 +898,12 @@ private fun SettingsTab(vm: AppViewModel) {
             )
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
+            Button(stringResource(R.string.rec_title), onClick = { vm.push(Screen.Recordings) }, modifier = w)
+            // rilegge l'etichetta quando il dialogo si chiude
+            val folderLabel = remember(folderDlg) { com.lumen.app.Recorder.label(ctx) }
+            Button(stringResource(R.string.rec_folder_btn, folderLabel), onClick = { folderDlg = true }, modifier = w, fr = folderFr)
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
             Button(stringResource(R.string.set_help), onClick = { vm.push(Screen.Help) }, modifier = w)
             Button(stringResource(R.string.set_logout), onClick = { vm.logout() }, modifier = w)
         }
@@ -826,5 +911,10 @@ private fun SettingsTab(vm: AppViewModel) {
         Text(stringResource(R.string.set_profile_note), color = TextDim, fontSize = 12.sp)
         Spacer(Modifier.height(6.dp))
         Text(stringResource(R.string.set_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE), color = TextDim, fontSize = 14.sp)
+    }
+    if (folderDlg) RecFolderDialog {
+        folderDlg = false
+        runCatching { folderFr.requestFocus() }
+    }
     }
 }

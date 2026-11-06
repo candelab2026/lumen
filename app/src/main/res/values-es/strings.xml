@@ -157,4 +157,37 @@
     <string name="upd_failed" formatted="true">Falló la actualización: %1$s</string>
     <string name="upd_allow">Permite a Lumen instalar apps y vuelve a pulsar el botón de actualizar</string>
     <string name="upd_checking">Buscando actualizaciones…</string>
+    <string name="rem_channel">Recordatorios de programas</string>
+    <string name="rem_starting">Empieza pronto: %1$s</string>
+    <string name="rem_watch">Ver</string>
+    <string name="rem_dismiss">Cerrar</string>
+    <string name="rem_watch_now">▶ Ver ahora</string>
+    <string name="rem_hint">OK en un programa futuro activa o quita el recordatorio 🔔 (un minuto antes)</string>
+    <string name="rem_none">No hay guía para este canal</string>
+    <string name="guide_hint_rem">Mantén OK (o Menú) en un canal: recordatorios 🔔</string>
+    <string name="rec_start">● Grabar</string>
+    <string name="rec_stop">■ Detener grabación</string>
+    <string name="rec_saved">Grabación guardada: %1$s</string>
+    <string name="rec_failed">Grabación detenida: %1$s</string>
+    <string name="rec_open_failed">No se puede escribir en la carpeta de grabaciones</string>
+    <string name="rec_title">Grabaciones</string>
+    <string name="rec_empty">Aún no hay grabaciones. En el reproductor en directo usa Opciones → Grabar.</string>
+    <string name="rec_delete_q">¿Eliminar esta grabación?</string>
+    <string name="rec_folder_btn">Carpeta de grabaciones: %1$s</string>
+    <string name="rec_folder_title">Dónde guardar las grabaciones</string>
+    <string name="rec_internal">Memoria interna</string>
+    <string name="rec_external">USB / tarjeta SD %1$d</string>
+    <string name="rec_pick">Elegir una carpeta…</string>
+    <string name="rec_custom">Carpeta elegida</string>
+    <string name="rec_free">%1$s libres</string>
+    <string name="rec_hint_list">OK reproduce    Mantén OK (o Menú) para eliminar</string>
+    <string name="rec_note">La grabación se detiene al final del programa, al cambiar de canal o al salir del reproductor. En USB/SD los archivos están en Android/data/com.lumen.app/files/Recordings.</string>
+    <string name="rec_converting">Convirtiendo la grabación a MP4…</string>
+    <string name="rec_conv_failed">Error al convertir a MP4: guardada como .ts</string>
+    <string name="ts_pause">⏸ Pausa</string>
+    <string name="ts_resume">▶ Reanudar</string>
+    <string name="ts_live">⏭ Volver al directo</string>
+    <string name="ts_paused">En pausa %1$s</string>
+    <string name="ts_delayed">En diferido −%1$s</string>
+    <string name="ts_failed">La pausa no está disponible en este canal</string>
 </resources>

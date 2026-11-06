@@ -157,4 +157,37 @@
     <string name="upd_failed" formatted="true">Update fehlgeschlagen: %1$s</string>
     <string name="upd_allow">Erlauben Sie Lumen das Installieren von Apps und drücken Sie erneut auf Aktualisieren</string>
     <string name="upd_checking">Suche nach Updates…</string>
+    <string name="rem_channel">Sendungserinnerungen</string>
+    <string name="rem_starting">Beginnt gleich: %1$s</string>
+    <string name="rem_watch">Ansehen</string>
+    <string name="rem_dismiss">Schließen</string>
+    <string name="rem_watch_now">▶ Jetzt ansehen</string>
+    <string name="rem_hint">OK auf einer kommenden Sendung setzt oder entfernt die Erinnerung 🔔 (eine Minute vorher)</string>
+    <string name="rem_none">Keine Programmführung für diesen Sender</string>
+    <string name="guide_hint_rem">OK (oder Menü) lange auf einem Sender: Erinnerungen 🔔</string>
+    <string name="rec_start">● Aufnehmen</string>
+    <string name="rec_stop">■ Aufnahme stoppen</string>
+    <string name="rec_saved">Aufnahme gespeichert: %1$s</string>
+    <string name="rec_failed">Aufnahme abgebrochen: %1$s</string>
+    <string name="rec_open_failed">Der Aufnahmeordner ist nicht beschreibbar</string>
+    <string name="rec_title">Aufnahmen</string>
+    <string name="rec_empty">Noch keine Aufnahmen. Im Live-Player: Optionen → Aufnehmen.</string>
+    <string name="rec_delete_q">Diese Aufnahme löschen?</string>
+    <string name="rec_folder_btn">Aufnahmeordner: %1$s</string>
+    <string name="rec_folder_title">Wo Aufnahmen gespeichert werden</string>
+    <string name="rec_internal">Interner Speicher</string>
+    <string name="rec_external">USB / SD-Karte %1$d</string>
+    <string name="rec_pick">Ordner wählen…</string>
+    <string name="rec_custom">Gewählter Ordner</string>
+    <string name="rec_free">%1$s frei</string>
+    <string name="rec_hint_list">OK spielt ab    OK (oder Menü) lange drücken löscht</string>
+    <string name="rec_note">Die Aufnahme endet mit der Sendung, beim Senderwechsel oder beim Verlassen des Players. Auf USB/SD liegen die Dateien in Android/data/com.lumen.app/files/Recordings.</string>
+    <string name="rec_converting">Aufnahme wird in MP4 umgewandelt…</string>
+    <string name="rec_conv_failed">MP4-Umwandlung fehlgeschlagen: als .ts gespeichert</string>
+    <string name="ts_pause">⏸ Pause</string>
+    <string name="ts_resume">▶ Fortsetzen</string>
+    <string name="ts_live">⏭ Zurück zu live</string>
+    <string name="ts_paused">Pausiert %1$s</string>
+    <string name="ts_delayed">Zeitversetzt −%1$s</string>
+    <string name="ts_failed">Pause ist auf diesem Sender nicht verfügbar</string>
 </resources>

@@ -157,4 +157,37 @@
     <string name="upd_failed" formatted="true">Bijwerken mislukt: %1$s</string>
     <string name="upd_allow">Sta Lumen toe apps te installeren en druk opnieuw op de updateknop</string>
     <string name="upd_checking">Zoeken naar updates…</string>
+    <string name="rem_channel">Programmaherinneringen</string>
+    <string name="rem_starting">Begint zo: %1$s</string>
+    <string name="rem_watch">Kijken</string>
+    <string name="rem_dismiss">Sluiten</string>
+    <string name="rem_watch_now">▶ Nu kijken</string>
+    <string name="rem_hint">OK op een komend programma zet de herinnering aan of uit 🔔 (een minuut van tevoren)</string>
+    <string name="rem_none">Geen gids voor deze zender</string>
+    <string name="guide_hint_rem">Houd OK (of Menu) ingedrukt op een zender: herinneringen 🔔</string>
+    <string name="rec_start">● Opnemen</string>
+    <string name="rec_stop">■ Opname stoppen</string>
+    <string name="rec_saved">Opname opgeslagen: %1$s</string>
+    <string name="rec_failed">Opname gestopt: %1$s</string>
+    <string name="rec_open_failed">Kan niet schrijven in de opnamemap</string>
+    <string name="rec_title">Opnames</string>
+    <string name="rec_empty">Nog geen opnames. Gebruik in de live-speler Opties → Opnemen.</string>
+    <string name="rec_delete_q">Deze opname verwijderen?</string>
+    <string name="rec_folder_btn">Opnamemap: %1$s</string>
+    <string name="rec_folder_title">Waar opnames worden opgeslagen</string>
+    <string name="rec_internal">Intern geheugen</string>
+    <string name="rec_external">USB / SD-kaart %1$d</string>
+    <string name="rec_pick">Map kiezen…</string>
+    <string name="rec_custom">Gekozen map</string>
+    <string name="rec_free">%1$s vrij</string>
+    <string name="rec_hint_list">OK speelt af    Houd OK (of Menu) ingedrukt om te verwijderen</string>
+    <string name="rec_note">De opname stopt aan het einde van het programma, bij een andere zender of als je de speler verlaat. Op USB/SD staan de bestanden in Android/data/com.lumen.app/files/Recordings.</string>
+    <string name="rec_converting">Opname wordt omgezet naar MP4…</string>
+    <string name="rec_conv_failed">Omzetten naar MP4 mislukt: opgeslagen als .ts</string>
+    <string name="ts_pause">⏸ Pauze</string>
+    <string name="ts_resume">▶ Hervatten</string>
+    <string name="ts_live">⏭ Terug naar live</string>
+    <string name="ts_paused">Gepauzeerd %1$s</string>
+    <string name="ts_delayed">Uitgesteld −%1$s</string>
+    <string name="ts_failed">Pauze is niet beschikbaar op deze zender</string>
 </resources>

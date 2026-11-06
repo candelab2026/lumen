@@ -157,4 +157,37 @@
     <string name="upd_failed" formatted="true">Aktualizacja nie powiodła się: %1$s</string>
     <string name="upd_allow">Zezwól Lumen na instalowanie aplikacji i ponownie naciśnij przycisk aktualizacji</string>
     <string name="upd_checking">Sprawdzanie aktualizacji…</string>
+    <string name="rem_channel">Przypomnienia o programach</string>
+    <string name="rem_starting">Zaraz się zacznie: %1$s</string>
+    <string name="rem_watch">Oglądaj</string>
+    <string name="rem_dismiss">Zamknij</string>
+    <string name="rem_watch_now">▶ Oglądaj teraz</string>
+    <string name="rem_hint">OK na przyszłym programie włącza lub usuwa przypomnienie 🔔 (minutę przed)</string>
+    <string name="rem_none">Brak przewodnika dla tego kanału</string>
+    <string name="guide_hint_rem">Przytrzymaj OK (lub Menu) na kanale: przypomnienia 🔔</string>
+    <string name="rec_start">● Nagraj</string>
+    <string name="rec_stop">■ Zatrzymaj nagrywanie</string>
+    <string name="rec_saved">Nagranie zapisane: %1$s</string>
+    <string name="rec_failed">Nagrywanie przerwane: %1$s</string>
+    <string name="rec_open_failed">Nie można zapisać w folderze nagrań</string>
+    <string name="rec_title">Nagrania</string>
+    <string name="rec_empty">Brak nagrań. W odtwarzaczu na żywo użyj Opcje → Nagraj.</string>
+    <string name="rec_delete_q">Usunąć to nagranie?</string>
+    <string name="rec_folder_btn">Folder nagrań: %1$s</string>
+    <string name="rec_folder_title">Gdzie zapisywać nagrania</string>
+    <string name="rec_internal">Pamięć wewnętrzna</string>
+    <string name="rec_external">USB / karta SD %1$d</string>
+    <string name="rec_pick">Wybierz folder…</string>
+    <string name="rec_custom">Wybrany folder</string>
+    <string name="rec_free">Wolne: %1$s</string>
+    <string name="rec_hint_list">OK odtwarza    Przytrzymaj OK (lub Menu), aby usunąć</string>
+    <string name="rec_note">Nagrywanie kończy się z końcem programu, przy zmianie kanału lub po wyjściu z odtwarzacza. Na USB/SD pliki są w Android/data/com.lumen.app/files/Recordings.</string>
+    <string name="rec_converting">Konwertowanie nagrania do MP4…</string>
+    <string name="rec_conv_failed">Konwersja do MP4 nie powiodła się: zapisano jako .ts</string>
+    <string name="ts_pause">⏸ Pauza</string>
+    <string name="ts_resume">▶ Wznów</string>
+    <string name="ts_live">⏭ Wróć na żywo</string>
+    <string name="ts_paused">Wstrzymano %1$s</string>
+    <string name="ts_delayed">Z opóźnieniem −%1$s</string>
+    <string name="ts_failed">Pauza niedostępna na tym kanale</string>
 </resources>

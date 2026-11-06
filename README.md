@@ -11,6 +11,9 @@ A lightweight IPTV player for **Android TV** and **Amazon Fire TV** (also runs o
 - Sign in with **server address, username and password** (nothing is hard-coded)
 - Live TV, Movies and Series, with categories and search
 - TV guide (EPG) from your provider, with an optional fallback to a public XMLTV guide matched by channel name
+- **Reminders** from the TV guide (hold OK on a channel, pick a programme): a notice a minute before it starts, even with the app closed
+- **Record** the live channel you are watching as .mp4 in Download/Lumen (or a USB drive / SD card, or any folder on phones); play recordings back in the app
+- **Pause live TV** and resume it delayed (timeshift), then jump back to live
 - Favorites, recent channels and "Continue watching" with resume position
 - 4 profiles, each with its own favorites and history
 - Audio track / subtitle selection, sleep timer, channel number entry, previous-channel key
@@ -68,4 +71,4 @@ Lumen has no account and no built-in server. On launch (once a day) and when you
 
 ## License
 
-[MIT](LICENSE)
+[MIT](LICENSE). Recordings use JLayer (LGPL 2.1) to decode MP2 audio.

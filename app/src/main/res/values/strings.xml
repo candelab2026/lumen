@@ -158,4 +158,37 @@
     <string name="upd_failed" formatted="true">Update failed: %1$s</string>
     <string name="upd_allow">Allow Lumen to install apps, then press the update button again</string>
     <string name="upd_checking">Checking for updates…</string>
+    <string name="rem_channel">Programme reminders</string>
+    <string name="rem_starting">Starting soon: %1$s</string>
+    <string name="rem_watch">Watch</string>
+    <string name="rem_dismiss">Close</string>
+    <string name="rem_watch_now">▶ Watch now</string>
+    <string name="rem_hint">OK on an upcoming programme sets or removes a reminder 🔔 (a minute before it starts)</string>
+    <string name="rem_none">No guide for this channel</string>
+    <string name="guide_hint_rem">Hold OK (or Menu) on a channel: reminders 🔔</string>
+    <string name="rec_start">● Record</string>
+    <string name="rec_stop">■ Stop recording</string>
+    <string name="rec_saved">Recording saved: %1$s</string>
+    <string name="rec_failed">Recording stopped: %1$s</string>
+    <string name="rec_open_failed">Cannot write to the recordings folder</string>
+    <string name="rec_title">Recordings</string>
+    <string name="rec_empty">No recordings yet. In the live player use Options → Record.</string>
+    <string name="rec_delete_q">Delete this recording?</string>
+    <string name="rec_folder_btn">Recordings folder: %1$s</string>
+    <string name="rec_folder_title">Where to save recordings</string>
+    <string name="rec_internal">Internal storage</string>
+    <string name="rec_external">USB / SD card %1$d</string>
+    <string name="rec_pick">Choose a folder…</string>
+    <string name="rec_custom">Chosen folder</string>
+    <string name="rec_free">%1$s free</string>
+    <string name="rec_hint_list">OK plays    Hold OK (or Menu) deletes</string>
+    <string name="rec_note">Recording stops at the end of the programme, when you change channel or when you leave the player. USB/SD recordings are in Android/data/com.lumen.app/files/Recordings.</string>
+    <string name="rec_converting">Converting recording to MP4…</string>
+    <string name="rec_conv_failed">MP4 conversion failed: saved as .ts</string>
+    <string name="ts_pause">⏸ Pause</string>
+    <string name="ts_resume">▶ Resume</string>
+    <string name="ts_live">⏭ Back to live</string>
+    <string name="ts_paused">Paused %1$s</string>
+    <string name="ts_delayed">Delayed −%1$s</string>
+    <string name="ts_failed">Pause is not available on this channel</string>
 </resources>

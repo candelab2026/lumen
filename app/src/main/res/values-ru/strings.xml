@@ -157,4 +157,37 @@
     <string name="upd_failed" formatted="true">Не удалось обновить: %1$s</string>
     <string name="upd_allow">Разрешите Lumen устанавливать приложения и снова нажмите кнопку обновления</string>
     <string name="upd_checking">Проверка обновлений…</string>
+    <string name="rem_channel">Напоминания о передачах</string>
+    <string name="rem_starting">Скоро начнётся: %1$s</string>
+    <string name="rem_watch">Смотреть</string>
+    <string name="rem_dismiss">Закрыть</string>
+    <string name="rem_watch_now">▶ Смотреть сейчас</string>
+    <string name="rem_hint">OK на будущей передаче включает или снимает напоминание 🔔 (за минуту до начала)</string>
+    <string name="rem_none">Для этого канала нет программы</string>
+    <string name="guide_hint_rem">Удерживайте OK (или Меню) на канале: напоминания 🔔</string>
+    <string name="rec_start">● Запись</string>
+    <string name="rec_stop">■ Остановить запись</string>
+    <string name="rec_saved">Запись сохранена: %1$s</string>
+    <string name="rec_failed">Запись прервана: %1$s</string>
+    <string name="rec_open_failed">Не удаётся записать в папку записей</string>
+    <string name="rec_title">Записи</string>
+    <string name="rec_empty">Записей пока нет. В плеере ТВ выберите Опции → Запись.</string>
+    <string name="rec_delete_q">Удалить эту запись?</string>
+    <string name="rec_folder_btn">Папка записей: %1$s</string>
+    <string name="rec_folder_title">Куда сохранять записи</string>
+    <string name="rec_internal">Внутренняя память</string>
+    <string name="rec_external">USB / SD-карта %1$d</string>
+    <string name="rec_pick">Выбрать папку…</string>
+    <string name="rec_custom">Выбранная папка</string>
+    <string name="rec_free">Свободно %1$s</string>
+    <string name="rec_hint_list">OK — воспроизвести    Удерживайте OK (или Меню) — удалить</string>
+    <string name="rec_note">Запись останавливается в конце передачи, при смене канала или выходе из плеера. На USB/SD файлы лежат в Android/data/com.lumen.app/files/Recordings.</string>
+    <string name="rec_converting">Преобразование записи в MP4…</string>
+    <string name="rec_conv_failed">Не удалось преобразовать в MP4: сохранено как .ts</string>
+    <string name="ts_pause">⏸ Пауза</string>
+    <string name="ts_resume">▶ Продолжить</string>
+    <string name="ts_live">⏭ Вернуться в эфир</string>
+    <string name="ts_paused">Пауза %1$s</string>
+    <string name="ts_delayed">Отставание −%1$s</string>
+    <string name="ts_failed">Пауза недоступна на этом канале</string>
 </resources>
