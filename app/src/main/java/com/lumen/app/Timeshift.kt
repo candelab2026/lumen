@@ -71,13 +71,16 @@ class Timeshift(val file: File) {
 
     private fun run(url: String, ua: String) {
         var failures = 0
+        // molti server contano ancora per un po' la connessione appena chiusa dal player (abbonamenti a 1
+        // connessione): finché non è arrivato niente si riprova fino a un minuto, tanto si è in pausa
+        val firstDeadline = System.currentTimeMillis() + 60_000L
         try {
             file.outputStream().use { out ->
                 val buf = ByteArray(64 * 1024)
-                // il server può contare ancora per un attimo la connessione appena chiusa dal player: si riprova
-                while (!stop && failures < 6) {
+                while (!stop) {
                     try {
                         val c = open(url, ua)
+                        android.util.Log.i("Lumen", "timeshift: connesso")
                         try {
                             c.inputStream.use { inp ->
                                 while (!stop) {
@@ -94,13 +97,18 @@ class Timeshift(val file: File) {
                         }
                     } catch (e: Exception) {
                         if (stop) break
-                        failures++
-                        Thread.sleep(1_000)
+                        android.util.Log.i("Lumen", "timeshift: tentativo fallito (${e.message})")
                     }
+                    if (stop) break
+                    failures++
+                    val giveUp = if (written == 0L) System.currentTimeMillis() > firstDeadline else failures > 6
+                    if (giveUp) break
+                    Thread.sleep(if (written == 0L) 2_000 else 1_000)
                 }
             }
         } catch (e: Exception) {
         } finally {
+            android.util.Log.i("Lumen", "timeshift: fine, scritti $written byte")
             done = true
         }
     }
@@ -161,7 +169,7 @@ class GrowingFileDataSource : BaseDataSource(false) {
                 throw InterruptedIOException()
             }
             waited += 20
-            if (waited > 30_000) throw IOException("timeshift stalled")
+            if (waited > 90_000) throw IOException("timeshift stalled")
         }
     }
 

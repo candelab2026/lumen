@@ -45,7 +45,7 @@
     <string name="set_unlimited">sınırsız</string>
     <string name="set_connections" formatted="true">Bağlantılar: %1$d/%2$d</string>
     <string name="set_offline">Çevrimdışı mod (önbellek verisi)</string>
-    <string name="set_profile" formatted="true">Profil: %1$d / %2$d (değiştir)</string>
+    <string name="set_profile" formatted="true">Profil: %1$s (değiştir)</string>
     <string name="set_text" formatted="true">Metin: %1$s</string>
     <string name="scale_normal">normal</string>
     <string name="scale_large">büyük</string>
@@ -95,7 +95,7 @@
     <string name="btn_exit">← Çıkış</string>
     <string name="channels">Kanallar</string>
     <string name="guide">Rehber</string>
-    <string name="live_hint">▲▼ kanal    ◀ liste    ▶ rehber    Menü seçenekler    ⏪ önceki    0-9 numara</string>
+    <string name="live_hint">▲▼ kanal    ◀ ▶ OK düğmeler    Menü seçenekler    ⏪ önceki    0-9 numara</string>
     <string name="prev_channel" formatted="true">Önceki kanal: %1$s</string>
     <string name="guide_for" formatted="true">Rehber · %1$s</string>
     <string name="guide_none">Bu kanal için rehber yok</string>
@@ -190,4 +190,12 @@
     <string name="ts_paused">Duraklatıldı %1$s</string>
     <string name="ts_delayed">Gecikmeli −%1$s</string>
     <string name="ts_failed">Bu kanalda duraklatma kullanılamıyor</string>
+    <string name="profile_default" formatted="true">Profil %1$d</string>
+    <string name="profile_rename">Profili yeniden adlandır</string>
+    <string name="profile_name_title">Profil adı</string>
+    <string name="profile_active" formatted="true">Profil: %1$s</string>
+    <string name="btn_save">Kaydet</string>
+    <string name="btn_cancel">İptal</string>
+    <string name="live_hint_bar">◀ ▶ seç    OK bas    Geri kapat</string>
+    <string name="rec_last_error" formatted="true">Son dönüştürme hatası: %1$s</string>
 </resources>

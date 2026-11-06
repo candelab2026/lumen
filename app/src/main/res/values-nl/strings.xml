@@ -45,7 +45,7 @@
     <string name="set_unlimited">onbeperkt</string>
     <string name="set_connections" formatted="true">Verbindingen: %1$d/%2$d</string>
     <string name="set_offline">Offlinemodus (gegevens uit cache)</string>
-    <string name="set_profile" formatted="true">Profiel: %1$d van %2$d (wijzig)</string>
+    <string name="set_profile" formatted="true">Profiel: %1$s (wijzig)</string>
     <string name="set_text" formatted="true">Tekst: %1$s</string>
     <string name="scale_normal">normaal</string>
     <string name="scale_large">groot</string>
@@ -95,7 +95,7 @@
     <string name="btn_exit">← Sluiten</string>
     <string name="channels">Zenders</string>
     <string name="guide">Gids</string>
-    <string name="live_hint">▲▼ zender    ◀ lijst    ▶ gids    Menu opties    ⏪ vorige    0-9 nummer</string>
+    <string name="live_hint">▲▼ zender    ◀ ▶ OK knoppen    Menu opties    ⏪ vorige    0-9 nummer</string>
     <string name="prev_channel" formatted="true">Vorige zender: %1$s</string>
     <string name="guide_for" formatted="true">Gids · %1$s</string>
     <string name="guide_none">Geen gids beschikbaar voor deze zender</string>
@@ -190,4 +190,12 @@
     <string name="ts_paused">Gepauzeerd %1$s</string>
     <string name="ts_delayed">Uitgesteld −%1$s</string>
     <string name="ts_failed">Pauze is niet beschikbaar op deze zender</string>
+    <string name="profile_default" formatted="true">Profiel %1$d</string>
+    <string name="profile_rename">Profiel hernoemen</string>
+    <string name="profile_name_title">Profielnaam</string>
+    <string name="profile_active" formatted="true">Profiel: %1$s</string>
+    <string name="btn_save">Opslaan</string>
+    <string name="btn_cancel">Annuleren</string>
+    <string name="live_hint_bar">◀ ▶ kiezen    OK drukken    Terug sluiten</string>
+    <string name="rec_last_error" formatted="true">Laatste conversiefout: %1$s</string>
 </resources>

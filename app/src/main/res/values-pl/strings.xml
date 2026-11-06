@@ -45,7 +45,7 @@
     <string name="set_unlimited">bezterminowo</string>
     <string name="set_connections" formatted="true">Połączenia: %1$d/%2$d</string>
     <string name="set_offline">Tryb offline (dane z pamięci podręcznej)</string>
-    <string name="set_profile" formatted="true">Profil: %1$d z %2$d (zmień)</string>
+    <string name="set_profile" formatted="true">Profil: %1$s (zmień)</string>
     <string name="set_text" formatted="true">Tekst: %1$s</string>
     <string name="scale_normal">normalny</string>
     <string name="scale_large">duży</string>
@@ -95,7 +95,7 @@
     <string name="btn_exit">← Wyjdź</string>
     <string name="channels">Kanały</string>
     <string name="guide">Program</string>
-    <string name="live_hint">▲▼ kanał    ◀ lista    ▶ program    Menu opcje    ⏪ poprzedni    0-9 numer</string>
+    <string name="live_hint">▲▼ kanał    ◀ ▶ OK przyciski    Menu opcje    ⏪ poprzedni    0-9 numer</string>
     <string name="prev_channel" formatted="true">Poprzedni kanał: %1$s</string>
     <string name="guide_for" formatted="true">Program · %1$s</string>
     <string name="guide_none">Brak programu dla tego kanału</string>
@@ -190,4 +190,12 @@
     <string name="ts_paused">Wstrzymano %1$s</string>
     <string name="ts_delayed">Z opóźnieniem −%1$s</string>
     <string name="ts_failed">Pauza niedostępna na tym kanale</string>
+    <string name="profile_default" formatted="true">Profil %1$d</string>
+    <string name="profile_rename">Zmień nazwę profilu</string>
+    <string name="profile_name_title">Nazwa profilu</string>
+    <string name="profile_active" formatted="true">Profil: %1$s</string>
+    <string name="btn_save">Zapisz</string>
+    <string name="btn_cancel">Anuluj</string>
+    <string name="live_hint_bar">◀ ▶ wybierz    OK naciśnij    Wstecz zamknij</string>
+    <string name="rec_last_error" formatted="true">Ostatni błąd konwersji: %1$s</string>
 </resources>

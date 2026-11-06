@@ -15,7 +15,7 @@ A lightweight IPTV player for **Android TV** and **Amazon Fire TV** (also runs o
 - **Record** the live channel you are watching as .mp4 in Download/Lumen (or a USB drive / SD card, or any folder on phones); play recordings back in the app
 - **Pause live TV** and resume it delayed (timeshift), then jump back to live
 - Favorites, recent channels and "Continue watching" with resume position
-- 4 profiles, each with its own favorites and history
+- 4 profiles with a name of your choice, each with its own favorites and history
 - Audio track / subtitle selection, sleep timer, channel number entry, previous-channel key
 - Built for the remote control (D-pad), with a built-in **Help** page in Settings
 - In-app updates from GitHub Releases (checked every 5 launches; installing over the old version keeps your data)

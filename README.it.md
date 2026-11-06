@@ -15,7 +15,7 @@ Player IPTV leggero per **Android TV** e **Amazon Fire TV** (funziona anche su t
 - **Registrazione** del canale live che stai guardando in .mp4 nella cartella Download/Lumen (oppure su chiavetta USB / scheda SD, o sui telefoni in una cartella a scelta); le registrazioni si rivedono nell'app
 - **Pausa della diretta** e ripresa in differita, con ritorno alla diretta
 - Preferiti, canali recenti e «Continua a guardare» con ripresa
-- 4 profili, ognuno con i propri preferiti e la cronologia
+- 4 profili con un nome a scelta, ognuno con i propri preferiti e la cronologia
 - Scelta di audio e sottotitoli, timer di spegnimento, numero del canale, tasto canale precedente
 - Pensata per il telecomando, con una pagina **Guida** nelle Impostazioni
 - Credenziali salvate cifrate sul dispositivo

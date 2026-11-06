@@ -45,7 +45,7 @@
     <string name="set_unlimited">illimitata</string>
     <string name="set_connections" formatted="true">Connessioni: %1$d/%2$d</string>
     <string name="set_offline">Modalità offline (dati in cache)</string>
-    <string name="set_profile" formatted="true">Profilo: %1$d di %2$d (cambia)</string>
+    <string name="set_profile" formatted="true">Profilo: %1$s (cambia)</string>
     <string name="set_text" formatted="true">Testo: %1$s</string>
     <string name="scale_normal">normale</string>
     <string name="scale_large">grande</string>
@@ -95,7 +95,7 @@
     <string name="btn_exit">← Esci</string>
     <string name="channels">Canali</string>
     <string name="guide">Guida</string>
-    <string name="live_hint">▲▼ canale    ◀ elenco    ▶ guida    Menu opzioni    ⏪ precedente    0-9 numero</string>
+    <string name="live_hint">▲▼ canale    ◀ ▶ OK pulsanti    Menu opzioni    ⏪ precedente    0-9 numero</string>
     <string name="prev_channel" formatted="true">Canale precedente: %1$s</string>
     <string name="guide_for" formatted="true">Guida · %1$s</string>
     <string name="guide_none">Guida non disponibile per questo canale</string>
@@ -190,4 +190,12 @@
     <string name="ts_paused">In pausa %1$s</string>
     <string name="ts_delayed">In differita −%1$s</string>
     <string name="ts_failed">Pausa non disponibile su questo canale</string>
+    <string name="profile_default" formatted="true">Profilo %1$d</string>
+    <string name="profile_rename">Rinomina profilo</string>
+    <string name="profile_name_title">Nome del profilo</string>
+    <string name="profile_active" formatted="true">Profilo: %1$s</string>
+    <string name="btn_save">Salva</string>
+    <string name="btn_cancel">Annulla</string>
+    <string name="live_hint_bar">◀ ▶ scegli    OK premi    Indietro chiudi</string>
+    <string name="rec_last_error" formatted="true">Ultimo errore di conversione: %1$s</string>
 </resources>

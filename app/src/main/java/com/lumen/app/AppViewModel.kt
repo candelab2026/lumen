@@ -180,6 +180,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     var cont by mutableStateOf(store.continueList())
         private set
     var profile by mutableIntStateOf(store.profile)
+    var profileNames by mutableStateOf(List(PROFILES) { store.profileName(it) })
         private set
     var autoStart by mutableStateOf(store.autoStart)
         private set
@@ -318,6 +319,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         recents = emptyList()
         cont = emptyList()
         profile = 0
+        profileNames = List(PROFILES) { null }
         autoStart = false
         liveCat = "*"
         vodCat = "*"
@@ -444,6 +446,11 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
     }
 
     // ---------- Profili e impostazioni ----------
+
+    fun renameProfile(name: String) {
+        store.setProfileName(profile, name)
+        profileNames = List(PROFILES) { store.profileName(it) }
+    }
 
     fun switchProfile() {
         store.profile = (store.profile + 1) % PROFILES

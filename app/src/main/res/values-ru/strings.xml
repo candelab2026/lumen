@@ -45,7 +45,7 @@
     <string name="set_unlimited">бессрочно</string>
     <string name="set_connections" formatted="true">Подключения: %1$d/%2$d</string>
     <string name="set_offline">Офлайн-режим (данные из кэша)</string>
-    <string name="set_profile" formatted="true">Профиль: %1$d из %2$d (сменить)</string>
+    <string name="set_profile" formatted="true">Профиль: %1$s (сменить)</string>
     <string name="set_text" formatted="true">Текст: %1$s</string>
     <string name="scale_normal">обычный</string>
     <string name="scale_large">крупный</string>
@@ -95,7 +95,7 @@
     <string name="btn_exit">← Выход</string>
     <string name="channels">Каналы</string>
     <string name="guide">Программа</string>
-    <string name="live_hint">▲▼ канал    ◀ список    ▶ программа    Меню опции    ⏪ предыдущий    0-9 номер</string>
+    <string name="live_hint">▲▼ канал    ◀ ▶ OK кнопки    Меню параметры    ⏪ предыдущий    0-9 номер</string>
     <string name="prev_channel" formatted="true">Предыдущий канал: %1$s</string>
     <string name="guide_for" formatted="true">Программа · %1$s</string>
     <string name="guide_none">Для этого канала нет телепрограммы</string>
@@ -190,4 +190,12 @@
     <string name="ts_paused">Пауза %1$s</string>
     <string name="ts_delayed">Отставание −%1$s</string>
     <string name="ts_failed">Пауза недоступна на этом канале</string>
+    <string name="profile_default" formatted="true">Профиль %1$d</string>
+    <string name="profile_rename">Переименовать профиль</string>
+    <string name="profile_name_title">Имя профиля</string>
+    <string name="profile_active" formatted="true">Профиль: %1$s</string>
+    <string name="btn_save">Сохранить</string>
+    <string name="btn_cancel">Отмена</string>
+    <string name="live_hint_bar">◀ ▶ выбор    OK нажать    Назад закрыть</string>
+    <string name="rec_last_error" formatted="true">Последняя ошибка преобразования: %1$s</string>
 </resources>

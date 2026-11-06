@@ -39,6 +39,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
@@ -292,6 +293,9 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
     var prevIndex by remember { mutableIntStateOf(-1) }
     var sleepMin by remember { mutableIntStateOf(0) }
     val fr = remember { FocusRequester() }
+    // barra dei comandi in basso: col telecomando ci si entra con ◀ ▶ OK e ci si muove tra i pulsanti
+    val barFr = remember { FocusRequester() }
+    var barFocused by remember { mutableStateOf(false) }
     val compact = isCompact()
     Immersive()
 
@@ -379,9 +383,13 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
         delayMs = 0L
     }
 
+    // tornando in diretta il server può contare ancora per un attimo la connessione della differita
+    var fromShift by remember { mutableStateOf(false) }
+
     fun goLive() {
         if (tsMode == 0) return
         endShift()
+        fromShift = true
         retry++
     }
 
@@ -447,7 +455,8 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
         // chiude subito la connessione del canale precedente: molti server contano le connessioni attive
         player.stop()
         player.clearMediaItems()
-        delay(600) // evita di martellare il server quando si fa zapping veloce
+        delay(if (fromShift) 1_500 else 600) // evita di martellare il server quando si fa zapping veloce
+        fromShift = false
         player.setMediaItem(
             MediaItem.Builder()
                 .setUri(vm.repo.liveUrl(ch, ext))
@@ -492,8 +501,15 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
     }
     LaunchedEffect(overlayTick) {
         overlay = true
-        delay(5_000)
+        delay(if (barFocused) 10_000 else 5_000)
         overlay = false
+    }
+    // barra nascosta: il focus torna al video (altrimenti resterebbe su un pulsante sparito)
+    LaunchedEffect(overlay) {
+        if (!overlay) {
+            barFocused = false
+            if (panel == 0) runCatching { fr.requestFocus() }
+        }
     }
     LaunchedEffect(typed) {
         if (typed.isNotEmpty()) {
@@ -505,8 +521,12 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
             overlayTick++
         }
     }
-    LaunchedEffect(panel) { if (panel == 0) runCatching { fr.requestFocus() } }
+    LaunchedEffect(panel) {
+        barFocused = false
+        if (panel == 0) runCatching { fr.requestFocus() }
+    }
     BackHandler(enabled = panel != 0) { panel = 0 }
+    BackHandler(enabled = panel == 0 && barFocused) { overlay = false }
 
     // EPG: dal file XMLTV, altrimenti quella breve del singolo canale
     @Suppress("UNUSED_VARIABLE") val ver = vm.epgVersion
@@ -530,6 +550,21 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
                 if (panel != 0) return@onKeyEvent false
                 val down = ev.type == KeyEventType.KeyDown
                 val first = ev.nativeKeyEvent.repeatCount == 0
+                val nav = ev.key == Key.DirectionLeft || ev.key == Key.DirectionRight ||
+                    ev.key == Key.DirectionCenter || ev.key == Key.Enter || ev.key == Key.NumPadEnter
+                if (barFocused) {
+                    // nella barra: ◀ ▶ spostano tra i pulsanti, OK preme; ▲ ▼ non cambiano canale
+                    if (down) overlayTick++
+                    if (nav) return@onKeyEvent false
+                    if (ev.key == Key.DirectionUp || ev.key == Key.DirectionDown) return@onKeyEvent true
+                } else if (overlay && nav && !(tsMode == 1 && ev.key != Key.DirectionLeft && ev.key != Key.DirectionRight)) {
+                    // barra visibile: ◀ ▶ OK entrano nella barra invece di aprire elenco/guida
+                    if (down && first) {
+                        overlayTick++
+                        runCatching { barFr.requestFocus() }
+                    }
+                    return@onKeyEvent true
+                }
                 when {
                     // ▼ = canale successivo nell'elenco (quello sotto), ▲ = precedente (quello sopra)
                     ev.key == Key.DirectionDown || ev.key == Key.ChannelUp || ev.key == Key.PageUp -> {
@@ -668,11 +703,14 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
                 if (next != null) {
                     Text(stringResource(R.string.next) + "  ${fmtTime(next.start)}-${fmtTime(next.stop)}  ${next.title}", color = TextDim, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 }
-                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    Modifier.onFocusChanged { barFocused = it.hasFocus }.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
                     Button(stringResource(R.string.btn_exit), { vm.back() }, small = compact)
                     Button("▲", { zapPrev(); overlayTick++ }, small = compact)
                     Button("▼", { zapNext(); overlayTick++ }, small = compact)
-                    Button(stringResource(R.string.channels), { panel = 1 }, small = compact)
+                    Button(stringResource(R.string.channels), { panel = 1 }, small = compact, fr = barFr)
                     Button(stringResource(R.string.guide), { panel = 2 }, small = compact)
                     Button(stringResource(if (tsMode == 1) R.string.ts_resume else R.string.ts_pause), { togglePause(); overlayTick++ }, small = compact)
                     if (tsMode != 0) Button(stringResource(R.string.ts_live), { goLive(); overlayTick++ }, small = compact)
@@ -684,7 +722,7 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
                     )
                 }
                 Text(
-                    stringResource(R.string.live_hint),
+                    stringResource(if (barFocused) R.string.live_hint_bar else R.string.live_hint),
                     color = TextDim, fontSize = 11.sp,
                 )
             }

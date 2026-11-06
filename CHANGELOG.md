@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.2.1
+
+- Live player on TV: when the bottom bar is shown, ◀ ▶ OK move between its buttons (Channels, Guide, Pause, Options…) instead of opening the list or guide; Back closes the bar.
+- Recordings: the video is copied as is instead of being re-encoded (channels with non-square pixels, e.g. SD 16:9 or HD 1440x1080, failed to convert on Fire TV); conversion is also much faster. The last conversion error is shown in the recordings list.
+- Pause live TV: more patient reconnection for single-connection subscriptions, both when pausing and when going back to live.
+- Profiles can be renamed (Settings → Rename profile); the active profile is always shown below the channel list.
+
 ## 2.2.0
 
 - TV guide reminders: hold OK (or Menu) on a channel, pick an upcoming programme; a notice appears a minute before it starts (dialog with the app open, notification otherwise) and opens the channel.

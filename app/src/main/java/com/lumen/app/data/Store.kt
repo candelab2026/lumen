@@ -56,6 +56,11 @@ class Store(ctx: Context) {
 
     private fun k(name: String) = if (profile == 0) name else "p${profile}_$name"
 
+    /** Nome scelto per il profilo [i] (null = nome predefinito "Profilo N"). */
+    fun profileName(i: Int): String? = data.getString("pname_$i", null)?.takeIf { it.isNotBlank() }
+
+    fun setProfileName(i: Int, name: String) = data.edit().putString("pname_$i", name.trim().take(24)).apply()
+
     // ---------- impostazioni ----------
 
     /** All'apertura dell'app riparte l'ultimo canale visto. */

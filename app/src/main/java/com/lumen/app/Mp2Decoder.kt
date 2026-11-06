@@ -22,7 +22,7 @@ import java.util.ArrayDeque
  * Transformer lo ricodifica in AAC. Per tutto il resto si usano i decoder di sistema.
  */
 class LumenDecoderFactory(ctx: android.content.Context) : Codec.DecoderFactory {
-    private val platform = DefaultDecoderFactory.Builder(ctx).build()
+    private val platform = DefaultDecoderFactory.Builder(ctx).setEnableDecoderFallback(true).build()
 
     override fun createForAudioDecoding(format: Format, logSessionId: LogSessionId?): Codec =
         if (format.sampleMimeType == MimeTypes.AUDIO_MPEG_L2 || format.sampleMimeType == MimeTypes.AUDIO_MPEG_L1) {
@@ -121,5 +121,82 @@ class Mp2Decoder(private val format: Format) : Codec {
 
     override fun release() {
         queue.clear()
+    }
+}
+
+/**
+ * Transformer ricodifica tutto il video quando i pixel non sono quadrati (canali SD 16:9 a 720x576, HD a 1440x1080):
+ * lento e sulla Fire Stick fallisce (il decoder hardware è già occupato dal player). Si dichiara il video "a pixel
+ * quadrati" così viene copiato com'è; il vero rapporto si rimette nel file finito (vedi [fixAspect]).
+ */
+class CopyVideoAssetLoaderFactory(private val base: androidx.media3.transformer.AssetLoader.Factory) : androidx.media3.transformer.AssetLoader.Factory {
+    /** Rapporto dei pixel del video originale (1 se quadrati). */
+    @Volatile
+    var pixelRatio = 1f
+        private set
+
+    override fun createAssetLoader(
+        editedMediaItem: androidx.media3.transformer.EditedMediaItem,
+        looper: android.os.Looper,
+        listener: androidx.media3.transformer.AssetLoader.Listener,
+        compositionSettings: androidx.media3.transformer.AssetLoader.CompositionSettings,
+    ): androidx.media3.transformer.AssetLoader = base.createAssetLoader(
+        editedMediaItem, looper,
+        object : androidx.media3.transformer.AssetLoader.Listener by listener {
+            override fun onTrackAdded(inputFormat: Format, supportedOutputTypes: Int): Boolean {
+                val video = MimeTypes.isVideo(inputFormat.sampleMimeType)
+                val r = inputFormat.pixelWidthHeightRatio
+                if (video && r > 0f && r != 1f) {
+                    pixelRatio = r
+                    return listener.onTrackAdded(inputFormat.buildUpon().setPixelWidthHeightRatio(1f).build(), supportedOutputTypes)
+                }
+                return listener.onTrackAdded(inputFormat, supportedOutputTypes)
+            }
+        },
+        compositionSettings,
+    )
+}
+
+/** Scrive nel box `pasp` del .mp4 il rapporto dei pixel originale (il muxer lo mette sempre 1:1). */
+fun fixAspect(mp4: java.io.File, ratio: Float) {
+    if (ratio <= 0f || ratio == 1f) return
+    var h = Math.round(ratio * 1000)
+    var v = 1000
+    tailrec fun gcd(a: Int, b: Int): Int = if (b == 0) a else gcd(b, a % b)
+    val g = gcd(h, v)
+    h /= g
+    v /= g
+    java.io.RandomAccessFile(mp4, "rw").use { f ->
+        // box di primo livello fino a moov, poi si cerca "pasp" dentro moov
+        var pos = 0L
+        val len = f.length()
+        while (pos + 8 <= len) {
+            f.seek(pos)
+            var size = f.readInt().toLong() and 0xFFFFFFFFL
+            val type = ByteArray(4).also { f.readFully(it) }
+            var header = 8
+            if (size == 1L) { size = f.readLong(); header = 16 }
+            if (size == 0L) size = len - pos
+            if (size < header) return
+            if (String(type, Charsets.US_ASCII) == "moov") {
+                if (size > 64L shl 20) return
+                val box = ByteArray(size.toInt())
+                f.seek(pos)
+                f.readFully(box)
+                var i = 4
+                while (i + 12 <= box.size) {
+                    if (box[i] == 'p'.code.toByte() && box[i + 1] == 'a'.code.toByte() && box[i + 2] == 's'.code.toByte() && box[i + 3] == 'p'.code.toByte()) {
+                        f.seek(pos + i + 4)
+                        f.writeInt(h)
+                        f.writeInt(v)
+                        i += 12
+                    } else {
+                        i++
+                    }
+                }
+                return
+            }
+            pos += size
+        }
     }
 }

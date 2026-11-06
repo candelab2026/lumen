@@ -287,6 +287,7 @@ private fun LiveContent(vm: AppViewModel, st: ListState<Channel>, active: Boolea
                 }
             })
         }
+        Column(Modifier.weight(1f)) {
         Box(
             Modifier.weight(1f).onPreviewKeyEvent { ev ->
                 if (ev.type != KeyEventType.KeyDown) return@onPreviewKeyEvent false
@@ -316,12 +317,26 @@ private fun LiveContent(vm: AppViewModel, st: ListState<Channel>, active: Boolea
                             ChannelRow(vm, ch, shown, i, active, jumpTick)
                         }
                     }
-                    Text(stringResource(R.string.live_hint_fav), color = TextDim, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(top = 4.dp))
                 }
             }
         }
+        // profilo attivo, sempre visibile sotto l'elenco
+        Row(Modifier.fillMaxWidth().padding(top = 4.dp), verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                "👤 " + stringResource(R.string.profile_active, profileLabel(vm)),
+                color = Accent, fontSize = 12.sp, fontWeight = FontWeight.Bold, maxLines = 1,
+                modifier = Modifier.padding(end = 16.dp),
+            )
+            Text(stringResource(R.string.live_hint_fav), color = TextDim, fontSize = 11.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+        }
+        }
     }
 }
+
+/** Nome del profilo [i]: quello scelto dall'utente oppure "Profilo N". */
+@Composable
+fun profileLabel(vm: AppViewModel, i: Int = vm.profile): String =
+    vm.profileNames.getOrNull(i) ?: stringResource(R.string.profile_default, i + 1)
 
 @Composable
 private fun ChannelRow(vm: AppViewModel, ch: Channel, list: List<Channel>, index: Int, active: Boolean, jumpTick: Int) {
@@ -858,6 +873,8 @@ private fun SettingsTab(vm: AppViewModel) {
     val ctx = LocalContext.current
     var folderDlg by remember { mutableStateOf(false) }
     val folderFr = remember { FocusRequester() }
+    var nameDlg by remember { mutableStateOf(false) }
+    val renameFr = remember { FocusRequester() }
     Box(Modifier.fillMaxSize()) {
     Column(
         Modifier.fillMaxSize().noFocus().verticalScroll(rememberScrollState()).padding(top = 8.dp),
@@ -881,21 +898,25 @@ private fun SettingsTab(vm: AppViewModel) {
         val gap = Arrangement.spacedBy(12.dp)
         val w = Modifier.weight(1f)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
-            Button(stringResource(R.string.set_profile, vm.profile + 1, AppViewModel.PROFILES), onClick = { vm.switchProfile() }, modifier = w)
+            Button(stringResource(R.string.set_profile, profileLabel(vm)), onClick = { vm.switchProfile() }, modifier = w)
+            Button(stringResource(R.string.profile_rename), onClick = { nameDlg = true }, modifier = w, fr = renameFr)
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
             Button(stringResource(R.string.set_text, stringResource(SCALE_NAMES[vm.textScale])), onClick = { vm.cycleTextScale() }, modifier = w)
-        }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
             Button(stringResource(R.string.set_autostart, stringResource(yesNo(vm.autoStart))), onClick = { vm.toggleAutoStart() }, modifier = w)
-            Button(stringResource(R.string.set_pubguide, stringResource(yesNo(vm.publicEpg))), onClick = { vm.togglePublicEpg() }, modifier = w)
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
+            Button(stringResource(R.string.set_pubguide, stringResource(yesNo(vm.publicEpg))), onClick = { vm.togglePublicEpg() }, modifier = w)
             Button(stringResource(R.string.set_refresh), onClick = { vm.refreshAll() }, modifier = w)
+        }
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
             Button(
                 vm.newVersion?.let { stringResource(R.string.upd_available_btn, it.version) } ?: stringResource(R.string.upd_check_btn),
                 onClick = { if (vm.newVersion != null) vm.installUpdate() else vm.checkAppUpdate(true) },
                 primary = vm.newVersion != null,
                 modifier = w,
             )
+            Button(stringResource(R.string.set_help), onClick = { vm.push(Screen.Help) }, modifier = w)
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
             Button(stringResource(R.string.rec_title), onClick = { vm.push(Screen.Recordings) }, modifier = w)
@@ -904,8 +925,8 @@ private fun SettingsTab(vm: AppViewModel) {
             Button(stringResource(R.string.rec_folder_btn, folderLabel), onClick = { folderDlg = true }, modifier = w, fr = folderFr)
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
-            Button(stringResource(R.string.set_help), onClick = { vm.push(Screen.Help) }, modifier = w)
             Button(stringResource(R.string.set_logout), onClick = { vm.logout() }, modifier = w)
+            Spacer(w)
         }
         vm.updateStatus?.let { Text(it, color = Gold, fontSize = 14.sp) }
         Text(stringResource(R.string.set_profile_note), color = TextDim, fontSize = 12.sp)
@@ -915,6 +936,32 @@ private fun SettingsTab(vm: AppViewModel) {
     if (folderDlg) RecFolderDialog {
         folderDlg = false
         runCatching { folderFr.requestFocus() }
+    }
+    if (nameDlg) {
+        var name by remember { mutableStateOf(vm.profileNames.getOrNull(vm.profile) ?: "") }
+        val fieldFr = remember { FocusRequester() }
+        LaunchedEffect(Unit) { runCatching { fieldFr.requestFocus() } }
+        val close = {
+            nameDlg = false
+            runCatching { renameFr.requestFocus() }
+            Unit
+        }
+        val save = {
+            vm.renameProfile(name)
+            close()
+        }
+        androidx.activity.compose.BackHandler { close() }
+        ModalBox {
+            Text(stringResource(R.string.profile_name_title), color = TextMain, fontSize = 20.sp, fontWeight = FontWeight.Bold)
+            TvTextField(
+                name, { name = it.take(24) }, stringResource(R.string.profile_default, vm.profile + 1),
+                Modifier.fillMaxWidth(), onImeAction = save, focusRequester = fieldFr,
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+                Button(stringResource(R.string.btn_save), onClick = save, strong = true, modifier = Modifier.width(180.dp))
+                Button(stringResource(R.string.btn_cancel), onClick = close, strong = true, modifier = Modifier.width(180.dp))
+            }
+        }
     }
     }
 }

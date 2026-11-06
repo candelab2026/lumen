@@ -129,6 +129,10 @@ fun RecordingsScreen(vm: AppViewModel) {
                 )
             }
             Text(stringResource(R.string.rec_hint_list), color = TextDim, fontSize = 11.sp, modifier = Modifier.padding(vertical = 6.dp))
+            // ultima conversione fallita: il dettaglio tecnico serve per segnalare il problema
+            remember(recs) { Recorder.lastError(ctx) }?.let {
+                Text(stringResource(R.string.rec_last_error, it), color = Gold, fontSize = 11.sp, maxLines = 3, overflow = TextOverflow.Ellipsis, modifier = Modifier.padding(bottom = 6.dp))
+            }
             if (recs.isEmpty()) {
                 CenterMessage(stringResource(R.string.rec_empty))
             } else {

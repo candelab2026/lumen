@@ -46,7 +46,7 @@
     <string name="set_unlimited">unlimited</string>
     <string name="set_connections" formatted="true">Connections: %1$d/%2$d</string>
     <string name="set_offline">Offline mode (cached data)</string>
-    <string name="set_profile" formatted="true">Profile: %1$d of %2$d (change)</string>
+    <string name="set_profile" formatted="true">Profile: %1$s (change)</string>
     <string name="set_text" formatted="true">Text: %1$s</string>
     <string name="scale_normal">normal</string>
     <string name="scale_large">large</string>
@@ -96,7 +96,7 @@
     <string name="btn_exit">← Exit</string>
     <string name="channels">Channels</string>
     <string name="guide">Guide</string>
-    <string name="live_hint">▲▼ channel    ◀ list    ▶ guide    Menu options    ⏪ previous    0-9 number</string>
+    <string name="live_hint">▲▼ channel    ◀ ▶ OK buttons    Menu options    ⏪ previous    0-9 number</string>
     <string name="prev_channel" formatted="true">Previous channel: %1$s</string>
     <string name="guide_for" formatted="true">Guide · %1$s</string>
     <string name="guide_none">Guide not available for this channel</string>
@@ -191,4 +191,12 @@
     <string name="ts_paused">Paused %1$s</string>
     <string name="ts_delayed">Delayed −%1$s</string>
     <string name="ts_failed">Pause is not available on this channel</string>
+    <string name="profile_default" formatted="true">Profile %1$d</string>
+    <string name="profile_rename">Rename profile</string>
+    <string name="profile_name_title">Profile name</string>
+    <string name="profile_active" formatted="true">Profile: %1$s</string>
+    <string name="btn_save">Save</string>
+    <string name="btn_cancel">Cancel</string>
+    <string name="live_hint_bar">◀ ▶ choose    OK press    Back close</string>
+    <string name="rec_last_error" formatted="true">Last conversion error: %1$s</string>
 </resources>

@@ -170,6 +170,13 @@ object Recorder {
         }
         // se lo spostamento fallisce il file resta in rec_tmp e si riprova al prossimo avvio
         val reason = (err as? ExportException)?.errorCodeName ?: err?.javaClass?.simpleName
+        // dettaglio dell'ultimo errore, mostrato nell'elenco registrazioni per poterlo segnalare
+        if (err != null) {
+            val chain = generateSequence(err as Throwable) { it.cause }.take(4).joinToString(" | ") { it.message ?: it.javaClass.simpleName }
+            prefs(ctx).edit().putString("last_error", "$reason: $chain".take(400)).apply()
+        } else if (ok) {
+            prefs(ctx).edit().remove("last_error").apply()
+        }
         job = if (ok && err != null) ctx.getString(R.string.rec_conv_failed) + " ($reason)" to 1f else null
         if (job != null) {
             delay(4_000)
@@ -190,11 +197,13 @@ object Recorder {
                 }
             }
         }
-        return try {
+        // decoder MP2 software (vedi Mp2Decoder.kt); il video si copia sempre senza ricodificarlo
+        val loader = CopyVideoAssetLoaderFactory(androidx.media3.transformer.ExoPlayerAssetLoader.Factory(ctx, LumenDecoderFactory(ctx), androidx.media3.common.util.Clock.DEFAULT))
+        val err = try {
             suspendCancellableCoroutine { cont ->
                 val t = Transformer.Builder(ctx)
-                    // decoder MP2 software (vedi Mp2Decoder.kt) e muxer interno, più tollerante di quello di sistema
-                    .setAssetLoaderFactory(androidx.media3.transformer.ExoPlayerAssetLoader.Factory(ctx, LumenDecoderFactory(ctx), androidx.media3.common.util.Clock.DEFAULT))
+                    // muxer interno, più tollerante di quello di sistema
+                    .setAssetLoaderFactory(loader)
                     .setMuxerFactory(androidx.media3.transformer.InAppMp4Muxer.Factory())
                     .addListener(object : Transformer.Listener {
                     override fun onCompleted(composition: Composition, exportResult: ExportResult) {
@@ -216,7 +225,12 @@ object Recorder {
         } finally {
             poll.cancel()
         }
+        if (err == null) withContext(Dispatchers.IO) { runCatching { fixAspect(dst, loader.pixelRatio) } }
+        return err
     }
+
+    /** Dettaglio dell'ultima conversione fallita (null se l'ultima è riuscita). */
+    fun lastError(ctx: Context): String? = prefs(ctx).getString("last_error", null)
 
     /** Sposta il file finito nella cartella scelta. */
     private fun deliver(ctx: Context, f: File, name: String, mime: String): Boolean = try {

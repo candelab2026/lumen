@@ -45,7 +45,7 @@
     <string name="set_unlimited">unbegrenzt</string>
     <string name="set_connections" formatted="true">Verbindungen: %1$d/%2$d</string>
     <string name="set_offline">Offline-Modus (zwischengespeicherte Daten)</string>
-    <string name="set_profile" formatted="true">Profil: %1$d von %2$d (wechseln)</string>
+    <string name="set_profile" formatted="true">Profil: %1$s (wechseln)</string>
     <string name="set_text" formatted="true">Text: %1$s</string>
     <string name="scale_normal">normal</string>
     <string name="scale_large">groß</string>
@@ -95,7 +95,7 @@
     <string name="btn_exit">← Beenden</string>
     <string name="channels">Sender</string>
     <string name="guide">Programm</string>
-    <string name="live_hint">▲▼ Sender    ◀ Liste    ▶ Programm    Menü Optionen    ⏪ zurück    0-9 Nummer</string>
+    <string name="live_hint">▲▼ Sender    ◀ ▶ OK Tasten    Menü Optionen    ⏪ vorheriger    0-9 Nummer</string>
     <string name="prev_channel" formatted="true">Vorheriger Sender: %1$s</string>
     <string name="guide_for" formatted="true">Programm · %1$s</string>
     <string name="guide_none">Kein Programm für diesen Sender verfügbar</string>
@@ -190,4 +190,12 @@
     <string name="ts_paused">Pausiert %1$s</string>
     <string name="ts_delayed">Zeitversetzt −%1$s</string>
     <string name="ts_failed">Pause ist auf diesem Sender nicht verfügbar</string>
+    <string name="profile_default" formatted="true">Profil %1$d</string>
+    <string name="profile_rename">Profil umbenennen</string>
+    <string name="profile_name_title">Profilname</string>
+    <string name="profile_active" formatted="true">Profil: %1$s</string>
+    <string name="btn_save">Speichern</string>
+    <string name="btn_cancel">Abbrechen</string>
+    <string name="live_hint_bar">◀ ▶ wählen    OK drücken    Zurück schließen</string>
+    <string name="rec_last_error" formatted="true">Letzter Konvertierungsfehler: %1$s</string>
 </resources>
