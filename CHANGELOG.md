@@ -1,5 +1,11 @@
 # Changelog
 
+## 2.2.2
+
+- Live player: in the Guide panel the programmes can be selected; OK on an upcoming one sets or removes its reminder 🔔 (the description of the focused programme is shown).
+- Fixed a crash opening the guide on channels whose guide lists the same programme twice.
+- Recordings are saved as .ts (no more MP4 conversion, which failed on many channels); the HLS playlist text no longer ends up inside the file, which made it unreadable. Smaller app (the MP2 decoder and converter are gone).
+
 ## 2.2.1
 
 - Live player on TV: when the bottom bar is shown, ◀ ▶ OK move between its buttons (Channels, Guide, Pause, Options…) instead of opening the list or guide; Back closes the bar.

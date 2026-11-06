@@ -14,20 +14,12 @@ import android.provider.MediaStore
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
-import androidx.media3.common.MediaItem
 import androidx.media3.datasource.DataSink
 import androidx.media3.datasource.DataSpec
-import androidx.media3.transformer.Composition
-import androidx.media3.transformer.ExportException
-import androidx.media3.transformer.ExportResult
-import androidx.media3.transformer.ProgressHolder
-import androidx.media3.transformer.Transformer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.sync.Mutex
 import kotlinx.coroutines.sync.withLock
 import kotlinx.coroutines.withContext
@@ -37,14 +29,13 @@ import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
-import kotlin.coroutines.resume
 
 /**
  * Registrazioni: durante la visione si salva su un file .ts temporaneo lo stesso flusso letto dal player
- * (una sola connessione al server). A registrazione finita il .ts diventa un .mp4 (Media3 Transformer,
- * di solito senza ricodificare il video) e viene spostato nella cartella scelta; se la conversione
- * fallisce si tiene il .ts. I .ts rimasti da una registrazione interrotta (app chiusa, TV spenta)
- * si convertono al successivo avvio.
+ * (una sola connessione al server). A registrazione finita il file viene ripulito (solo pacchetti TS validi)
+ * e spostato nella cartella scelta. Niente conversione in .mp4: il .ts si apre con Lumen, VLC e quasi tutti
+ * i lettori, e la conversione falliva con molti canali. I .ts rimasti da una registrazione interrotta
+ * (app chiusa, TV spenta) si sistemano al successivo avvio.
  *
  * Cartella: "" = Download/Lumen (predefinita); "file:<percorso>" = cartella dell'app su USB/SD;
  * "content://..." = cartella scelta dall'utente (solo dove Android offre la scelta, non su Fire TV).
@@ -57,7 +48,7 @@ object Recorder {
     private val scope = CoroutineScope(SupervisorJob() + Dispatchers.Main)
     private val queue = Mutex()
 
-    /** Conversione in corso: (testo, frazione 0..1), null se nessuna. Mostrata in basso a sinistra. */
+    /** Salvataggio in corso: (testo, frazione 0..1), null se nessuno. Mostrato in basso a sinistra. */
     var job by mutableStateOf<Pair<String, Float>?>(null)
         private set
 
@@ -124,7 +115,7 @@ object Recorder {
     /** File temporaneo dove scrivere il flusso durante la registrazione. */
     fun begin(ctx: Context, base: String): File = File(tmpDir(ctx), "$base.ts")
 
-    /** Registrazione finita: conversione in .mp4 e spostamento nella cartella scelta, in sottofondo e in coda. */
+    /** Registrazione finita: pulizia e spostamento nella cartella scelta, in sottofondo e in coda. */
     fun finish(ctx: Context, ts: File) {
         val app = ctx.applicationContext
         scope.launch {
@@ -132,14 +123,14 @@ object Recorder {
         }
     }
 
-    /** All'avvio: i .ts rimasti da registrazioni interrotte vengono convertiti come se fossero appena finiti. */
+    /** All'avvio: i .ts rimasti da registrazioni interrotte vengono salvati come se fossero appena finiti. */
     private var recovered = false
 
     fun recover(ctx: Context) {
         if (recovered) return
         recovered = true
         tmpDir(ctx)
-        tmpDirs(ctx).forEach { d -> d.listFiles { f -> f.name.endsWith(".mp4") }?.forEach { it.delete() } }
+        tmpDirs(ctx).forEach { d -> d.listFiles { f -> f.name.endsWith(".mp4") || f.name.endsWith(".clean") }?.forEach { it.delete() } }
         tmpDirs(ctx).flatMap { d -> d.listFiles { f -> f.name.endsWith(".ts") }?.toList() ?: emptyList() }
             .filter { it.length() > 0 }
             .forEach { finish(ctx, it) }
@@ -148,89 +139,55 @@ object Recorder {
     private suspend fun process(ctx: Context, ts: File) {
         if (!ts.exists()) return
         val base = ts.name.removeSuffix(".ts")
-        job = ctx.getString(R.string.rec_converting) to 0f
-        val mp4 = File(ts.parentFile, "$base.mp4")
-        // se la conversione di questo file aveva fatto chiudere l'app, al riavvio non si ritenta: si tiene il .ts
-        val crashed = prefs(ctx).getString("converting", null) == ts.absolutePath
-        prefs(ctx).edit().putString("converting", ts.absolutePath).commit()
-        val err = if (crashed) IllegalStateException("previous conversion crashed") else convert(ctx, ts, mp4)
-        prefs(ctx).edit().remove("converting").commit()
-        job = ctx.getString(R.string.rec_converting) to 1f
-        val ok = withContext(Dispatchers.IO) {
-            if (err == null && mp4.length() > 0) {
-                deliver(ctx, mp4, "$base.mp4", "video/mp4").also { if (it) ts.delete() }
-            } else {
-                mp4.delete()
-                deliver(ctx, ts, "$base.ts", "video/mp2t")
-            }
-        }
-        if (err != null) {
-            android.util.Log.w("Lumen", "conversione MP4 fallita: ${ts.name}", err)
-            AppStats.event(ctx, "record_convert_failed")
-        }
+        job = ctx.getString(R.string.rec_saving) to 0.5f
         // se lo spostamento fallisce il file resta in rec_tmp e si riprova al prossimo avvio
-        val reason = (err as? ExportException)?.errorCodeName ?: err?.javaClass?.simpleName
-        // dettaglio dell'ultimo errore, mostrato nell'elenco registrazioni per poterlo segnalare
-        if (err != null) {
-            val chain = generateSequence(err as Throwable) { it.cause }.take(4).joinToString(" | ") { it.message ?: it.javaClass.simpleName }
-            prefs(ctx).edit().putString("last_error", "$reason: $chain".take(400)).apply()
-        } else if (ok) {
-            prefs(ctx).edit().remove("last_error").apply()
+        withContext(Dispatchers.IO) {
+            val clean = File(ts.parentFile, "$base.clean")
+            if (runCatching { cleanTs(ts, clean) }.getOrDefault(false)) {
+                ts.delete()
+                clean.renameTo(ts)
+            } else {
+                clean.delete()
+            }
+            deliver(ctx, ts, "$base.ts", "video/mp2t")
         }
-        job = if (ok && err != null) ctx.getString(R.string.rec_conv_failed) + " ($reason)" to 1f else null
-        if (job != null) {
-            delay(4_000)
-            job = null
-        }
+        job = null
     }
 
-    /** .ts → .mp4 con Transformer (sul thread principale, come richiede la libreria). Restituisce l'errore o null. */
-    private suspend fun convert(ctx: Context, src: File, dst: File): Exception? {
-        dst.delete()
-        var tr: Transformer? = null
-        val poll = scope.launch {
-            val ph = ProgressHolder()
-            while (true) {
-                delay(500)
-                if (tr?.getProgress(ph) == Transformer.PROGRESS_STATE_AVAILABLE) {
-                    job = ctx.getString(R.string.rec_converting) to ph.progress / 100f
+    /**
+     * Copia solo i pacchetti TS validi (188 byte che iniziano con 0x47 e sono seguiti da un altro 0x47):
+     * scarta eventuali pezzi estranei (playlist, pagine d'errore) che renderebbero il file illeggibile.
+     */
+    private fun cleanTs(src: File, dst: File): Boolean {
+        var kept = 0L
+        src.inputStream().buffered(1 shl 20).use { inp ->
+            dst.outputStream().buffered(1 shl 20).use { out ->
+                val chunk = ByteArray(1 shl 20)
+                var buf = ByteArray(0)
+                while (true) {
+                    val n = inp.read(chunk)
+                    val eof = n < 0
+                    val data = if (n > 0) buf + chunk.copyOf(n) else buf
+                    var i = 0
+                    while (i + 188 <= data.size) {
+                        // per verificare il pacchetto serve l'inizio del successivo (salvo a fine file)
+                        if (!eof && i + 189 > data.size) break
+                        val nextOk = i + 188 >= data.size || data[i + 188] == 0x47.toByte()
+                        if (data[i] == 0x47.toByte() && nextOk) {
+                            out.write(data, i, 188)
+                            kept += 188
+                            i += 188
+                        } else {
+                            i++
+                        }
+                    }
+                    buf = data.copyOfRange(i, data.size)
+                    if (eof) break
                 }
             }
         }
-        // decoder MP2 software (vedi Mp2Decoder.kt); il video si copia sempre senza ricodificarlo
-        val loader = CopyVideoAssetLoaderFactory(androidx.media3.transformer.ExoPlayerAssetLoader.Factory(ctx, LumenDecoderFactory(ctx), androidx.media3.common.util.Clock.DEFAULT))
-        val err = try {
-            suspendCancellableCoroutine { cont ->
-                val t = Transformer.Builder(ctx)
-                    // muxer interno, più tollerante di quello di sistema
-                    .setAssetLoaderFactory(loader)
-                    .setMuxerFactory(androidx.media3.transformer.InAppMp4Muxer.Factory())
-                    .addListener(object : Transformer.Listener {
-                    override fun onCompleted(composition: Composition, exportResult: ExportResult) {
-                        if (cont.isActive) cont.resume(null)
-                    }
-
-                    override fun onError(composition: Composition, exportResult: ExportResult, exportException: ExportException) {
-                        if (cont.isActive) cont.resume(exportException)
-                    }
-                }).build()
-                tr = t
-                cont.invokeOnCancellation { t.cancel() }
-                try {
-                    t.start(MediaItem.fromUri(Uri.fromFile(src)), dst.absolutePath)
-                } catch (e: Exception) {
-                    if (cont.isActive) cont.resume(e)
-                }
-            }
-        } finally {
-            poll.cancel()
-        }
-        if (err == null) withContext(Dispatchers.IO) { runCatching { fixAspect(dst, loader.pixelRatio) } }
-        return err
+        return kept > 0
     }
-
-    /** Dettaglio dell'ultima conversione fallita (null se l'ultima è riuscita). */
-    fun lastError(ctx: Context): String? = prefs(ctx).getString("last_error", null)
 
     /** Sposta il file finito nella cartella scelta. */
     private fun deliver(ctx: Context, f: File, name: String, mime: String): Boolean = try {
@@ -403,17 +360,23 @@ class RecTap {
     }
 }
 
-/** Sink per TeeDataSource: scrive solo i dati video (flusso .ts o segmenti HLS), mai le playlist .m3u8. */
+/**
+ * Sink per TeeDataSource: scrive solo i dati video .ts (flusso continuo o segmenti HLS). Si decide dal
+ * contenuto: le playlist possono arrivare da indirizzi che non finiscono in .m3u8 (redirect del server)
+ * e non devono finire nel file. Un dato video TS comincia sempre con il byte di sincronismo 0x47.
+ */
 class TapSink(private val tap: RecTap) : DataSink {
-    private var media = false
+    private var state = 0 // 0 da decidere, 1 video, 2 da scartare
 
     override fun open(dataSpec: DataSpec) {
         val path = dataSpec.uri.path.orEmpty().lowercase()
-        media = !path.endsWith(".m3u8") && !path.endsWith(".m3u") && !path.endsWith(".key")
+        state = if (path.endsWith(".m3u8") || path.endsWith(".m3u") || path.endsWith(".key")) 2 else 0
     }
 
     override fun write(buffer: ByteArray, offset: Int, length: Int) {
-        if (media) tap.write(buffer, offset, length)
+        if (length <= 0) return
+        if (state == 0) state = if (buffer[offset] == 0x47.toByte()) 1 else 2
+        if (state == 1) tap.write(buffer, offset, length)
     }
 
     override fun close() {}

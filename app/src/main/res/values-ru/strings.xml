@@ -182,8 +182,6 @@
     <string name="rec_free">Свободно %1$s</string>
     <string name="rec_hint_list">OK — воспроизвести    Удерживайте OK (или Меню) — удалить</string>
     <string name="rec_note">Запись останавливается в конце передачи, при смене канала или выходе из плеера. На USB/SD файлы лежат в Android/data/com.lumen.app/files/Recordings.</string>
-    <string name="rec_converting">Преобразование записи в MP4…</string>
-    <string name="rec_conv_failed">Не удалось преобразовать в MP4: сохранено как .ts</string>
     <string name="ts_pause">⏸ Пауза</string>
     <string name="ts_resume">▶ Продолжить</string>
     <string name="ts_live">⏭ Вернуться в эфир</string>
@@ -197,5 +195,5 @@
     <string name="btn_save">Сохранить</string>
     <string name="btn_cancel">Отмена</string>
     <string name="live_hint_bar">◀ ▶ выбор    OK нажать    Назад закрыть</string>
-    <string name="rec_last_error" formatted="true">Последняя ошибка преобразования: %1$s</string>
+    <string name="rec_saving">Сохранение записи…</string>
 </resources>

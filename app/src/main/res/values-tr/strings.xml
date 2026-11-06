@@ -182,8 +182,6 @@
     <string name="rec_free">%1$s boş</string>
     <string name="rec_hint_list">OK oynatır    OK (veya Menü) basılı tutun: sil</string>
     <string name="rec_note">Kayıt program bitince, kanal değiştirince veya oynatıcıdan çıkınca durur. USB/SD üzerindeki dosyalar Android/data/com.lumen.app/files/Recordings klasöründedir.</string>
-    <string name="rec_converting">Kayıt MP4\'e dönüştürülüyor…</string>
-    <string name="rec_conv_failed">MP4 dönüştürme başarısız: .ts olarak kaydedildi</string>
     <string name="ts_pause">⏸ Duraklat</string>
     <string name="ts_resume">▶ Devam et</string>
     <string name="ts_live">⏭ Canlıya dön</string>
@@ -197,5 +195,5 @@
     <string name="btn_save">Kaydet</string>
     <string name="btn_cancel">İptal</string>
     <string name="live_hint_bar">◀ ▶ seç    OK bas    Geri kapat</string>
-    <string name="rec_last_error" formatted="true">Son dönüştürme hatası: %1$s</string>
+    <string name="rec_saving">Kayıt kaydediliyor…</string>
 </resources>

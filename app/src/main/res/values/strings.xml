@@ -183,8 +183,6 @@
     <string name="rec_free">%1$s free</string>
     <string name="rec_hint_list">OK plays    Hold OK (or Menu) deletes</string>
     <string name="rec_note">Recording stops at the end of the programme, when you change channel or when you leave the player. USB/SD recordings are in Android/data/com.lumen.app/files/Recordings.</string>
-    <string name="rec_converting">Converting recording to MP4…</string>
-    <string name="rec_conv_failed">MP4 conversion failed: saved as .ts</string>
     <string name="ts_pause">⏸ Pause</string>
     <string name="ts_resume">▶ Resume</string>
     <string name="ts_live">⏭ Back to live</string>
@@ -198,5 +196,5 @@
     <string name="btn_save">Save</string>
     <string name="btn_cancel">Cancel</string>
     <string name="live_hint_bar">◀ ▶ choose    OK press    Back close</string>
-    <string name="rec_last_error" formatted="true">Last conversion error: %1$s</string>
+    <string name="rec_saving">Saving recording…</string>
 </resources>

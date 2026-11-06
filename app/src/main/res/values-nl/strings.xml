@@ -182,8 +182,6 @@
     <string name="rec_free">%1$s vrij</string>
     <string name="rec_hint_list">OK speelt af    Houd OK (of Menu) ingedrukt om te verwijderen</string>
     <string name="rec_note">De opname stopt aan het einde van het programma, bij een andere zender of als je de speler verlaat. Op USB/SD staan de bestanden in Android/data/com.lumen.app/files/Recordings.</string>
-    <string name="rec_converting">Opname wordt omgezet naar MP4…</string>
-    <string name="rec_conv_failed">Omzetten naar MP4 mislukt: opgeslagen als .ts</string>
     <string name="ts_pause">⏸ Pauze</string>
     <string name="ts_resume">▶ Hervatten</string>
     <string name="ts_live">⏭ Terug naar live</string>
@@ -197,5 +195,5 @@
     <string name="btn_save">Opslaan</string>
     <string name="btn_cancel">Annuleren</string>
     <string name="live_hint_bar">◀ ▶ kiezen    OK drukken    Terug sluiten</string>
-    <string name="rec_last_error" formatted="true">Laatste conversiefout: %1$s</string>
+    <string name="rec_saving">Opname opslaan…</string>
 </resources>

@@ -182,8 +182,6 @@
     <string name="rec_free">%1$s libres</string>
     <string name="rec_hint_list">OK reproduce    Mantén OK (o Menú) para eliminar</string>
     <string name="rec_note">La grabación se detiene al final del programa, al cambiar de canal o al salir del reproductor. En USB/SD los archivos están en Android/data/com.lumen.app/files/Recordings.</string>
-    <string name="rec_converting">Convirtiendo la grabación a MP4…</string>
-    <string name="rec_conv_failed">Error al convertir a MP4: guardada como .ts</string>
     <string name="ts_pause">⏸ Pausa</string>
     <string name="ts_resume">▶ Reanudar</string>
     <string name="ts_live">⏭ Volver al directo</string>
@@ -197,5 +195,5 @@
     <string name="btn_save">Guardar</string>
     <string name="btn_cancel">Cancelar</string>
     <string name="live_hint_bar">◀ ▶ elegir    OK pulsar    Atrás cerrar</string>
-    <string name="rec_last_error" formatted="true">Último error de conversión: %1$s</string>
+    <string name="rec_saving">Guardando grabación…</string>
 </resources>

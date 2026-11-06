@@ -182,8 +182,6 @@
     <string name="rec_free">%1$s frei</string>
     <string name="rec_hint_list">OK spielt ab    OK (oder Menü) lange drücken löscht</string>
     <string name="rec_note">Die Aufnahme endet mit der Sendung, beim Senderwechsel oder beim Verlassen des Players. Auf USB/SD liegen die Dateien in Android/data/com.lumen.app/files/Recordings.</string>
-    <string name="rec_converting">Aufnahme wird in MP4 umgewandelt…</string>
-    <string name="rec_conv_failed">MP4-Umwandlung fehlgeschlagen: als .ts gespeichert</string>
     <string name="ts_pause">⏸ Pause</string>
     <string name="ts_resume">▶ Fortsetzen</string>
     <string name="ts_live">⏭ Zurück zu live</string>
@@ -197,5 +195,5 @@
     <string name="btn_save">Speichern</string>
     <string name="btn_cancel">Abbrechen</string>
     <string name="live_hint_bar">◀ ▶ wählen    OK drücken    Zurück schließen</string>
-    <string name="rec_last_error" formatted="true">Letzter Konvertierungsfehler: %1$s</string>
+    <string name="rec_saving">Aufnahme wird gespeichert…</string>
 </resources>

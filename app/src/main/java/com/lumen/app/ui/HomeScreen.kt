@@ -755,7 +755,7 @@ private fun GuideContent(vm: AppViewModel, st: ListState<Channel>) {
 private fun ReminderPicker(vm: AppViewModel, list: List<Channel>, index: Int, reminded: Set<String>, onToggle: () -> Unit, onClose: () -> Unit) {
     val ch = list[index]
     val ctx = LocalContext.current
-    val progs = remember(vm.epgVersion, ch.epgId) { vm.epg.upcoming(ch.epgId, 30) }
+    val progs = remember(vm.epgVersion, ch.epgId) { vm.epg.upcoming(ch.epgId, 30).distinctBy { it.start } } // guide con programmi doppi: chiavi uniche
     val fr = remember { FocusRequester() }
     LaunchedEffect(Unit) { runCatching { fr.requestFocus() } }
     androidx.activity.compose.BackHandler { onClose() }

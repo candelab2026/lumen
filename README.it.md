@@ -12,7 +12,7 @@ Player IPTV leggero per **Android TV** e **Amazon Fire TV** (funziona anche su t
 - TV Live, Film e Serie, con categorie e ricerca
 - Guida TV (EPG) del fornitore, con ricerca facoltativa in una guida XMLTV pubblica abbinando il nome del canale
 - **Promemoria** dalla Guida TV (tieni premuto OK su un canale e scegli il programma): avviso un minuto prima dell'inizio, anche ad app chiusa
-- **Registrazione** del canale live che stai guardando in .mp4 nella cartella Download/Lumen (oppure su chiavetta USB / scheda SD, o sui telefoni in una cartella a scelta); le registrazioni si rivedono nell'app
+- **Registrazione** del canale live che stai guardando in .ts nella cartella Download/Lumen (si apre con Lumen, VLC e quasi tutti i lettori) (oppure su chiavetta USB / scheda SD, o sui telefoni in una cartella a scelta); le registrazioni si rivedono nell'app
 - **Pausa della diretta** e ripresa in differita, con ritorno alla diretta
 - Preferiti, canali recenti e «Continua a guardare» con ripresa
 - 4 profili con un nome a scelta, ognuno con i propri preferiti e la cronologia
@@ -47,4 +47,4 @@ Lumen non ha account né server incorporato. All'avvio (una volta al giorno) e q
 
 ## Licenza
 
-[MIT](LICENSE). Le registrazioni usano JLayer (LGPL 2.1) per decodificare l'audio MP2.
+[MIT](LICENSE).

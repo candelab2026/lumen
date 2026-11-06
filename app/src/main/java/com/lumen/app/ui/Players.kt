@@ -1,4 +1,4 @@
-@file:OptIn(UnstableApi::class)
+@file:OptIn(UnstableApi::class, androidx.compose.ui.ExperimentalComposeUiApi::class)
 
 package com.lumen.app.ui
 
@@ -40,6 +40,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.focus.focusProperties
+import androidx.compose.foundation.focusGroup
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.key.Key
@@ -540,7 +542,7 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
     val (xNow, xNext) = vm.epg.nowNext(ch.epgId, t)
     val now = xNow ?: fallback.firstOrNull { it.start <= t && it.stop > t }
     val next = xNext ?: fallback.firstOrNull { it.start >= (now?.stop ?: t) }
-    val upcoming = vm.epg.upcoming(ch.epgId, 12, t).ifEmpty { fallback.filter { it.stop > t } }
+    val upcoming = vm.epg.upcoming(ch.epgId, 30, t).ifEmpty { fallback.filter { it.stop > t } }.distinctBy { it.start } // guide con programmi doppi: chiavi uniche
 
     Box(
         Modifier
@@ -779,13 +781,48 @@ fun LivePlayerScreen(vm: AppViewModel, req: Screen.PlayLive) {
             ) {
                 Text(stringResource(R.string.guide_for, ch.name), color = TextMain, fontSize = 18.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 if (upcoming.isEmpty()) Text(stringResource(R.string.guide_none), color = TextDim, fontSize = 14.sp)
-                upcoming.take(8).forEach { p ->
-                    Column {
-                        Text("${fmtTime(p.start)}  ${p.title}", color = TextMain, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                        if (p.desc.isNotEmpty()) Text(p.desc, color = TextDim, fontSize = 11.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
+                // OK su un programma futuro attiva/toglie il promemoria (come nella guida TV della home)
+                var remTick by remember { mutableIntStateOf(0) }
+                val reminded = remember(remTick) { com.lumen.app.Reminders.all(ctx).map { it.key }.toSet() }
+                val firstFr = remember { FocusRequester() }
+                LaunchedEffect(Unit) { runCatching { firstFr.requestFocus() } }
+                LazyColumn(
+                    Modifier.noFocus().fillMaxWidth().weight(1f).focusProperties { exit = { FocusRequester.Cancel } }.focusGroup(),
+                    verticalArrangement = Arrangement.spacedBy(4.dp),
+                ) {
+                    itemsIndexed(upcoming, key = { _, p -> p.start }) { i, p ->
+                        val running = p.start <= t
+                        val on = "${ch.id}@${p.start}" in reminded
+                        TvBox(
+                            onClick = {
+                                if (running) {
+                                    panel = 0
+                                } else {
+                                    val active = com.lumen.app.Reminders.toggle(ctx, com.lumen.app.Reminder(ch.id, ch.name, p.title, p.start))
+                                    if (active) com.lumen.app.Reminders.askPermission(ctx)
+                                    remTick++
+                                }
+                            },
+                            focusRequester = if (i == 0) firstFr else null,
+                            selected = on,
+                            modifier = Modifier.fillMaxWidth(),
+                            focusScale = 1.01f,
+                        ) { f ->
+                            Column(Modifier.padding(horizontal = 10.dp, vertical = 6.dp)) {
+                                Row(verticalAlignment = Alignment.CenterVertically) {
+                                    Text(
+                                        (if (running) "▶ " else "") + fmtTime(p.start),
+                                        color = if (running) Accent else TextDim, fontSize = 13.sp, modifier = Modifier.width(64.dp),
+                                    )
+                                    Text(p.title, color = if (f || on || running) TextMain else TextDim, fontSize = 14.sp, maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.weight(1f))
+                                    if (on) Text("🔔", fontSize = 14.sp, modifier = Modifier.padding(start = 6.dp))
+                                }
+                                if (f && p.desc.isNotEmpty()) Text(p.desc, color = TextDim, fontSize = 11.sp, maxLines = 3, overflow = TextOverflow.Ellipsis)
+                            }
+                        }
                     }
                 }
-                Spacer(Modifier.weight(1f))
+                Text(stringResource(R.string.rem_hint), color = TextDim, fontSize = 11.sp)
                 Text(stringResource(R.string.back_close), color = TextDim, fontSize = 11.sp)
             }
         }
