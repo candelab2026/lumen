@@ -34,7 +34,7 @@
     <string name="home_hint_remove">Удерживайте OK (или Меню) на названии, чтобы убрать его из списка</string>
     <string name="live_hint_fav">Удерживайте OK (или Меню) на канале, чтобы добавить его в избранное</string>
     <string name="home_empty">Здесь появятся последние каналы и начатые фильмы или серии.\nПерейдите в «Эфир», «Фильмы» или «Сериалы», чтобы начать.</string>
-    <string name="guide_nav_hint">◀ ▶ сменить интервал    OK смотреть канал    (категория выбирается в «Эфире»)</string>
+    <string name="guide_nav_hint">◀ ▶ сменить интервал    OK смотреть канал</string>
     <string name="guide_no_channels">В этой категории нет каналов</string>
     <string name="guide_unavailable">Телепрограмма недоступна</string>
     <string name="set_account">Аккаунт</string>
@@ -102,7 +102,7 @@
     <string name="btn_pause">⏸ Пауза</string>
     <string name="btn_resume">▶ Продолжить</string>
     <string name="btn_next">Далее ⏭</string>
-    <string name="vod_hint">◀ ▶ перемотка 10 с    OK пауза/пуск    ▲ или Меню: звук, субтитры, таймер</string>
+    <string name="vod_hint">◀ ▶ перемотка 10 с    OK пауза/пуск    ▼ кнопки    ▲ или Меню: звук, субтитры, таймер</string>
     <string name="btn_resume_at" formatted="true">Продолжить с %1$s</string>
     <string name="btn_play">Смотреть</string>
     <string name="btn_from_start">С начала</string>
@@ -196,4 +196,21 @@
     <string name="btn_cancel">Отмена</string>
     <string name="live_hint_bar">◀ ▶ выбор    OK нажать    Назад закрыть</string>
     <string name="rec_saving">Сохранение записи…</string>
+    <string name="info_original">Оригинальное название</string>
+    <string name="info_genre">Жанр</string>
+    <string name="info_director">Режиссёр</string>
+    <string name="info_cast">В ролях</string>
+    <string name="info_country">Страна</string>
+    <string name="info_released">Дата выхода</string>
+    <string name="info_duration">Продолжительность</string>
+    <string name="info_age">Возрастной рейтинг</string>
+    <string name="info_video">Видео</string>
+    <string name="info_seasons" formatted="true">Сезонов: %1$d</string>
+    <string name="info_scroll_hint">▲▼ прокрутка</string>
+    <string name="btn_trailer">▶ Трейлер</string>
+    <string name="btn_info">ℹ Info</string>
+    <string name="sec_profile">Профиль</string>
+    <string name="sec_view">Просмотр</string>
+    <string name="sec_lists">Списки и телепрограмма</string>
+    <string name="sec_app">Приложение</string>
 </resources>

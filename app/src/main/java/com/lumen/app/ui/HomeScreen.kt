@@ -680,13 +680,16 @@ private fun GuideTab(vm: AppViewModel) {
 private fun GuideContent(vm: AppViewModel, st: ListState<Channel>) {
     var start by remember { mutableLongStateOf(floorHalfHour(System.currentTimeMillis())) }
     val shown = remember(st, vm.liveCat, vm.favs, vm.recents) { channelsFor(vm, st) }
-    val catName = when (vm.liveCat) {
-        "*" -> stringResource(R.string.cat_all_channels)
-        "fav" -> stringResource(R.string.name_favorites)
-        "rec" -> stringResource(R.string.cat_recent)
-        else -> st.cats.firstOrNull { it.id == vm.liveCat }?.name ?: ""
+    val lFav = stringResource(R.string.cat_favorites)
+    val lRec = stringResource(R.string.cat_recent)
+    val lAll = stringResource(R.string.cat_all_channels)
+    // le stesse liste di TV Live, a sinistra: la scelta vale per entrambe le schede
+    val entries = remember(st, lFav) {
+        listOf("fav" to lFav, "rec" to lRec, "*" to lAll) + st.cats.map { it.id to it.name }
     }
-    val dayFmt = remember { SimpleDateFormat("EEE d MMM", Locale.getDefault()) }
+    val compact = isCompact()
+    val nameW = if (compact) 120.dp else 170.dp
+    val dayFmt = remember(compact) { SimpleDateFormat(if (compact) "d/M" else "EEE d MMM", Locale.getDefault()) }
     fun shift(h: Int) {
         val now = floorHalfHour(System.currentTimeMillis())
         start = (start + h * HOUR).coerceIn(now - 2 * HOUR, now + 24 * HOUR)
@@ -696,26 +699,51 @@ private fun GuideContent(vm: AppViewModel, st: ListState<Channel>) {
     var picked by remember { mutableStateOf<Pair<Int, FocusRequester>?>(null) }
     var remTick by remember { mutableIntStateOf(0) }
     val reminded = remember(remTick) { com.lumen.app.Reminders.all(ctx).map { it.key }.toSet() }
+    val listState = rememberLazyListState()
+    val scope = rememberCoroutineScope()
+    // riga su cui portare il focus quando dalle liste si passa alla griglia
+    var rowId by remember { mutableIntStateOf(-1) }
+    var rowTick by remember { mutableIntStateOf(0) }
+    LaunchedEffect(vm.liveCat) { listState.scrollToItem(0) }
+    fun toGrid() {
+        if (shown.isEmpty()) return
+        var idx = shown.indexOfFirst { it.id == rowId }
+        scope.launch {
+            if (idx < 0) {
+                idx = 0
+                listState.scrollToItem(0)
+            } else if (listState.layoutInfo.visibleItemsInfo.none { it.index == idx }) {
+                listState.scrollToItem(idx)
+            }
+            rowId = shown[idx].id
+            rowTick++
+        }
+    }
 
     Box(Modifier.fillMaxSize()) {
+    Row(Modifier.fillMaxSize(), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
+    Column(Modifier.width(if (compact) 130.dp else 180.dp)) {
+        CategoryList(entries, vm.liveCat, onFocusCat = { vm.liveCat = it }, onPick = { vm.liveCat = it; toGrid() }, onRight = { toGrid() })
+    }
     Column(
-        Modifier.fillMaxSize().onPreviewKeyEvent { ev ->
+        Modifier.weight(1f).fillMaxHeight().onPreviewKeyEvent { ev ->
             if (ev.type != KeyEventType.KeyDown || picked != null) return@onPreviewKeyEvent false
             when (ev.key) {
                 Key.DirectionRight -> { shift(1); true }
-                Key.DirectionLeft -> { shift(-1); true }
+                // ◀ torna indietro fino all'ora attuale, poi passa all'elenco delle liste
+                Key.DirectionLeft -> if (start > floorHalfHour(System.currentTimeMillis())) { shift(-1); true } else false
                 else -> false
             }
         },
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             // « » per il touch: col telecomando bastano ◀ ▶
-            Row(Modifier.width(250.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+            Row(Modifier.width(nameW + 6.dp), verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(6.dp)) {
                 Button("«", { shift(-1) }, small = true)
                 Button("»", { shift(1) }, small = true)
                 Text(
-                    "$catName  ·  ${dayFmt.format(Date(start))}",
-                    color = TextMain, fontSize = 15.sp, fontWeight = FontWeight.SemiBold,
+                    dayFmt.format(Date(start)),
+                    color = TextMain, fontSize = 13.sp, fontWeight = FontWeight.SemiBold,
                     maxLines = 1, overflow = TextOverflow.Ellipsis,
                 )
             }
@@ -732,12 +760,16 @@ private fun GuideContent(vm: AppViewModel, st: ListState<Channel>) {
         if (shown.isEmpty()) {
             CenterMessage(stringResource(R.string.guide_no_channels))
         } else {
-            LazyColumn(Modifier.noFocus().fillMaxSize(), verticalArrangement = Arrangement.spacedBy(3.dp), contentPadding = PaddingValues(vertical = 4.dp)) {
+            LazyColumn(
+                Modifier.noFocus().fillMaxSize(), state = listState,
+                verticalArrangement = Arrangement.spacedBy(3.dp), contentPadding = PaddingValues(vertical = 4.dp),
+            ) {
                 itemsIndexed(shown, key = { _, c -> c.id }) { i, ch ->
-                    GuideRow(vm, ch, shown, i, start, reminded) { fr -> picked = ch.id to fr }
+                    GuideRow(vm, ch, shown, i, start, reminded, nameW, rowId, rowTick, onFocus = { rowId = ch.id }) { fr -> picked = ch.id to fr }
                 }
             }
         }
+    }
     }
     val p = picked
     val pi = p?.let { (id, _) -> shown.indexOfFirst { it.id == id } } ?: -1
@@ -808,8 +840,16 @@ private fun ReminderPicker(vm: AppViewModel, list: List<Channel>, index: Int, re
 }
 
 @Composable
-private fun GuideRow(vm: AppViewModel, ch: Channel, list: List<Channel>, index: Int, start: Long, reminded: Set<String>, onPick: (FocusRequester) -> Unit) {
+private fun GuideRow(
+    vm: AppViewModel, ch: Channel, list: List<Channel>, index: Int, start: Long, reminded: Set<String>,
+    nameW: androidx.compose.ui.unit.Dp, focusId: Int, focusTick: Int, onFocus: () -> Unit, onPick: (FocusRequester) -> Unit,
+) {
     val fr = remember { FocusRequester() }
+    val first = remember { booleanArrayOf(true) }
+    LaunchedEffect(focusTick) {
+        if (first[0]) { first[0] = false; return@LaunchedEffect }
+        if (focusId == ch.id) runCatching { fr.requestFocus() }
+    }
     @Suppress("UNUSED_VARIABLE") val ver = vm.epgVersion
     val end = start + GUIDE_WINDOW
     val progs = remember(vm.epgVersion, ch.epgId, start) { vm.epg.between(ch.epgId, start, end) }
@@ -818,6 +858,7 @@ private fun GuideRow(vm: AppViewModel, ch: Channel, list: List<Channel>, index: 
     TvBox(
         onClick = { vm.playLive(list, index) },
         onLongClick = { onPick(fr) },
+        onFocus = onFocus,
         focusRequester = fr,
         modifier = Modifier.fillMaxWidth(),
         focusScale = 1.01f,
@@ -826,7 +867,7 @@ private fun GuideRow(vm: AppViewModel, ch: Channel, list: List<Channel>, index: 
             Text(
                 "${ch.num}  ${ch.name}",
                 color = if (f) TextMain else TextDim, fontSize = 14.sp, fontWeight = FontWeight.SemiBold,
-                maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(244.dp),
+                maxLines = 1, overflow = TextOverflow.Ellipsis, modifier = Modifier.width(nameW),
             )
             BoxWithConstraints(Modifier.weight(1f).height(46.dp).clip(RoundedCornerShape(6.dp))) {
                 val w = maxWidth
@@ -867,6 +908,25 @@ private fun GuideRow(vm: AppViewModel, ch: Channel, list: List<Channel>, index: 
 private val SCALE_NAMES = listOf(R.string.scale_normal, R.string.scale_large, R.string.scale_xlarge)
 
 @Composable
+private fun SectionTitle(id: Int) {
+    Text(stringResource(id).uppercase(), color = Accent, fontSize = 11.sp, fontWeight = FontWeight.Bold, modifier = Modifier.padding(top = 4.dp))
+}
+
+/** Pulsante delle impostazioni: testo medio su una o due righe, alto quanto il vicino. */
+@Composable
+private fun SetButton(text: String, modifier: Modifier = Modifier, primary: Boolean = false, fr: FocusRequester? = null, onClick: () -> Unit) {
+    TvBox(onClick = onClick, modifier = modifier, focusRequester = fr, selected = primary, focusScale = 1.02f) { f ->
+        Text(
+            text,
+            color = if (f || primary) androidx.compose.ui.graphics.Color.White else TextMain,
+            fontSize = 15.sp, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis,
+            textAlign = androidx.compose.ui.text.style.TextAlign.Center,
+            modifier = Modifier.align(Alignment.Center).padding(horizontal = 12.dp, vertical = 10.dp),
+        )
+    }
+}
+
+@Composable
 private fun SettingsTab(vm: AppViewModel) {
     val acc = vm.account
     val dateFmt = remember { java.text.DateFormat.getDateInstance(java.text.DateFormat.SHORT) }
@@ -876,62 +936,73 @@ private fun SettingsTab(vm: AppViewModel) {
     var nameDlg by remember { mutableStateOf(false) }
     val renameFr = remember { FocusRequester() }
     Box(Modifier.fillMaxSize()) {
-    Column(
-        Modifier.fillMaxSize().noFocus().verticalScroll(rememberScrollState()).padding(top = 8.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
-    ) {
-        Text(stringResource(R.string.set_account), color = TextMain, fontSize = 20.sp, fontWeight = FontWeight.Bold)
-        Text(stringResource(R.string.set_server, vm.server), color = TextDim, fontSize = 15.sp)
-        if (acc != null) {
-            Text(stringResource(R.string.set_user, acc.username), color = TextDim, fontSize = 15.sp)
-            Text(stringResource(R.string.set_status, acc.status), color = TextDim, fontSize = 15.sp)
-            Text(
-                stringResource(R.string.set_expiry, acc.expiry?.let { dateFmt.format(Date(it)) } ?: stringResource(R.string.set_unlimited)),
-                color = TextDim, fontSize = 15.sp,
-            )
-            Text(stringResource(R.string.set_connections, acc.activeConnections, acc.maxConnections), color = TextDim, fontSize = 15.sp)
-        } else {
-            Text(stringResource(R.string.set_offline), color = Gold, fontSize = 15.sp)
+    val compact = isCompact()
+    val yesNo = { b: Boolean -> if (b) R.string.yes else R.string.no }
+    Row(Modifier.fillMaxSize().padding(top = 4.dp), horizontalArrangement = Arrangement.spacedBy(if (compact) 12.dp else 20.dp)) {
+        // scheda dell'account: resta sempre visibile a sinistra
+        Column(
+            Modifier.width(if (compact) 210.dp else 290.dp).fillMaxHeight().clip(RoundedCornerShape(14.dp)).background(Surface)
+                .noFocus().verticalScroll(rememberScrollState()).padding(if (compact) 12.dp else 18.dp),
+            verticalArrangement = Arrangement.spacedBy(7.dp),
+        ) {
+            SectionTitle(R.string.set_account)
+            Text("👤 " + profileLabel(vm), color = TextMain, fontSize = 20.sp, fontWeight = FontWeight.Bold, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(stringResource(R.string.set_server, vm.server), color = TextDim, fontSize = 13.sp, maxLines = 2, overflow = TextOverflow.Ellipsis)
+            if (acc != null) {
+                Text(stringResource(R.string.set_user, acc.username), color = TextDim, fontSize = 13.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+                Text(stringResource(R.string.set_status, acc.status), color = TextDim, fontSize = 13.sp)
+                Text(
+                    stringResource(R.string.set_expiry, acc.expiry?.let { dateFmt.format(Date(it)) } ?: stringResource(R.string.set_unlimited)),
+                    color = TextMain, fontSize = 13.sp, fontWeight = FontWeight.SemiBold,
+                )
+                Text(stringResource(R.string.set_connections, acc.activeConnections, acc.maxConnections), color = TextDim, fontSize = 13.sp)
+            } else {
+                Text(stringResource(R.string.set_offline), color = Gold, fontSize = 13.sp)
+            }
+            SetButton(stringResource(R.string.set_logout), Modifier.fillMaxWidth().padding(top = 6.dp)) { vm.logout() }
+            Text(stringResource(R.string.set_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE), color = TextDim, fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
         }
-        Spacer(Modifier.height(6.dp))
-        val yesNo = { b: Boolean -> if (b) R.string.yes else R.string.no }
-        val gap = Arrangement.spacedBy(12.dp)
-        val w = Modifier.weight(1f)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
-            Button(stringResource(R.string.set_profile, profileLabel(vm)), onClick = { vm.switchProfile() }, modifier = w)
-            Button(stringResource(R.string.profile_rename), onClick = { nameDlg = true }, modifier = w, fr = renameFr)
+        // impostazioni raggruppate per argomento: su schermi bassi la colonna scorre
+        Column(
+            Modifier.weight(1f).fillMaxHeight().noFocus().verticalScroll(rememberScrollState()),
+            verticalArrangement = Arrangement.spacedBy(7.dp),
+        ) {
+            val gap = Arrangement.spacedBy(10.dp)
+            val pair = Modifier.fillMaxWidth().height(androidx.compose.foundation.layout.IntrinsicSize.Min)
+            val w = Modifier.weight(1f).fillMaxHeight()
+            SectionTitle(R.string.sec_profile)
+            Row(pair, horizontalArrangement = gap) {
+                SetButton(stringResource(R.string.set_profile, profileLabel(vm)), w) { vm.switchProfile() }
+                SetButton(stringResource(R.string.profile_rename), w, fr = renameFr) { nameDlg = true }
+            }
+            Text(stringResource(R.string.set_profile_note), color = TextDim, fontSize = 11.sp)
+            SectionTitle(R.string.sec_view)
+            Row(pair, horizontalArrangement = gap) {
+                SetButton(stringResource(R.string.set_text, stringResource(SCALE_NAMES[vm.textScale])), w) { vm.cycleTextScale() }
+                SetButton(stringResource(R.string.set_autostart, stringResource(yesNo(vm.autoStart))), w) { vm.toggleAutoStart() }
+            }
+            SectionTitle(R.string.sec_lists)
+            Row(pair, horizontalArrangement = gap) {
+                SetButton(stringResource(R.string.set_refresh), w) { vm.refreshAll() }
+                SetButton(stringResource(R.string.set_pubguide, stringResource(yesNo(vm.publicEpg))), w) { vm.togglePublicEpg() }
+            }
+            SectionTitle(R.string.rec_title)
+            Row(pair, horizontalArrangement = gap) {
+                SetButton(stringResource(R.string.rec_title), w) { vm.push(Screen.Recordings) }
+                // rilegge l'etichetta quando il dialogo si chiude
+                val folderLabel = remember(folderDlg) { com.lumen.app.Recorder.label(ctx) }
+                SetButton(stringResource(R.string.rec_folder_btn, folderLabel), w, fr = folderFr) { folderDlg = true }
+            }
+            SectionTitle(R.string.sec_app)
+            Row(pair, horizontalArrangement = gap) {
+                SetButton(
+                    vm.newVersion?.let { stringResource(R.string.upd_available_btn, it.version) } ?: stringResource(R.string.upd_check_btn),
+                    w, primary = vm.newVersion != null,
+                ) { if (vm.newVersion != null) vm.installUpdate() else vm.checkAppUpdate(true) }
+                SetButton(stringResource(R.string.set_help), w) { vm.push(Screen.Help) }
+            }
+            vm.updateStatus?.let { Text(it, color = Gold, fontSize = 13.sp) }
         }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
-            Button(stringResource(R.string.set_text, stringResource(SCALE_NAMES[vm.textScale])), onClick = { vm.cycleTextScale() }, modifier = w)
-            Button(stringResource(R.string.set_autostart, stringResource(yesNo(vm.autoStart))), onClick = { vm.toggleAutoStart() }, modifier = w)
-        }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
-            Button(stringResource(R.string.set_pubguide, stringResource(yesNo(vm.publicEpg))), onClick = { vm.togglePublicEpg() }, modifier = w)
-            Button(stringResource(R.string.set_refresh), onClick = { vm.refreshAll() }, modifier = w)
-        }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
-            Button(
-                vm.newVersion?.let { stringResource(R.string.upd_available_btn, it.version) } ?: stringResource(R.string.upd_check_btn),
-                onClick = { if (vm.newVersion != null) vm.installUpdate() else vm.checkAppUpdate(true) },
-                primary = vm.newVersion != null,
-                modifier = w,
-            )
-            Button(stringResource(R.string.set_help), onClick = { vm.push(Screen.Help) }, modifier = w)
-        }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
-            Button(stringResource(R.string.rec_title), onClick = { vm.push(Screen.Recordings) }, modifier = w)
-            // rilegge l'etichetta quando il dialogo si chiude
-            val folderLabel = remember(folderDlg) { com.lumen.app.Recorder.label(ctx) }
-            Button(stringResource(R.string.rec_folder_btn, folderLabel), onClick = { folderDlg = true }, modifier = w, fr = folderFr)
-        }
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = gap) {
-            Button(stringResource(R.string.set_logout), onClick = { vm.logout() }, modifier = w)
-            Spacer(w)
-        }
-        vm.updateStatus?.let { Text(it, color = Gold, fontSize = 14.sp) }
-        Text(stringResource(R.string.set_profile_note), color = TextDim, fontSize = 12.sp)
-        Spacer(Modifier.height(6.dp))
-        Text(stringResource(R.string.set_version, BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE), color = TextDim, fontSize = 14.sp)
     }
     if (folderDlg) RecFolderDialog {
         folderDlg = false

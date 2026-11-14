@@ -78,6 +78,7 @@ class MainActivity : ComponentActivity() {
     override fun onStart() {
         super.onStart()
         Reminders.foreground = true
+        vm.refreshIfStale()
     }
 
     override fun onStop() {

@@ -34,7 +34,7 @@
     <string name="home_hint_remove">Listeden kaldırmak için bir başlıkta OK (veya Menü) tuşuna uzun basın</string>
     <string name="live_hint_fav">Favorilere eklemek için bir kanalda OK (veya Menü) tuşuna uzun basın</string>
     <string name="home_empty">Son izlenen kanallar ile başladığın film veya bölümler burada görünür.\nBaşlamak için Canlı TV, Filmler veya Diziler\'e git.</string>
-    <string name="guide_nav_hint">◀ ▶ zaman aralığı    OK kanalı izle    (kategori Canlı TV\'den seçilir)</string>
+    <string name="guide_nav_hint">◀ ▶ zaman aralığı    OK kanalı izle</string>
     <string name="guide_no_channels">Bu kategoride kanal yok</string>
     <string name="guide_unavailable">Rehber yok</string>
     <string name="set_account">Hesap</string>
@@ -102,7 +102,7 @@
     <string name="btn_pause">⏸ Duraklat</string>
     <string name="btn_resume">▶ Devam</string>
     <string name="btn_next">Sonraki ⏭</string>
-    <string name="vod_hint">◀ ▶ 10 sn atla    OK duraklat/devam    ▲ veya Menü: ses, altyazı, zamanlayıcı</string>
+    <string name="vod_hint">◀ ▶ 10 sn atla    OK duraklat/devam    ▼ düğmeler    ▲ veya Menü: ses, altyazı, zamanlayıcı</string>
     <string name="btn_resume_at" formatted="true">%1$s konumundan devam et</string>
     <string name="btn_play">Oynat</string>
     <string name="btn_from_start">Baştan</string>
@@ -196,4 +196,21 @@
     <string name="btn_cancel">İptal</string>
     <string name="live_hint_bar">◀ ▶ seç    OK bas    Geri kapat</string>
     <string name="rec_saving">Kayıt kaydediliyor…</string>
+    <string name="info_original">Özgün adı</string>
+    <string name="info_genre">Tür</string>
+    <string name="info_director">Yönetmen</string>
+    <string name="info_cast">Oyuncular</string>
+    <string name="info_country">Ülke</string>
+    <string name="info_released">Yayın tarihi</string>
+    <string name="info_duration">Süre</string>
+    <string name="info_age">Yaş sınırı</string>
+    <string name="info_video">Video</string>
+    <string name="info_seasons" formatted="true">%1$d sezon</string>
+    <string name="info_scroll_hint">▲▼ kaydır</string>
+    <string name="btn_trailer">▶ Fragman</string>
+    <string name="btn_info">ℹ Info</string>
+    <string name="sec_profile">Profil</string>
+    <string name="sec_view">İzleme</string>
+    <string name="sec_lists">Listeler ve TV rehberi</string>
+    <string name="sec_app">Uygulama</string>
 </resources>

@@ -34,7 +34,7 @@
     <string name="home_hint_remove">Houd OK (of Menu) ingedrukt op een titel om hem uit de lijst te halen</string>
     <string name="live_hint_fav">Houd OK (of Menu) ingedrukt op een zender om hem aan favorieten toe te voegen</string>
     <string name="home_empty">Hier verschijnen recent bekeken zenders en de films of afleveringen die je begon.\nGa naar Live-tv, Films of Series om te beginnen.</string>
-    <string name="guide_nav_hint">◀ ▶ ander tijdvak    OK kanaal kijken    (categorie kies je in Live-tv)</string>
+    <string name="guide_nav_hint">◀ ▶ ander tijdvak    OK kanaal kijken</string>
     <string name="guide_no_channels">Geen zenders in deze categorie</string>
     <string name="guide_unavailable">Gids niet beschikbaar</string>
     <string name="set_account">Account</string>
@@ -102,7 +102,7 @@
     <string name="btn_pause">⏸ Pauze</string>
     <string name="btn_resume">▶ Hervatten</string>
     <string name="btn_next">Volgende ⏭</string>
-    <string name="vod_hint">◀ ▶ 10 s overslaan    OK pauze/hervatten    ▲ of Menu: audio, ondertitels, timer</string>
+    <string name="vod_hint">◀ ▶ 10 s overslaan    OK pauze/hervatten    ▼ knoppen    ▲ of Menu: audio, ondertitels, timer</string>
     <string name="btn_resume_at" formatted="true">Hervatten vanaf %1$s</string>
     <string name="btn_play">Afspelen</string>
     <string name="btn_from_start">Vanaf het begin</string>
@@ -196,4 +196,21 @@
     <string name="btn_cancel">Annuleren</string>
     <string name="live_hint_bar">◀ ▶ kiezen    OK drukken    Terug sluiten</string>
     <string name="rec_saving">Opname opslaan…</string>
+    <string name="info_original">Originele titel</string>
+    <string name="info_genre">Genre</string>
+    <string name="info_director">Regie</string>
+    <string name="info_cast">Cast</string>
+    <string name="info_country">Land</string>
+    <string name="info_released">Verschijningsdatum</string>
+    <string name="info_duration">Speelduur</string>
+    <string name="info_age">Leeftijdsclassificatie</string>
+    <string name="info_video">Video</string>
+    <string name="info_seasons" formatted="true">%1$d seizoenen</string>
+    <string name="info_scroll_hint">▲▼ scrollen</string>
+    <string name="btn_trailer">▶ Trailer</string>
+    <string name="btn_info">ℹ Info</string>
+    <string name="sec_profile">Profiel</string>
+    <string name="sec_view">Weergave</string>
+    <string name="sec_lists">Lijsten en tv-gids</string>
+    <string name="sec_app">App</string>
 </resources>

@@ -1,5 +1,14 @@
 # Changelog
 
+## 2.3.0
+
+- Movie and series pages: star rating and score, plus every detail the provider supplies (genre, director, cast, country, release date, running time, age rating, original title, video and audio quality) and a Trailer button when YouTube or a browser is available. Plot and details scroll with ▲ ▼ on the remote; series have a "Info" button that opens the full plot and details.
+- Movie/series player: ▼ moves to the bottom buttons (◀ ▶ choose, OK presses, ▲ or Back return to the video); pausing with OK puts the focus on the Resume button.
+- TV guide: the channel lists are shown on the left as in Live TV; ▶ enters the grid, ◀ goes back to the lists.
+- Settings: account card on the left, buttons grouped by topic on the right.
+- Movies and series: fixed the frequent "invalid response from the server" error. Some providers redirect every request to a different machine holding a slightly different copy of the file; the player now stays on the first one for the whole title. Other temporary errors are retried automatically (up to 8 times), resuming from the same point.
+- Lists are also refreshed when they are more than 2 days old (the TV guide after 24 hours), including when the app comes back to the foreground after being left open.
+
 ## 2.2.2
 
 - Live player: in the Guide panel the programmes can be selected; OK on an upcoming one sets or removes its reminder 🔔 (the description of the focused programme is shown).

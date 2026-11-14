@@ -47,6 +47,7 @@ data class SeriesDetail(
     val cast: String?,
     val backdrop: String?,
     val seasons: Map<Int, List<Episode>>,
+    val extra: TitleExtra = TitleExtra(),
 )
 
 data class MovieInfo(
@@ -56,6 +57,21 @@ data class MovieInfo(
     val cast: String?,
     val duration: String?,
     val backdrop: String?,
+    val extra: TitleExtra = TitleExtra(),
+)
+
+/** Informazioni aggiuntive di un film o di una serie, quando il fornitore le dà (di solito arrivano da TMDB). */
+data class TitleExtra(
+    val rating: Double? = null,
+    val director: String? = null,
+    val country: String? = null,
+    val released: String? = null,
+    val runtime: String? = null,
+    val age: String? = null,
+    val original: String? = null,
+    val quality: String? = null,
+    val audio: String? = null,
+    val trailer: String? = null,
 )
 
 data class Programme(

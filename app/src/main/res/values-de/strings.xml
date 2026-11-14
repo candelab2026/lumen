@@ -34,7 +34,7 @@
     <string name="home_hint_remove">OK (oder Menü) lange auf einem Titel drücken, um ihn zu entfernen</string>
     <string name="live_hint_fav">OK (oder Menü) lange auf einem Sender drücken, um ihn zu den Favoriten hinzuzufügen</string>
     <string name="home_empty">Zuletzt gesehene Sender sowie begonnene Filme oder Folgen erscheinen hier.\nGehe zu Live-TV, Filme oder Serien, um zu starten.</string>
-    <string name="guide_nav_hint">◀ ▶ Zeitfenster ändern    OK Sender ansehen    (Kategorie in Live-TV wählen)</string>
+    <string name="guide_nav_hint">◀ ▶ Zeitfenster ändern    OK Sender ansehen</string>
     <string name="guide_no_channels">Keine Sender in dieser Kategorie</string>
     <string name="guide_unavailable">Programm nicht verfügbar</string>
     <string name="set_account">Konto</string>
@@ -102,7 +102,7 @@
     <string name="btn_pause">⏸ Pause</string>
     <string name="btn_resume">▶ Fortsetzen</string>
     <string name="btn_next">Weiter ⏭</string>
-    <string name="vod_hint">◀ ▶ 10 s springen    OK Pause/Fortsetzen    ▲ oder Menü: Audio, Untertitel, Timer</string>
+    <string name="vod_hint">◀ ▶ 10 s springen    OK Pause/Fortsetzen    ▼ Tasten    ▲ oder Menü: Audio, Untertitel, Timer</string>
     <string name="btn_resume_at" formatted="true">Fortsetzen ab %1$s</string>
     <string name="btn_play">Abspielen</string>
     <string name="btn_from_start">Von vorn</string>
@@ -196,4 +196,21 @@
     <string name="btn_cancel">Abbrechen</string>
     <string name="live_hint_bar">◀ ▶ wählen    OK drücken    Zurück schließen</string>
     <string name="rec_saving">Aufnahme wird gespeichert…</string>
+    <string name="info_original">Originaltitel</string>
+    <string name="info_genre">Genre</string>
+    <string name="info_director">Regie</string>
+    <string name="info_cast">Besetzung</string>
+    <string name="info_country">Land</string>
+    <string name="info_released">Erscheinungsdatum</string>
+    <string name="info_duration">Laufzeit</string>
+    <string name="info_age">Altersfreigabe</string>
+    <string name="info_video">Video</string>
+    <string name="info_seasons" formatted="true">%1$d Staffeln</string>
+    <string name="info_scroll_hint">▲▼ blättern</string>
+    <string name="btn_trailer">▶ Trailer</string>
+    <string name="btn_info">ℹ Info</string>
+    <string name="sec_profile">Profil</string>
+    <string name="sec_view">Wiedergabe</string>
+    <string name="sec_lists">Listen und TV-Programm</string>
+    <string name="sec_app">App</string>
 </resources>

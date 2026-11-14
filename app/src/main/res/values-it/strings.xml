@@ -34,7 +34,7 @@
     <string name="home_hint_remove">Tieni premuto OK (o Menu) su un titolo per toglierlo dall\'elenco</string>
     <string name="live_hint_fav">Tieni premuto OK (o Menu) su un canale per aggiungerlo ai preferiti</string>
     <string name="home_empty">Qui compariranno gli ultimi canali visti e i film o gli episodi che hai iniziato.\nVai in TV Live, Film o Serie per cominciare.</string>
-    <string name="guide_nav_hint">◀ ▶ cambia fascia oraria    OK guarda il canale    (la categoria si sceglie in TV Live)</string>
+    <string name="guide_nav_hint">◀ ▶ cambia fascia oraria    OK guarda il canale</string>
     <string name="guide_no_channels">Nessun canale in questa categoria</string>
     <string name="guide_unavailable">Guida non disponibile</string>
     <string name="set_account">Account</string>
@@ -102,7 +102,7 @@
     <string name="btn_pause">⏸ Pausa</string>
     <string name="btn_resume">▶ Riprendi</string>
     <string name="btn_next">Prossimo ⏭</string>
-    <string name="vod_hint">◀ ▶ salta 10s    OK pausa/riprendi    ▲ o Menu: audio, sottotitoli, timer</string>
+    <string name="vod_hint">◀ ▶ salta 10s    OK pausa/riprendi    ▼ pulsanti    ▲ o Menu: audio, sottotitoli, timer</string>
     <string name="btn_resume_at" formatted="true">Riprendi da %1$s</string>
     <string name="btn_play">Riproduci</string>
     <string name="btn_from_start">Dall\'inizio</string>
@@ -196,4 +196,21 @@
     <string name="btn_cancel">Annulla</string>
     <string name="live_hint_bar">◀ ▶ scegli    OK premi    Indietro chiudi</string>
     <string name="rec_saving">Salvataggio registrazione…</string>
+    <string name="info_original">Titolo originale</string>
+    <string name="info_genre">Genere</string>
+    <string name="info_director">Regia</string>
+    <string name="info_cast">Cast</string>
+    <string name="info_country">Paese</string>
+    <string name="info_released">Uscita</string>
+    <string name="info_duration">Durata</string>
+    <string name="info_age">Età consigliata</string>
+    <string name="info_video">Video</string>
+    <string name="info_seasons" formatted="true">%1$d stagioni</string>
+    <string name="info_scroll_hint">▲▼ scorri</string>
+    <string name="btn_trailer">▶ Trailer</string>
+    <string name="btn_info">ℹ Info</string>
+    <string name="sec_profile">Profilo</string>
+    <string name="sec_view">Visione</string>
+    <string name="sec_lists">Liste e guida TV</string>
+    <string name="sec_app">App</string>
 </resources>

@@ -157,6 +157,7 @@ private fun playbackErrorText(ctx: android.content.Context, e: PlaybackException
             ctx.getString(R.string.err_denied, acc?.let { ctx.getString(R.string.err_denied_conn, it.activeConnections, it.maxConnections) } ?: "")
         code == 404 -> ctx.getString(R.string.err_404)
         e.errorCode == PlaybackException.ERROR_CODE_PARSING_MANIFEST_MALFORMED ||
+            e.errorCode == PlaybackException.ERROR_CODE_IO_UNSPECIFIED ||
             e.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_MALFORMED ||
             e.errorCode == PlaybackException.ERROR_CODE_PARSING_CONTAINER_UNSUPPORTED ->
             ctx.getString(R.string.err_malformed)
@@ -845,6 +846,13 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
     var overlay by remember { mutableStateOf(true) }
     var overlayTick by remember { mutableIntStateOf(0) }
     val last = remember { longArrayOf(0L, 0L) }
+    val barFr = remember { FocusRequester() }
+    var barFocused by remember { mutableStateOf(false) }
+    var barTick by remember { mutableIntStateOf(0) }
+    // il server a volte risponde con una pagina d'errore invece del video: si riprova da soli, dal punto in cui si era
+    var retry by remember { mutableIntStateOf(0) }
+    var failures by remember(entry.key) { mutableIntStateOf(0) }
+    var retrying by remember { mutableStateOf(false) }
     val fr = remember { FocusRequester() }
     var optOpen by remember { mutableStateOf(false) }
     var sleepMin by remember { mutableIntStateOf(0) }
@@ -853,11 +861,13 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
     SleepTimer(sleepMin, player) { vm.back() }
     BackHandler(enabled = optOpen) { optOpen = false }
 
-    LaunchedEffect(entry.key) {
+    LaunchedEffect(entry.key, retry) {
         error = null
+        retrying = false
         buffering = true
         val saved = vm.store.resume(entry.key)
-        player.setMediaItem(MediaItem.fromUri(entry.url), if (saved > 30_000) saved else 0L)
+        val from = if (retry > 0 && last[0] > 0) last[0] else if (saved > 30_000) saved else 0L
+        player.setMediaItem(MediaItem.fromUri(entry.url), from)
         player.prepare()
         player.playWhenReady = true
     }
@@ -865,6 +875,7 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
         val l = object : Player.Listener {
             override fun onPlaybackStateChanged(state: Int) {
                 buffering = state == Player.STATE_BUFFERING
+                if (state == Player.STATE_READY) failures = 0
                 if (state == Player.STATE_ENDED) {
                     vm.dropContinue(entry.key)
                     if (idx + 1 < req.entries.size) idx++ else vm.back()
@@ -876,12 +887,25 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
             }
 
             override fun onPlayerError(e: PlaybackException) {
+                val http = generateSequence<Throwable>(e) { it.cause }
+                    .filterIsInstance<HttpDataSource.InvalidResponseCodeException>().firstOrNull()?.responseCode
+                // 401/403/404 non passano da soli: si riprova solo per risposte non valide, rete e errori del server
+                retrying = failures < 8 && (http == null || http >= 500 || http == 408 || http == 429)
                 error = playbackErrorText(ctx, e, vm.account)
                 AppStats.event(ctx, "player_error")
             }
         }
         player.addListener(l)
         onDispose { player.removeListener(l) }
+    }
+    LaunchedEffect(error) {
+        if (error != null && retrying) {
+            failures++
+            if (failures == 3) com.lumen.app.RoutingDataSource.forget()
+            // il server a volte prepara il file e nel frattempo manda dati non validi: attese crescenti, fino a ~40 s in tutto
+            delay((1_500L + failures * 1_000L).coerceAtMost(7_000L))
+            retry++
+        }
     }
     LaunchedEffect(entry.key) {
         var n = 0
@@ -905,14 +929,44 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
             }
         }
     }
-    LaunchedEffect(overlayTick, playing) {
+    LaunchedEffect(overlayTick, playing, barFocused) {
         overlay = true
         if (playing) {
-            delay(4_000)
+            delay(if (barFocused) 8_000 else 4_000)
             overlay = false
         }
     }
-    LaunchedEffect(optOpen) { if (!optOpen) runCatching { fr.requestFocus() } }
+    // la barra sparisce: il focus torna al video
+    LaunchedEffect(overlay) {
+        if (!overlay) {
+            barFocused = false
+            if (!optOpen) runCatching { fr.requestFocus() }
+        }
+    }
+    LaunchedEffect(optOpen) {
+        barFocused = false
+        if (!optOpen) runCatching { fr.requestFocus() }
+    }
+    LaunchedEffect(barTick) {
+        if (barTick > 0) repeat(5) {
+            if (runCatching { barFr.requestFocus() }.getOrDefault(false)) return@LaunchedEffect
+            delay(60)
+        }
+    }
+
+    /** Porta il focus sui pulsanti in basso (▼, oppure quando si mette in pausa). */
+    fun enterBar() {
+        overlay = true
+        overlayTick++
+        barTick++
+    }
+
+    fun leaveBar() {
+        barFocused = false
+        runCatching { fr.requestFocus() }
+        overlayTick++
+    }
+    BackHandler(enabled = !optOpen && barFocused) { leaveBar() }
 
     fun seek(delta: Long) {
         val target = (player.currentPosition + delta).coerceIn(0L, if (dur > 0) dur else Long.MAX_VALUE)
@@ -929,6 +983,19 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
                 if (optOpen) return@onKeyEvent false
                 val down = ev.type == KeyEventType.KeyDown
                 val rep = ev.nativeKeyEvent.repeatCount
+                if (barFocused) {
+                    // nella barra: ◀ ▶ spostano tra i pulsanti, OK preme, ▲ o Indietro tornano al video
+                    if (down) overlayTick++
+                    when (ev.key) {
+                        Key.DirectionLeft, Key.DirectionRight, Key.DirectionCenter, Key.Enter, Key.NumPadEnter -> return@onKeyEvent false
+                        Key.DirectionUp -> {
+                            if (down && rep == 0) leaveBar()
+                            return@onKeyEvent true
+                        }
+                        Key.DirectionDown -> return@onKeyEvent true
+                        else -> {}
+                    }
+                }
                 when (ev.key) {
                     Key.DirectionLeft, Key.MediaRewind -> {
                         if (down) seek(-(if (rep > 8) 60_000L else if (rep > 2) 30_000L else 10_000L))
@@ -939,13 +1006,18 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
                         true
                     }
                     Key.DirectionCenter, Key.Enter, Key.NumPadEnter, Key.MediaPlayPause -> {
-                        if (down && rep == 0) { player.playWhenReady = !player.playWhenReady; overlayTick++ }
+                        if (down && rep == 0) {
+                            val pause = player.playWhenReady
+                            player.playWhenReady = !pause
+                            // in pausa il focus va sulla barra: ◀ ▶ scelgono un pulsante, OK su «Riprendi» riparte
+                            if (pause && ev.key != Key.MediaPlayPause) enterBar() else overlayTick++
+                        }
                         true
                     }
                     Key.MediaPlay -> { if (down) player.playWhenReady = true; true }
                     Key.MediaPause -> { if (down) player.playWhenReady = false; true }
                     Key.DirectionUp, Key.Menu, Key.Info, Key.Settings -> { if (down && rep == 0) optOpen = true; true }
-                    Key.DirectionDown -> { if (down) overlayTick++; true }
+                    Key.DirectionDown -> { if (down && rep == 0) enterBar(); true }
                     Key.MediaNext -> { if (down && idx + 1 < req.entries.size) idx++; true }
                     Key.MediaPrevious -> { if (down && idx > 0) idx--; true }
                     else -> false
@@ -967,7 +1039,7 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
             CircularProgressIndicator(color = Accent, modifier = Modifier.align(Alignment.Center))
         }
         error?.let {
-            Text(it, color = Gold, fontSize = 18.sp, modifier = Modifier.align(Alignment.Center).background(Color(0xAA000000)).padding(16.dp))
+            Text(if (retrying) stringResource(R.string.retry_soon, it) else it, color = Gold, fontSize = 18.sp, modifier = Modifier.align(Alignment.Center).background(Color(0xAA000000)).padding(16.dp))
         }
         if (overlay) {
             Column(
@@ -1008,17 +1080,29 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
                         Box(Modifier.fillMaxWidth(frac).fillMaxHeight().background(Accent))
                     }
                 }
-                Row(Modifier.horizontalScroll(rememberScrollState()), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Row(
+                    Modifier.onFocusChanged { barFocused = it.hasFocus }.horizontalScroll(rememberScrollState()),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                ) {
                     Button(stringResource(R.string.btn_exit), { vm.back() }, small = compact)
                     Button("⏪ 10s", { seek(-10_000L) }, small = compact)
-                    Button(if (playing) stringResource(R.string.btn_pause) else stringResource(R.string.btn_resume), { player.playWhenReady = !player.playWhenReady; overlayTick++ }, small = compact)
+                    Button(
+                        if (playing) stringResource(R.string.btn_pause) else stringResource(R.string.btn_resume),
+                        {
+                            val pause = player.playWhenReady
+                            player.playWhenReady = !pause
+                            // ripresa la visione il focus torna al video: ◀ ▶ saltano di nuovo avanti e indietro
+                            if (pause) overlayTick++ else leaveBar()
+                        },
+                        small = compact, fr = barFr,
+                    )
                     Button("10s ⏩", { seek(10_000L) }, small = compact)
                     if (idx + 1 < req.entries.size) Button(stringResource(R.string.btn_next), { idx++ }, small = compact)
                     Button(stringResource(R.string.options), { optOpen = true }, small = compact)
                 }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                     Text("${fmtClock(pos)} / ${fmtClock(dur)}", color = TextDim, fontSize = 13.sp)
-                    Text(stringResource(R.string.vod_hint), color = TextDim, fontSize = 11.sp)
+                    Text(stringResource(if (barFocused) R.string.live_hint_bar else R.string.vod_hint), color = TextDim, fontSize = 11.sp)
                 }
             }
         }

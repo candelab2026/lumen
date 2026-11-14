@@ -335,7 +335,50 @@ class Repository(ctx: Context) {
             duration = info.optString("duration").clean(),
             backdrop = info.optJSONArray("backdrop_path")?.optString(0).clean()
                 ?: info.optString("movie_image").clean(),
+            extra = extra(info, info.optString("releasedate").clean() ?: info.optString("release_date").clean()),
         )
+    }
+
+    /** Campi facoltativi comuni a film e serie: ogni fornitore ne compila solo alcuni. */
+    private fun extra(info: JSONObject, date: String?): TitleExtra {
+        fun s(vararg keys: String): String? = keys.firstNotNullOfOrNull { info.optString(it).clean() }
+        val rating = s("rating")?.replace(',', '.')?.toDoubleOrNull()
+            ?: s("rating_5based")?.replace(',', '.')?.toDoubleOrNull()?.times(2)
+        val secs = s("duration_secs")?.toLongOrNull() ?: 0L
+        val mins = if (secs > 0) secs / 60 else s("episode_run_time", "runtime")?.toLongOrNull() ?: 0L
+        val video = info.optJSONObject("video")
+        val w = video?.optInt("width") ?: 0
+        val h = video?.optInt("height") ?: 0
+        val res = when {
+            w >= 3800 || h >= 2000 -> "4K"
+            w >= 1900 || h >= 1000 -> "Full HD 1080p"
+            w >= 1200 || h >= 700 -> "HD 720p"
+            w > 0 -> "SD"
+            else -> null
+        }
+        val audio = info.optJSONObject("audio")
+        val channels = when (audio?.optInt("channels") ?: 0) { 1 -> "mono"; 2 -> "stereo"; 6 -> "5.1"; 8 -> "7.1"; else -> null }
+        val trailer = s("youtube_trailer", "trailer")?.let { if (it.startsWith("http")) it else "https://www.youtube.com/watch?v=$it" }
+        return TitleExtra(
+            rating = rating?.takeIf { it > 0.0 && it <= 10.0 },
+            director = s("director"),
+            country = s("country"),
+            released = date?.let(::localDate),
+            runtime = if (mins > 0) (if (mins >= 60) "${mins / 60}h ${mins % 60}m" else "${mins}m") else null,
+            age = s("mpaa_rating", "age", "mpaa"),
+            original = s("o_name", "original_name"),
+            quality = listOfNotNull(res, video?.optString("codec_name").clean()?.uppercase()).joinToString(" · ").ifEmpty { null },
+            audio = listOfNotNull(audio?.optString("codec_name").clean()?.uppercase(), channels).joinToString(" ").ifEmpty { null },
+            trailer = trailer,
+        )
+    }
+
+    /** "2023-05-12" nel formato data del dispositivo; se non è una data resta com'è. */
+    private fun localDate(s: String): String = try {
+        val d = java.text.SimpleDateFormat("yyyy-MM-dd", java.util.Locale.US).parse(s.take(10))
+        if (d != null && s.length >= 10) java.text.DateFormat.getDateInstance(java.text.DateFormat.MEDIUM).format(d) else s
+    } catch (e: Exception) {
+        s
     }
 
     suspend fun seriesDetail(id: Int): SeriesDetail = withContext(Dispatchers.IO) {
@@ -382,6 +425,7 @@ class Repository(ctx: Context) {
             cast = info?.optString("cast").clean(),
             backdrop = info?.optJSONArray("backdrop_path")?.optString(0).clean() ?: info?.optString("cover").clean(),
             seasons = seasons,
+            extra = info?.let { extra(it, it.optString("releaseDate").clean() ?: it.optString("release_date").clean()) } ?: TitleExtra(),
         )
     }
 

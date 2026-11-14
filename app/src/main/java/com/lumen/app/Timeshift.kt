@@ -198,7 +198,38 @@ class RoutingDataSource(private val base: DataSource.Factory) : DataSource {
     }
 
     override fun open(dataSpec: DataSpec): Long {
-        val ds = if (dataSpec.uri.scheme == Timeshift.SCHEME) GrowingFileDataSource() else base.createDataSource()
+        if (dataSpec.uri.scheme == Timeshift.SCHEME) return start(GrowingFileDataSource(), dataSpec)
+        // Film ed episodi: molti server rimandano ogni richiesta a una macchina diversa, e le copie dello stesso
+        // titolo non sono sempre identiche (dimensioni diverse). Leggere l'inizio da una copia e il resto da
+        // un'altra dà dati senza senso ("risposta non valida"): dopo il primo rinvio si resta su quell'indirizzo.
+        val key = dataSpec.uri.toString()
+        val vod = dataSpec.uri.scheme?.startsWith("http") == true &&
+            dataSpec.uri.path.orEmpty().let { it.contains("/movie/") || it.contains("/series/") }
+        if (vod) {
+            val pinned = synchronized(resolved) { resolved[key] }
+            if (pinned != null) {
+                try {
+                    return start(base.createDataSource(), dataSpec.withUri(pinned))
+                } catch (e: java.io.IOException) {
+                    // indirizzo scaduto o macchina non raggiungibile: si richiede di nuovo al server
+                    runCatching { current?.close() }
+                    synchronized(resolved) { resolved.remove(key) }
+                }
+            }
+        }
+        val ds = base.createDataSource()
+        val n = start(ds, dataSpec)
+        val final = ds.uri
+        if (vod && final != null && final != dataSpec.uri) {
+            synchronized(resolved) {
+                if (resolved.size >= 16) resolved.clear()
+                resolved[key] = final
+            }
+        }
+        return n
+    }
+
+    private fun start(ds: DataSource, dataSpec: DataSpec): Long {
         listeners.forEach { ds.addTransferListener(it) }
         current = ds
         return ds.open(dataSpec)
@@ -216,5 +247,13 @@ class RoutingDataSource(private val base: DataSource.Factory) : DataSource {
         } finally {
             current = null
         }
+    }
+
+    companion object {
+        /** Indirizzo finale (dopo i rinvii) di ogni film/episodio aperto, per restare sulla stessa copia. */
+        private val resolved = HashMap<String, Uri>()
+
+        /** Dimentica gli indirizzi tenuti: dopo più errori di fila si lascia scegliere di nuovo al server. */
+        fun forget() = synchronized(resolved) { resolved.clear() }
     }
 }

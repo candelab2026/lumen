@@ -331,6 +331,8 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
 
     // ---------- Caricamento liste ----------
 
+    private val STALE = 2 * 24 * 3_600_000L
+
     fun ensureLoaded(t: Int) {
         when (t) {
             0, 1, 4 -> if (live.status == Status.Idle || live.status == Status.Error) loadLive(false)
@@ -345,7 +347,21 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         if (series.status != Status.Idle) loadSeries(true)
     }
 
-    /** Le liste si riscaricano ogni 3 aperture dell'app (o a richiesta); altrimenti si usa la cache. */
+    /**
+     * Al ritorno in primo piano (le TV tengono l'app aperta per giorni): le liste più vecchie di 2 giorni
+     * e la guida più vecchia di 24 ore si riscaricano, ma solo dalla home, mai durante la visione.
+     */
+    fun refreshIfStale() {
+        if (screens.lastOrNull() !is Screen.Home) return
+        if (live.status == Status.Ready) {
+            if (repo.cacheAge("live.json") > STALE) loadLive(false)
+            else if (update == null && repo.epgAge() > 24 * 3_600_000L) loadEpg(live.items, false)
+        }
+        if (vod.status == Status.Ready && repo.cacheAge("vod.json") > STALE) loadVod(false)
+        if (series.status == Status.Ready && repo.cacheAge("series.json") > STALE) loadSeries(false)
+    }
+
+    /** Le liste si riscaricano ogni 5 aperture dell'app, dopo 2 giorni o a richiesta; altrimenti si usa la cache. */
     private fun markIfFetched(section: String, file: String) {
         if (repo.cacheAge(file) < 5 * 60_000L) store.markRefreshed(section)
     }
@@ -354,7 +370,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         live = ListState(Status.Loading)
         viewModelScope.launch {
             try {
-                val f = force || store.due("live")
+                val f = force || store.due("live") || repo.cacheAge("live.json") > STALE
                 repo.progress = ::reportUpdate
                 val cats = repo.liveCategories(f)
                 val items = repo.liveChannels(f)
@@ -378,7 +394,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         vod = ListState(Status.Loading)
         viewModelScope.launch {
             try {
-                val f = force || store.due("vod")
+                val f = force || store.due("vod") || repo.cacheAge("vod.json") > STALE
                 val cats = repo.vodCategories(f)
                 val items = repo.movies(f)
                 markIfFetched("vod", "vod.json")
@@ -393,7 +409,7 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         series = ListState(Status.Loading)
         viewModelScope.launch {
             try {
-                val f = force || store.due("series")
+                val f = force || store.due("series") || repo.cacheAge("series.json") > STALE
                 val cats = repo.seriesCategories(f)
                 val items = repo.seriesList(f)
                 markIfFetched("series", "series.json")

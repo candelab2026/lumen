@@ -34,7 +34,7 @@
     <string name="home_hint_remove">Maintenez OK (ou Menu) sur un titre pour le retirer de la liste</string>
     <string name="live_hint_fav">Maintenez OK (ou Menu) sur une chaîne pour l\'ajouter aux favoris</string>
     <string name="home_empty">Les dernières chaînes regardées et les films ou épisodes commencés apparaîtront ici.\nAllez dans TV en direct, Films ou Séries pour commencer.</string>
-    <string name="guide_nav_hint">◀ ▶ changer de plage    OK regarder la chaîne    (catégorie à choisir dans TV en direct)</string>
+    <string name="guide_nav_hint">◀ ▶ changer de plage    OK regarder la chaîne</string>
     <string name="guide_no_channels">Aucune chaîne dans cette catégorie</string>
     <string name="guide_unavailable">Guide indisponible</string>
     <string name="set_account">Compte</string>
@@ -102,7 +102,7 @@
     <string name="btn_pause">⏸ Pause</string>
     <string name="btn_resume">▶ Reprendre</string>
     <string name="btn_next">Suivant ⏭</string>
-    <string name="vod_hint">◀ ▶ saut de 10 s    OK pause/reprise    ▲ ou Menu : audio, sous-titres, minuterie</string>
+    <string name="vod_hint">◀ ▶ saut de 10 s    OK pause/reprise    ▼ boutons    ▲ ou Menu : audio, sous-titres, minuterie</string>
     <string name="btn_resume_at" formatted="true">Reprendre à %1$s</string>
     <string name="btn_play">Lire</string>
     <string name="btn_from_start">Depuis le début</string>
@@ -196,4 +196,21 @@
     <string name="btn_cancel">Annuler</string>
     <string name="live_hint_bar">◀ ▶ choisir    OK valider    Retour fermer</string>
     <string name="rec_saving">Enregistrement du fichier…</string>
+    <string name="info_original">Titre original</string>
+    <string name="info_genre">Genre</string>
+    <string name="info_director">Réalisation</string>
+    <string name="info_cast">Distribution</string>
+    <string name="info_country">Pays</string>
+    <string name="info_released">Sortie</string>
+    <string name="info_duration">Durée</string>
+    <string name="info_age">Classification</string>
+    <string name="info_video">Vidéo</string>
+    <string name="info_seasons" formatted="true">%1$d saisons</string>
+    <string name="info_scroll_hint">▲▼ défiler</string>
+    <string name="btn_trailer">▶ Bande-annonce</string>
+    <string name="btn_info">ℹ Info</string>
+    <string name="sec_profile">Profil</string>
+    <string name="sec_view">Affichage</string>
+    <string name="sec_lists">Listes et guide TV</string>
+    <string name="sec_app">Appli</string>
 </resources>
