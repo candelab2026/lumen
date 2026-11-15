@@ -877,7 +877,11 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
                 buffering = state == Player.STATE_BUFFERING
                 if (state == Player.STATE_READY) failures = 0
                 if (state == Player.STATE_ENDED) {
-                    vm.dropContinue(entry.key)
+                    // visto fino in fondo: resta nello storico, in "Continua a guardare" passa al successivo
+                    val cur = req.entries[idx]
+                    val d = player.duration.coerceAtLeast(1L)
+                    vm.noteProgress(cur, d, d, req.entries.getOrNull(idx + 1))
+                    last[0] = 0L
                     if (idx + 1 < req.entries.size) idx++ else vm.back()
                 }
             }
@@ -915,8 +919,7 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
             last[0] = pos
             last[1] = dur
             if (++n % 20 == 0 && dur > 0 && pos > 0) {
-                vm.store.setResume(entry.key, pos, dur)
-                if (pos > 30_000) entry.item?.let { vm.noteContinue(it) }
+                vm.noteProgress(entry, pos, dur, req.entries.getOrNull(req.entries.indexOf(entry) + 1))
             }
             delay(500)
         }
@@ -924,9 +927,9 @@ fun VodPlayerScreen(vm: AppViewModel, req: Screen.PlayVod) {
     DisposableEffect(entry.key) {
         onDispose {
             if (last[0] > 0) {
-                vm.store.setResume(entry.key, last[0], last[1])
-                if (last[0] > 30_000) entry.item?.let { vm.noteContinue(it) }
+                vm.noteProgress(entry, last[0], last[1], req.entries.getOrNull(req.entries.indexOf(entry) + 1))
             }
+            vm.watchTick++
         }
     }
     LaunchedEffect(overlayTick, playing, barFocused) {

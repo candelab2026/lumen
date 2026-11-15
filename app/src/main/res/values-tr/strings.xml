@@ -213,4 +213,11 @@
     <string name="sec_view">İzleme</string>
     <string name="sec_lists">Listeler ve TV rehberi</string>
     <string name="sec_app">Uygulama</string>
+    <string name="watch_done">✓ İzlendi</string>
+    <string name="watch_done_on" formatted="true">✓ İzlendi: %1$s</string>
+    <string name="watch_at" formatted="true">Durduruldu: %1$s / %2$s (%3$d%%)</string>
+    <string name="watch_count" formatted="true">%1$d/%2$d izlendi</string>
+    <string name="btn_resume_ep" formatted="true">▶ %1$s devam et: %2$s</string>
+    <string name="btn_next_ep" formatted="true">▶ Sıradaki: %1$s</string>
+    <string name="next_episode">Sonraki bölüm</string>
 </resources>

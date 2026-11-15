@@ -1,5 +1,13 @@
 # Changelog
 
+## 2.3.1
+
+- Viewing history for movies and series: position, duration, date of the last viewing and whether the title was watched to the end are kept (they used to be dropped when an episode ended).
+- Series page: a "Resume S1E3 at 12:30" / "Next: S1E4" button, the page opens on the right season and episode, each episode shows "Watched" or its position with a progress bar and the date, and a "3/10 watched" count. Playback continues across seasons.
+- Movie page: "Stopped at 45:12 of 2:37:01 (29%)" with date and progress bar, or "Watched on …".
+- Movie and series lists: ▶ on started titles, ✓ on watched movies, progress bar on movies. "Started" lists every started title, also finished ones; hold OK there to remove one.
+- Home "Continue watching": progress bar and percentage; when an episode ends the next one is proposed.
+
 ## 2.3.0
 
 - Movie and series pages: star rating and score, plus every detail the provider supplies (genre, director, cast, country, release date, running time, age rating, original title, video and audio quality) and a Trailer button when YouTube or a browser is available. Plot and details scroll with ▲ ▼ on the remote; series have a "Info" button that opens the full plot and details.

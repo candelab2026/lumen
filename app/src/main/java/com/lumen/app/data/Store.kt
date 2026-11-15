@@ -16,6 +16,15 @@ class ContinueItem(
     val parent: String = "", // per gli episodi: id della serie
 )
 
+/** Storico di un film o di un episodio: dove ci si è fermati, quanto dura, quando, e se è stato visto fino in fondo. */
+class Watch(val pos: Long, val dur: Long, val time: Long, val done: Boolean) {
+    /** Parte vista, da 0 a 1 (1 se visto fino in fondo). */
+    val frac: Float get() = if (done && pos <= 0) 1f else if (dur > 0) (pos.toFloat() / dur).coerceIn(0f, 1f) else 0f
+}
+
+/** Ultimo episodio guardato di una serie. */
+class SeriesLast(val episodeKey: String, val title: String, val time: Long)
+
 /** Credenziali (cifrate quando possibile), preferiti, recenti e posizioni di ripresa (per profilo). */
 class Store(ctx: Context) {
     private val secure: SharedPreferences = try {
@@ -122,12 +131,63 @@ class Store(ctx: Context) {
 
     fun setResume(key: String, pos: Long, dur: Long) {
         val e = data.edit()
-        if (dur > 0 && pos > dur * 0.95) e.remove(k("r_$key")) else e.putLong(k("r_$key"), pos)
+        val finished = dur > 0 && pos > dur * 0.95
+        if (finished) e.remove(k("r_$key")) else e.putLong(k("r_$key"), pos)
+        // storico: resta anche a visione finita ("visto" non si perde riguardando il titolo)
+        val done = finished || watch(key)?.done == true
+        e.putString(k("w_$key"), "${if (finished) 0 else pos},$dur,${System.currentTimeMillis()},${if (done) 1 else 0}")
         e.apply()
     }
 
     fun clearResume(key: String) {
         data.edit().remove(k("r_$key")).apply()
+    }
+
+    // ---------- storico di visione ----------
+
+    fun watch(key: String): Watch? {
+        val f = (data.getString(k("w_$key"), null) ?: return null).split(',')
+        if (f.size < 4) return null
+        return Watch(f[0].toLongOrNull() ?: 0L, f[1].toLongOrNull() ?: 0L, f[2].toLongOrNull() ?: 0L, f[3] == "1")
+    }
+
+    /** Chiavi dei film con uno storico, dal più recente. */
+    fun watchedMovies(): List<String> {
+        val p = k("w_M")
+        return data.all.keys.filter { it.startsWith(p) }.map { it.substring(p.length - 1) }
+            .sortedByDescending { watch(it)?.time ?: 0L }
+    }
+
+    fun seriesLast(seriesId: String): SeriesLast? {
+        val f = (data.getString(k("ws_$seriesId"), null) ?: return null).split('\t')
+        if (f.size < 3) return null
+        return SeriesLast(f[0], f[1], f[2].toLongOrNull() ?: 0L)
+    }
+
+    fun setSeriesLast(seriesId: String, episodeKey: String, title: String) {
+        val t = title.replace('\t', ' ').replace('\n', ' ')
+        data.edit().putString(k("ws_$seriesId"), "$episodeKey\t$t\t${System.currentTimeMillis()}").apply()
+    }
+
+    /** Id delle serie iniziate, dalla più recente. */
+    fun startedSeries(): List<String> {
+        val p = k("ws_")
+        return data.all.keys.filter { it.startsWith(p) }.map { it.substring(p.length) }
+            .sortedByDescending { seriesLast(it)?.time ?: 0L }
+    }
+
+    /** Toglie un titolo dallo storico (film: "M<id>", serie: "S<id>"). */
+    fun forget(key: String) {
+        val e = data.edit()
+        if (key.startsWith("S")) e.remove(k("ws_${key.substring(1)}")) else e.remove(k("w_$key")).remove(k("r_$key"))
+        e.apply()
+    }
+
+    /** Episodio messo in "Continua a guardare" perché viene dopo uno finito (non ancora iniziato). */
+    fun isNext(key: String): Boolean = data.getBoolean(k("n_$key"), false)
+
+    fun setNext(key: String, on: Boolean) {
+        if (on) data.edit().putBoolean(k("n_$key"), true).apply() else if (isNext(key)) data.edit().remove(k("n_$key")).apply()
     }
 
     // ---------- "continua a guardare" ----------
@@ -149,6 +209,7 @@ class Store(ctx: Context) {
     fun removeContinue(key: String) {
         val old = continueList()
         if (old.any { it.key == key }) saveContinue(old.filter { it.key != key })
+        setNext(key, false)
     }
 
     private fun saveContinue(l: List<ContinueItem>) {

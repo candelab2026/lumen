@@ -214,4 +214,11 @@
     <string name="sec_view">Viewing</string>
     <string name="sec_lists">Lists and TV guide</string>
     <string name="sec_app">App</string>
+    <string name="watch_done">✓ Watched</string>
+    <string name="watch_done_on" formatted="true">✓ Watched on %1$s</string>
+    <string name="watch_at" formatted="true">Stopped at %1$s of %2$s (%3$d%%)</string>
+    <string name="watch_count" formatted="true">%1$d/%2$d watched</string>
+    <string name="btn_resume_ep" formatted="true">▶ Resume %1$s at %2$s</string>
+    <string name="btn_next_ep" formatted="true">▶ Next: %1$s</string>
+    <string name="next_episode">Next episode</string>
 </resources>

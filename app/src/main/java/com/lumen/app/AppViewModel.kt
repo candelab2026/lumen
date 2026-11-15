@@ -509,6 +509,37 @@ class AppViewModel(app: Application) : AndroidViewModel(app) {
         if (store.touchContinue(item)) cont = store.continueList()
     }
 
+    /** Cambia quando lo storico di visione viene aggiornato: le schermate che lo mostrano si ridisegnano. */
+    var watchTick by mutableIntStateOf(0)
+
+    /**
+     * Salva dove si è arrivati in un film o episodio: posizione, storico, ultimo episodio della serie e
+     * "Continua a guardare". A episodio finito mette in elenco il successivo ([next]).
+     */
+    fun noteProgress(e: VodEntry, pos: Long, dur: Long, next: VodEntry?) {
+        if (pos <= 0) return
+        store.setResume(e.key, pos, dur)
+        val item = e.item ?: return
+        if (item.kind == "series" && item.parent.isNotEmpty()) store.setSeriesLast(item.parent, e.key, item.title)
+        if (dur > 0 && pos > dur * 0.95) {
+            store.removeContinue(e.key)
+            val n = next?.item
+            if (n != null && store.watch(n.key)?.done != true) {
+                store.setNext(n.key, true)
+                store.touchContinue(n)
+            }
+            cont = store.continueList()
+        } else if (pos > 30_000) {
+            noteContinue(item)
+        }
+    }
+
+    /** Toglie un titolo da "Iniziati" (pressione lunga nell'elenco). */
+    fun forgetWatch(key: String) {
+        store.forget(key)
+        watchTick++
+    }
+
     fun dropContinue(key: String) {
         store.clearResume(key)
         store.removeContinue(key)

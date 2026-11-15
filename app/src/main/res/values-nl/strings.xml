@@ -213,4 +213,11 @@
     <string name="sec_view">Weergave</string>
     <string name="sec_lists">Lijsten en tv-gids</string>
     <string name="sec_app">App</string>
+    <string name="watch_done">✓ Gezien</string>
+    <string name="watch_done_on" formatted="true">✓ Gezien op %1$s</string>
+    <string name="watch_at" formatted="true">Gestopt op %1$s van %2$s (%3$d%%)</string>
+    <string name="watch_count" formatted="true">%1$d/%2$d gezien</string>
+    <string name="btn_resume_ep" formatted="true">▶ %1$s hervatten vanaf %2$s</string>
+    <string name="btn_next_ep" formatted="true">▶ Volgende: %1$s</string>
+    <string name="next_episode">Volgende aflevering</string>
 </resources>

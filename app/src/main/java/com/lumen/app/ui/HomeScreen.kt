@@ -50,6 +50,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.foundation.focusGroup
@@ -455,9 +456,16 @@ private fun <T> PosterSection(
         listOf("start" to sStart, "fav" to sFav, "*" to sAll) + st.cats.map { it.id to it.name }
     }
     // titoli già iniziati, dal più recente: i film per chiave, le serie tramite l'episodio in corso
-    val started = vm.cont.filter { vm.store.resume(it.key) > 30_000 }.mapNotNull { c ->
-        if (prefix == "M") c.key.takeIf { c.kind == "movie" } else "S${c.parent}".takeIf { c.kind == "series" && c.parent.isNotEmpty() }
-    }.distinct()
+    val watchTick = vm.watchTick
+    val started = remember(vm.cont, watchTick, vm.profile) {
+        // dallo storico (resta anche a visione finita); in coda i titoli iniziati con le versioni precedenti
+        val hist = if (prefix == "M") vm.store.watchedMovies().filter { k -> vm.store.watch(k)?.let { it.done || it.pos >= 30_000 } == true }
+        else vm.store.startedSeries().map { "S$it" }
+        val old = vm.cont.filter { vm.store.resume(it.key) > 30_000 }.mapNotNull { c ->
+            if (prefix == "M") c.key.takeIf { c.kind == "movie" } else "S${c.parent}".takeIf { c.kind == "series" && c.parent.isNotEmpty() }
+        }
+        (hist + old).distinct()
+    }
     val shown = remember(st, selCat, query, favs, started) {
         val q = query.trim()
         if (q.isNotEmpty()) {
@@ -544,7 +552,7 @@ private fun <T> PosterSection(
                         }
                         TvBox(
                             onClick = { vm.lastFocus = key; onOpen(item) },
-                            onLongClick = { vm.toggleFav(key) },
+                            onLongClick = { if (selCat == "start" && query.isBlank()) vm.forgetWatch(key) else vm.toggleFav(key) },
                             onFocus = { vm.lastFocus = key },
                             focusRequester = fr,
                         ) { f ->
@@ -554,6 +562,23 @@ private fun <T> PosterSection(
                                     if (key in vm.favs) {
                                         Text("★", color = Gold, fontSize = 16.sp, modifier = Modifier.align(Alignment.TopEnd).padding(6.dp))
                                     }
+                                    // storico: ✓ visto, ▶ iniziato (film: barra con la parte vista)
+                                    val w = remember(key, watchTick) { if (prefix == "M") vm.store.watch(key) else null }
+                                    val begun = remember(key, watchTick) { prefix == "S" && vm.store.seriesLast(key.substring(1)) != null }
+                                    val mark = when {
+                                        w != null && w.pos >= 30_000 -> "▶"
+                                        w?.done == true -> "✓"
+                                        begun -> "▶"
+                                        else -> null
+                                    }
+                                    if (mark != null) {
+                                        Text(
+                                            mark, color = Color.White, fontSize = 12.sp, fontWeight = FontWeight.Bold,
+                                            modifier = Modifier.align(Alignment.TopStart).padding(6.dp).clip(RoundedCornerShape(6.dp))
+                                                .background(Accent).padding(horizontal = 6.dp, vertical = 2.dp),
+                                        )
+                                    }
+                                    if (w != null && w.pos >= 30_000) DetailScreens.ProgressLine(w.frac, Modifier.align(Alignment.BottomStart).fillMaxWidth())
                                 }
                                 Text(
                                     name(item),
@@ -579,7 +604,7 @@ private fun <T> PosterSection(
 private fun ForYouTab(vm: AppViewModel) {
     val byId = remember(vm.live) { vm.live.items.associateBy { it.id } }
     val recentCh = vm.recents.mapNotNull { byId[it] }
-    val cont = vm.cont.filter { vm.store.resume(it.key) > 30_000 }
+    val cont = vm.cont.filter { vm.store.resume(it.key) > 30_000 || vm.store.isNext(it.key) }
     val days = vm.account?.expiry?.let { (it - System.currentTimeMillis()) / 86_400_000L }
     val ctx = LocalContext.current
 
@@ -629,7 +654,12 @@ private fun ForYouTab(vm: AppViewModel) {
                         modifier = Modifier.width(130.dp),
                     ) { f ->
                         Column {
-                            Poster(c.poster, Modifier.fillMaxWidth())
+                            val at = vm.store.resume(c.key)
+                            val w = vm.store.watch(c.key)
+                            Box {
+                                Poster(c.poster, Modifier.fillMaxWidth())
+                                if (at > 30_000 && w != null) DetailScreens.ProgressLine(w.frac, Modifier.align(Alignment.BottomStart).fillMaxWidth())
+                            }
                             Text(
                                 c.title,
                                 color = if (f) TextMain else TextDim,
@@ -637,7 +667,8 @@ private fun ForYouTab(vm: AppViewModel) {
                                 modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                             )
                             Text(
-                                stringResource(R.string.resume_from, (vm.store.resume(c.key) / 60_000).toInt()),
+                                if (at > 30_000) stringResource(R.string.resume_from, (at / 60_000).toInt()) + (w?.takeIf { it.dur > 0 }?.let { "  ·  ${(it.frac * 100).toInt()}%" } ?: "")
+                                else stringResource(R.string.next_episode),
                                 color = Accent, fontSize = 11.sp,
                                 modifier = Modifier.padding(start = 8.dp, end = 8.dp, bottom = 6.dp),
                             )
@@ -918,7 +949,7 @@ private fun SetButton(text: String, modifier: Modifier = Modifier, primary: Bool
     TvBox(onClick = onClick, modifier = modifier, focusRequester = fr, selected = primary, focusScale = 1.02f) { f ->
         Text(
             text,
-            color = if (f || primary) androidx.compose.ui.graphics.Color.White else TextMain,
+            color = if (f || primary) Color.White else TextMain,
             fontSize = 15.sp, fontWeight = FontWeight.SemiBold, maxLines = 2, overflow = TextOverflow.Ellipsis,
             textAlign = androidx.compose.ui.text.style.TextAlign.Center,
             modifier = Modifier.align(Alignment.Center).padding(horizontal = 12.dp, vertical = 10.dp),

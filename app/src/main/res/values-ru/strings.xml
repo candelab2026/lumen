@@ -213,4 +213,11 @@
     <string name="sec_view">Просмотр</string>
     <string name="sec_lists">Списки и телепрограмма</string>
     <string name="sec_app">Приложение</string>
+    <string name="watch_done">✓ Просмотрено</string>
+    <string name="watch_done_on" formatted="true">✓ Просмотрено %1$s</string>
+    <string name="watch_at" formatted="true">Остановлено на %1$s из %2$s (%3$d%%)</string>
+    <string name="watch_count" formatted="true">Просмотрено: %1$d/%2$d</string>
+    <string name="btn_resume_ep" formatted="true">▶ Продолжить %1$s с %2$s</string>
+    <string name="btn_next_ep" formatted="true">▶ Далее: %1$s</string>
+    <string name="next_episode">Следующая серия</string>
 </resources>
